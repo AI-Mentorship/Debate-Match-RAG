@@ -1,0 +1,13 @@
+# Python
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# MongoDB
+*.mongodb
