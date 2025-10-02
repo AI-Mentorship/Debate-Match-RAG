@@ -19,7 +19,7 @@ class DebateDatabase:
     
     def test_connection(self):
         try:
-            self.client.admin.command('ping')
+            self.client.admin.command("ping")
             print("Successfully connected to MongoDB.")
             return True
 
