@@ -1,5 +1,5 @@
-from src.debate_ai.backend.database.connection import DebateDatabase
-from src.debate_ai.backend.database.insert import DataInserter
+from src.backend.database.connection import DebateDatabase
+from src.backend.database.insert import DataInserter
 
 def main():
     print("Setting up Debate AI Database...")

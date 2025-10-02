@@ -29,29 +29,28 @@ The project will begin with local debates (e.g., mayoral races) before scaling u
 ```bash
 Debate-Match-RAG
 ├── debate_ai/
-│   ├── main.py                                 # Entry point
+│   ├── main.py                             # Entry point
 │   └── src/
-│       └── debate_ai/
-│           ├── backend/                        # Core application logic and data processing
-│           │   ├── data/
-│           │   │   └── sample_data.csv
-│           │   │
-│           │   ├── database/                   # Database setup
-│           │   │   ├── __init__.py
-│           │   │   ├── config.py
-│           │   │   ├── connection.py
-│           │   │   ├── insert.py
-│           │   │   └── README.md               # Database documentation
-│           │   │
-│           │   ├── embeddings_faiss/           # Embeddings + FAISS
-│           │   │   ├── embedding.py
-│           │   │   └── faiss.py
-│           │   │
-│           │   └── retriever/                  # Retriever
-│           │       └── retriever.py
-│           │
-│           └── frontend/                       # UI components
-│               └── something.txt
+│       ├── backend/                        # Data processing
+│       │   ├── data/
+│       │   │   └── sample_data.csv
+│       │   │
+│       │   ├── database/                   # Database setup
+│       │   │   ├── __init__.py
+│       │   │   ├── config.py
+│       │   │   ├── connection.py
+│       │   │   ├── insert.py
+│       │   │   └── README.md               # Database documentation
+│       │   │
+│       │   ├── embeddings_faiss/           # Embeddings + FAISS
+│       │   │   ├── embedding.py
+│       │   │   └── faiss.py
+│       │   │
+│       │   └── retriever/                  # Retriever
+│       │       └── retriever.py
+│       │
+│       └── frontend/                       # UI components
+│           └── something.txt
 │
 ├── README.md
 └── requirements.txt
