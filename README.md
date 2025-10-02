@@ -1,4 +1,4 @@
-# **Debate Match RAG**
+# **Happy Birthday :v 🫶**
 
 This project aims to build an AI-powered debate matcher that allows users to ask political questions and receive factually grounded answers based on political debate transcripts.
 
