@@ -33,7 +33,7 @@ class DataInserter(DebateDatabase):
 
         except FileNotFoundError:
             print(f"CSV file not found: {csv_file_path}")
-            print("Please make sure the file exists in debate_ai/data folder")
+            print("Please make sure the file exists in src/backend/data folder")
 
         except Exception as e:
             print(f"Error loading CSV: {e}")

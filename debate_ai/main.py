@@ -12,7 +12,7 @@ def main():
 
         # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("debate_ai/data/sample_data.csv")
+        inserter.process_transcript_file("src/backend/data/sample_data.csv")
 
         print("Database setup complete!")
         print("\nAvailable collections:")

@@ -3,25 +3,23 @@
 .AppleDouble
 .LSOverride
 
-# Python cache files
+# Python
+.env
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
 env/
 venv/
-ENV/
-env.bak/
-venv.bak/
+.venv/
 
-# IDE and editor files
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# Project specific
-*.log
-*.sqlite3
+# MongoDB
+*.mongodb
