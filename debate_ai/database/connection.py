@@ -22,6 +22,7 @@ class DebateDatabase:
             self.client.admin.command('ping')
             print("Successfully connected to MongoDB.")
             return True
+
         except Exception as e:
             print(f"Connection failed: {e}")
             return False
