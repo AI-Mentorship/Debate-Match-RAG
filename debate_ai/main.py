@@ -15,7 +15,7 @@ def main():
         inserter.process_transcript_file("debate_ai/data/sample_data.csv")
 
         print("Database setup complete!")
-        print("Available collections:")
+        print("\nAvailable collections:")
         collections = database.db.list_collection_names()
         for collection in collections:
             count = database.db[collection].count_documents({})

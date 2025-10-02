@@ -39,10 +39,20 @@ class DataInserter(DebateDatabase):
             print(f"Error loading CSV: {e}")
 
     def insert_speaker(self, speaker, speakers_dict):
-        # Check duplicate
+        # Check duplicate in the file
         if speaker in speakers_dict:
             return speakers_dict[speaker]
         
+        # Check duplicate in the database
+        existing_speaker = self.speakers.find_one({
+            "name": speaker
+        })
+
+        if existing_speaker:
+            speakers_dict[speaker] = existing_speaker["speaker_id"]
+            return existing_speaker["speaker_id"]
+        
+        # Insert
         speaker_id = self.generate_unique_id()
         self.speakers.insert_one({
             "speaker_id": speaker_id,
@@ -60,6 +70,17 @@ class DataInserter(DebateDatabase):
         if key in debates_dict:
             return debates_dict[key]
         
+        # Check duplicate in the database
+        existing_debate = self.debates.find_one({
+            "name": source,
+            "date": datetime.strptime(date, "%Y-%m-%d")
+        })
+
+        if existing_debate:
+            debates_dict[key] = existing_debate["debate_id"]
+            return existing_debate["debate_id"]
+
+        # Insert
         debate_id = self.generate_unique_id()
         self.debates.insert_one({
             "debate_id": debate_id,
@@ -71,8 +92,19 @@ class DataInserter(DebateDatabase):
         return debate_id
     
     def insert_utterance(self, debate_id, speaker_id, text, timestamp):
+        # Check duplicate in the database
+        existing_utterance = self.utterances.find_one({
+            "debate_id": debate_id,
+            "speaker_id": speaker_id, 
+            "text": text,
+            "timestamp": timestamp
+        })
+
+        if existing_utterance:
+            return
+
+        # Insert
         utterance_id = self.generate_unique_id()
-        
         self.utterances.insert_one({
             "utterance_id": utterance_id,
             "debate_id": debate_id,
@@ -83,6 +115,3 @@ class DataInserter(DebateDatabase):
 
     def generate_unique_id(self):
         return f"chunk_{uuid.uuid4().hex[:8]}"
-    
-    def test(self, speaker_name, debate_name=None):
-        pass
