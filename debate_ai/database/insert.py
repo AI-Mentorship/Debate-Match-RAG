@@ -1,68 +1,88 @@
 # This file will contain data insertion functions :D
 import csv
-import os
 import uuid
 from datetime import datetime
 from .connection import DebateDatabase
 
 class DataInserter(DebateDatabase):
+    def __init__(self):
+        super().__init__() # Initialize DebateDatabase in order to use self.speakers, self.debates, and self.utterances
+
     def process_transcript_file(self, csv_file_path):
-        if not os.path.exists(csv_file_path):
-            print(f"CSV file not found at: {csv_file_path}")
-            print("Please make sure the file exists in debate_ai/data folder")
-            return
+        speakers_dict = {}  # speaker_id = name
+        debates_dict = {}   # debate_id = (source, date)
 
         # Load clean CSV file
         try:
             with open(csv_file_path, "r", encoding="utf-8") as file:
                 csv_reader = csv.DictReader(file)
 
-                for row_num, row_data in enumerate(csv_reader, 1):
-                    # Each row is a separate chunk
-                    chunk_id = self.generate_unique_id()
-                    date = datetime.strptime(row_data["date"], "%Y-%m-%d")
+                for row in csv_reader:
+                    # Insert speaker
+                    speaker_id = self.insert_speaker(row["speaker"], speakers_dict)
+                    
+                    # Insert debate
+                    debate_id = self.insert_debate(row["source"], row["date"], debates_dict)
+                    
+                    # Insert utterance
+                    self.insert_utterance(debate_id, speaker_id, row["text"], row["timestamp"])
+                    
+                    print(f"Added: {row["speaker"]} - {row["timestamp"]}")
 
-                    # Insert into transcripts
-                    self.transcripts.insert_one({
-                        "speaker": row_data["speaker"],
-                        "date": date,
-                        "topic": row_data["topic"],
-                        "chunk_text": row_data["text"],
-                        "chunk_id": chunk_id
-                    })
-
-                    # Generate embedding vector
-                    embedding_vector = self.call_openai_embedding_api(row_data["text"])
-
-                    # Insert into embeddings
-                    self.embeddings.insert_one({
-                        "chunk_id": chunk_id,
-                        "embedding": embedding_vector,
-                        "dimension": len(embedding_vector)
-                    })
-
-                    # Insert into metadata
-                    self.metadata.insert_one({
-                        "chunk_id": chunk_id,
-                        "source": row_data["source"],
-                        "timestamp": row_data["timestamp"],
-                        "tags": self.extract_keywords(row_data["text"])
-                    })
-
-                    print(f"Processed {row_data["speaker"]} at {row_data["timestamp"]} on {date}: {chunk_id}")
+            print(f"Done: {len(speakers_dict)} speakers, {len(debates_dict)} debates")
 
         except FileNotFoundError:
             print(f"CSV file not found: {csv_file_path}")
+            print("Please make sure the file exists in debate_ai/data folder")
 
         except Exception as e:
             print(f"Error loading CSV: {e}")
 
+    def insert_speaker(self, speaker, speakers_dict):
+        # Check duplicate
+        if speaker in speakers_dict:
+            return speakers_dict[speaker]
+        
+        speaker_id = self.generate_unique_id()
+        self.speakers.insert_one({
+            "speaker_id": speaker_id,
+            "name": speaker,
+            "role": "Candidate" # Will update the CSV file later
+        })
+
+        speakers_dict[speaker] = speaker_id
+        return speaker_id
+    
+    def insert_debate(self, source, date, debates_dict):
+        key = (source, date)
+
+        # Check duplicate
+        if key in debates_dict:
+            return debates_dict[key]
+        
+        debate_id = self.generate_unique_id()
+        self.debates.insert_one({
+            "debate_id": debate_id,
+            "name": source,
+            "date": datetime.strptime(date, "%Y-%m-%d")
+        })
+
+        debates_dict[key] = debate_id
+        return debate_id
+    
+    def insert_utterance(self, debate_id, speaker_id, text, timestamp):
+        utterance_id = self.generate_unique_id()
+        
+        self.utterances.insert_one({
+            "utterance_id": utterance_id,
+            "debate_id": debate_id,
+            "speaker_id": speaker_id,
+            "text": text,
+            "timestamp": timestamp
+        })
 
     def generate_unique_id(self):
         return f"chunk_{uuid.uuid4().hex[:8]}"
     
-    def call_openai_embedding_api(self, text):
-        pass
-
-    def extract_keywords(self, text):
+    def test(self, speaker_name, debate_name=None):
         pass

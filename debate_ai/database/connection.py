@@ -3,19 +3,23 @@ from .config import DatabaseConfig
 
 class DebateDatabase:
     def __init__(self):
+        # Connection
         self.client = MongoClient(DatabaseConfig.MONGODB_URI)
         self.db = self.client[DatabaseConfig.DATABASE_NAME]
-        self.transcripts = self.db["transcripts"]
-        self.embeddings = self.db["embeddings"]
-        self.metadata = self.db["metadata"]
         
-        # Indexes
-        self.transcripts.create_index("chunk_id", unique=True)
-        self.embeddings.create_index("chunk_id", unique=True)
-        self.metadata.create_index("chunk_id", unique=True)
-        self.transcripts.create_index("speaker")
-        self.transcripts.create_index("topic")
-        self.transcripts.create_index("date")
+        # Tables
+        self.speakers = self.db["speakers"]
+        self.debates = self.db["debates"] 
+        self.utterances = self.db["utterances"]
+
+        self.indexes()
+
+    def indexes(self):
+        self.speakers.create_index("speaker_id", unique=True)
+        self.debates.create_index("debate_id", unique=True)
+        self.utterances.create_index("utterance_id", unique=True)
+        self.utterances.create_index("debate_id")
+        self.utterances.create_index("speaker_id")
     
     def test_connection(self):
         try:
