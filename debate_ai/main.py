@@ -14,8 +14,8 @@ def main():
         inserter = DataInserter()
         inserter.process_transcript_file("src/backend/data/sample_data.csv")
 
-        print("Database setup complete!")
-        print("\nAvailable collections:")
+        print("\nDatabase setup complete!")
+        print("Available collections:")
         collections = database.db.list_collection_names()
         for collection in collections:
             count = database.db[collection].count_documents({})

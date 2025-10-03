@@ -18,7 +18,7 @@ The project will begin with local debates (e.g., mayoral races) before scaling u
 
 - **Backend:** Python (LangChain, Hugging Face Transformers, scikit-learn, pandas, numpy)
 
-- **Databases:** PostgreSQL / MongoDB (for transcripts and fact-check metadata)
+- **Databases:** MongoDB (for transcripts and fact-check metadata)
 
 - **AI/NLP:** Retrieval-Augmented Generation (RAG), spaCy, OpenAI/LLMs, fact-checking APIs
 
