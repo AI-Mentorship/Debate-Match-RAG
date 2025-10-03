@@ -42,7 +42,7 @@ Store clean transcripts in a queryable format.
 
 - Python 3.6+
 
-- `debate_clean.csv` file in `debate_ai/backend/data` folder
+- Include `debate_clean.csv` file in `debate_ai/backend/data` folder
 
 #### **2. Installation**
 
