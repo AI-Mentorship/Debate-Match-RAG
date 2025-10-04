@@ -55,25 +55,3 @@ Debate-Match-RAG
 ├── README.md
 └── requirements.txt
 ```
-
-## **Contributors**
-
-- Mentors:
-
-    - Adya Dhanasekar
-    
-    - Shivam Singh
-
-- Mentees
-
-    - Raisa Reza
-
-    - Yakina Azza
-
-    - Sadwitha Thopucharla
-
-    - Khang Doan
-
-    - Pavan Arani
-
-    - Satyank Nadimpalli
