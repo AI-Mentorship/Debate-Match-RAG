@@ -26,20 +26,24 @@ The project will begin with local debates (e.g., mayoral races) before scaling u
 
 ## **🚀 Quick Start 🚀**
 
-#### **1. Clone & Setup**
+#### **1. Clone Repository**
 
 ```bash
 git clone https://github.com/AI-Mentorship/Debate-Match-RAG
 cd Debate-Match-RAG
 ```
 
-#### **2. Install dependencies**
+#### **2. Install Dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### **3. Execute Program**
+#### **3. Database Setup**
+
+- Navigate to the [Database Documentation](src/backend/database/README.md) and read **How to Run Loader Script**.
+
+#### **4. Execute Program**
 
 ```bash
 python src/main.py
