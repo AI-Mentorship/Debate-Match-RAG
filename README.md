@@ -24,33 +24,53 @@ The project will begin with local debates (e.g., mayoral races) before scaling u
 
 - **Visualization:** matplotlib, Plotly/Dash (for interactive debate insights)
 
+## **🚀 Quick Start 🚀**
+
+#### **1. Clone & Setup**
+
+```bash
+git clone https://github.com/AI-Mentorship/Debate-Match-RAG
+cd Debate-Match-RAG
+```
+
+#### **2. Install dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+#### **3. Execute Program**
+
+```bash
+python src/main.py
+```
+
 ## **📁 Project Structure 📁**
 
 ```bash
 Debate-Match-RAG
-├── debate_ai/
-│   └── src/
-│       ├── main.py                         # Entry point
-│       ├── backend/                        # Data processing
-│       │   ├── data/
-│       │   │   └── sample_data.csv
-│       │   │
-│       │   ├── database/                   # Database setup
-│       │   │   ├── __init__.py
-│       │   │   ├── config.py
-│       │   │   ├── connection.py
-│       │   │   ├── insert.py
-│       │   │   └── README.md               # Database documentation
-│       │   │
-│       │   ├── embeddings_faiss/           # Embeddings + FAISS
-│       │   │   ├── embedding.py
-│       │   │   └── faiss.py
-│       │   │
-│       │   └── retriever/                  # Retriever
-│       │       └── retriever.py
-│       │
-│       └── frontend/                       # UI components
-│           └── something.txt
+├── src/
+│   ├── main.py                         # Entry point
+│   ├── backend/                        # Data processing
+│   │   ├── data/
+│   │   │   └── sample_data.csv
+│   │   │
+│   │   ├── database/                   # Database setup
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   ├── connection.py
+│   │   │   ├── insert.py
+│   │   │   └── README.md               # Database documentation
+│   │   │
+│   │   ├── embeddings_faiss/           # Embeddings + FAISS
+│   │   │   ├── embedding.py
+│   │   │   └── faiss.py
+│   │   │
+│   │   └── retriever/                  # Retriever
+│   │       └── retriever.py
+│   │
+│   └── frontend/                       # UI components
+│       └── something.txt
 │
 ├── README.md
 └── requirements.txt
