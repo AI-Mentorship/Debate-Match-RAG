@@ -6,13 +6,13 @@ The system will employ a Retrieval-Augmented Generation (RAG) framework to retri
 
 The project will begin with local debates (e.g., mayoral races) before scaling up to larger elections, with the ultimate goal of improving political transparency and accessibility through an interactive tool.
 
-## **Programming Languages**
+## **🐍 Programming Languages 🐍**
 
 - **Python:** primary, for NLP pipelines, data preprocessing, and backend logic
 
 - **SQL:** for storing transcripts, metadata, and fact-checking references
 
-## **Technology Stacks**
+## **🛠️ Technology Stacks 🛠️**
 
 - **Frontend:** JavaScript (React.js or Streamlit)
 
@@ -24,13 +24,13 @@ The project will begin with local debates (e.g., mayoral races) before scaling u
 
 - **Visualization:** matplotlib, Plotly/Dash (for interactive debate insights)
 
-## **Project Structure**
+## **📁 Project Structure 📁**
 
 ```bash
 Debate-Match-RAG
 ├── debate_ai/
-│   ├── main.py                             # Entry point
 │   └── src/
+│       ├── main.py                         # Entry point
 │       ├── backend/                        # Data processing
 │       │   ├── data/
 │       │   │   └── sample_data.csv
