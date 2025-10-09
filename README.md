@@ -53,7 +53,6 @@ python src/main.py
 
 ```bash
 Debate-Match-RAG
-<<<<<<< HEAD
 ├── debate_ai/
 │   ├── main.py                             # Entry point
 │   └── src/
@@ -80,30 +79,6 @@ Debate-Match-RAG
 │       │  
 │       └── frontend/                       # UI components
 │           └── something.txt
-=======
-├── src/
-│   ├── main.py                         # Entry point
-│   ├── backend/                        # Data processing
-│   │   ├── data/
-│   │   │   └── sample_data.csv
-│   │   │
-│   │   ├── database/                   # Database setup
-│   │   │   ├── __init__.py
-│   │   │   ├── config.py
-│   │   │   ├── connection.py
-│   │   │   ├── insert.py
-│   │   │   └── README.md               # Database documentation
-│   │   │
-│   │   ├── embeddings_faiss/           # Embeddings + FAISS
-│   │   │   ├── embedding.py
-│   │   │   └── faiss.py
-│   │   │
-│   │   └── retriever/                  # Retriever
-│   │       └── retriever.py
-│   │
-│   └── frontend/                       # UI components
-│       └── something.txt
->>>>>>> ce1eefca13f089f4938caf1af91991eb613cdcf0
 │
 ├── README.md
 └── requirements.txt
