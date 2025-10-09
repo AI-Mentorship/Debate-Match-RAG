@@ -5,3 +5,4 @@ numpy
 requests
 transformers
 newsapi
+torch
