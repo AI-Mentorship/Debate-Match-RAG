@@ -71,7 +71,7 @@ Debate-Match-RAG
 │       │   │   ├── embedding.py
 │       │   │   └── faiss.py
 │       │   │
-│       │   └── retriever/                  # Retriever
+│       │   ├── retriever/                  # Retriever
 │       │   │   └── retriever.py
 │       │   │
 │       │   └── fact_checker_prototype/     # Fact Checker
