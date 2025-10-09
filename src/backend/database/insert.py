@@ -26,8 +26,8 @@ class DataInserter(DebateDatabase):
                     
                     # Insert utterance
                     self.insert_utterance(debate_id, speaker_id, row["text"], row["timestamp"])
-                    
-                    print(f"Added: {row["speaker"]} - {row["timestamp"]}")
+
+                    print(f"Added: {row['speaker']} - {row['timestamp']}")
 
             print(f"Done: {len(speakers_dict)} speakers, {len(debates_dict)} debates")
 

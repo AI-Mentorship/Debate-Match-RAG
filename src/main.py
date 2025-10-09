@@ -1,5 +1,5 @@
-from src.backend.database.connection import DebateDatabase
-from src.backend.database.insert import DataInserter
+from backend.database.connection import DebateDatabase
+from backend.database.insert import DataInserter
 
 def main():
     print("Setting up Debate AI Database...")
@@ -12,10 +12,10 @@ def main():
 
         # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("src/backend/data/sample_data.csv")
+        inserter.process_transcript_file("backend/data/sample_data.csv")
 
-        print("Database setup complete!")
-        print("\nAvailable collections:")
+        print("\nDatabase setup complete!")
+        print("Available collections:")
         collections = database.db.list_collection_names()
         for collection in collections:
             count = database.db[collection].count_documents({})

@@ -6,28 +6,54 @@ The system will employ a Retrieval-Augmented Generation (RAG) framework to retri
 
 The project will begin with local debates (e.g., mayoral races) before scaling up to larger elections, with the ultimate goal of improving political transparency and accessibility through an interactive tool.
 
-## **Programming Languages**
+## **🐍 Programming Languages 🐍**
 
 - **Python:** primary, for NLP pipelines, data preprocessing, and backend logic
 
 - **SQL:** for storing transcripts, metadata, and fact-checking references
 
-## **Technology Stacks**
+## **🛠️ Technology Stacks 🛠️**
 
 - **Frontend:** JavaScript (React.js or Streamlit)
 
 - **Backend:** Python (LangChain, Hugging Face Transformers, scikit-learn, pandas, numpy)
 
-- **Databases:** PostgreSQL / MongoDB (for transcripts and fact-check metadata)
+- **Databases:** MongoDB (for transcripts and fact-check metadata)
 
 - **AI/NLP:** Retrieval-Augmented Generation (RAG), spaCy, OpenAI/LLMs, fact-checking APIs
 
 - **Visualization:** matplotlib, Plotly/Dash (for interactive debate insights)
 
-## **Project Structure**
+## **🚀 Quick Start 🚀**
+
+#### **1. Clone Repository**
+
+```bash
+git clone https://github.com/AI-Mentorship/Debate-Match-RAG
+cd Debate-Match-RAG
+```
+
+#### **2. Install Dependencies**
+
+```bash
+pip install -r requirements.txt
+```
+
+#### **3. Database Setup**
+
+- Navigate to the [Database Documentation](src/backend/database/README.md) and read **How to Run Loader Script**.
+
+#### **4. Execute Program**
+
+```bash
+python src/main.py
+```
+
+## **📁 Project Structure 📁**
 
 ```bash
 Debate-Match-RAG
+<<<<<<< HEAD
 ├── debate_ai/
 │   ├── main.py                             # Entry point
 │   └── src/
@@ -54,29 +80,31 @@ Debate-Match-RAG
 │       │  
 │       └── frontend/                       # UI components
 │           └── something.txt
+=======
+├── src/
+│   ├── main.py                         # Entry point
+│   ├── backend/                        # Data processing
+│   │   ├── data/
+│   │   │   └── sample_data.csv
+│   │   │
+│   │   ├── database/                   # Database setup
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   ├── connection.py
+│   │   │   ├── insert.py
+│   │   │   └── README.md               # Database documentation
+│   │   │
+│   │   ├── embeddings_faiss/           # Embeddings + FAISS
+│   │   │   ├── embedding.py
+│   │   │   └── faiss.py
+│   │   │
+│   │   └── retriever/                  # Retriever
+│   │       └── retriever.py
+│   │
+│   └── frontend/                       # UI components
+│       └── something.txt
+>>>>>>> ce1eefca13f089f4938caf1af91991eb613cdcf0
 │
 ├── README.md
 └── requirements.txt
 ```
-
-## **Contributors**
-
-- Mentors:
-
-    - Adya Dhanasekar
-    
-    - Shivam Singh
-
-- Mentees
-
-    - Raisa Reza
-
-    - Yakina Azza
-
-    - Sadwitha Thopucharla
-
-    - Khang Doan
-
-    - Pavan Arani
-
-    - Satyank Nadimpalli

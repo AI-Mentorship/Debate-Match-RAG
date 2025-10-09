@@ -42,7 +42,7 @@ Store clean transcripts in a queryable format.
 
 - Python 3.6+
 
-- `debate_clean.csv` file in data/ folder
+- Include `debate_clean.csv` file in `src/backend/data` folder
 
 #### **2. Installation**
 
@@ -64,7 +64,7 @@ MONGODB_URI="mongodb+srv://debate_ai:<db_password>@debate-ai-cluster.tu4frag.mon
 - In `main.py`, replace `sample_data.csv` with `debate_clean.csv`
 
 ```bash
-inserter.process_transcript_file("src/backend/data/sample_data.csv")
+inserter.process_transcript_file("backend/data/sample_data.csv")
 ```
 
 #### **5. Run the Loader**
