@@ -75,7 +75,7 @@ Debate-Match-RAG
 │       │   └── retriever/                  # Retriever
 │       │   │   └── retriever.py
 │       │   │
-│       │   └── fact checker prototype/                  # Retriever
+│       │   └── fact checker prototype/     # Fact Checker
 │       │       └── fact_check.py
 │       │  
 │       └── frontend/                       # UI components
