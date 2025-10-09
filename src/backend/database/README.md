@@ -70,5 +70,5 @@ inserter.process_transcript_file("backend/data/sample_data.csv")
 #### **5. Run the Loader**
 
 ```bash
-python debate_ai/main.py
+python src/main.py
 ```
