@@ -47,8 +47,11 @@ Debate-Match-RAG
 │       │   │   └── faiss.py
 │       │   │
 │       │   └── retriever/                  # Retriever
-│       │       └── retriever.py
-│       │
+│       │   │   └── retriever.py
+│       │   │
+│       │   └── fact checker prototype/                  # Retriever
+│       │       └── fact_check.py
+│       │  
 │       └── frontend/                       # UI components
 │           └── something.txt
 │
