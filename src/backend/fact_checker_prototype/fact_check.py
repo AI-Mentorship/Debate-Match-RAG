@@ -22,7 +22,6 @@ Notes:
 
 Example usage (CLI): python fact_check.py "Healthcare is free in the United States for everyone."
 '''
-# push test
 
 import os
 import json
