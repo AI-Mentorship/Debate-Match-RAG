@@ -57,7 +57,7 @@ def build_index():
     index.add(vectors_np)
 
     # Save FAISS index + metadata
-    faiss.write_index(index, "debates.index")
+    faiss.write_index(index, "src/backend/data/debates.index")
     with open("metadata.pkl", "wb") as f:
         pickle.dump(metadata, f)
 
@@ -66,8 +66,8 @@ def build_index():
 
 # STEP 5. Search function which returns top k results
 def search(query, k=3):
-    index = faiss.read_index("debates.index")
-    with open("metadata.pkl", "rb") as f:
+    index = faiss.read_index("src/backend/data/debates.index")
+    with open("src/backend/data/metadata.pkl", "rb") as f:
         metadata = pickle.load(f)
 
     q_emb = np.array([get_embedding(query)]).astype("float32")
