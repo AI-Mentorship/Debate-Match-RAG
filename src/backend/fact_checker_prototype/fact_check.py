@@ -1,28 +1,3 @@
-'''
-1st draft for fact-checking module of Debate Match RAG pipeline.
-
-Features:
-- claim_verdict(claim, top_k = 3, use_news = True)
-- Searches Wikipedia (no API key) and NewsAPI (requires NEWSAPI_KEY env var)
-- Uses a zero-shot classifier (facebook/bart-large-mnli) to classify each snippet as:
-    'supports', 'refutes', 'not enough evidence'
-- Aggregates snippet judgments into a final verdict:
-    SUPPORTED / REFUTED / NOT ENOUGH EVIDENCE
-
-(under progress)
-- NewsAPI 
-- Returns structured JSON with sources, per-source verdicts, aggregate verdict, confidence and a simple badge
-
-Notes:
-- pip install requests transformers newsapi newsapi-python
-    - using torch to allow the classifier to run the model is slow but pretty accurate
-    - using tensorflow or flax to allow the classifier to run the model allows for faster runtime but extremely inaccurate results.
-- If transformers pipeline is not available, falls back to simple similarity heuristic
-- This is a prototype, later on we can replace classifiers/sources with production services for more reliability
-
-Example usage (CLI): python fact_check.py "Healthcare is free in the United States for everyone."
-'''
-
 import os
 import json
 import requests
@@ -51,7 +26,6 @@ WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 ZERO_SHOT_MODEL = "facebook/bart-large-mnli"
 NEWSAPI_ENV_VAR = "NEWSAPI_KEY"
 
-LABELS = ["supports", "refutes", "not enough evidence"]
 HEADERS = {
     "User-Agent": "DebateMatch/1.0 (pavanarani00@gmail.com)" 
 }
