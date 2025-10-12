@@ -142,13 +142,16 @@ Command-line interface for testing the fact-checker.
 **Example usage:**
 ```bash
 python fact_check.py "Healthcare is free in the United States."
+```
 
-## Installation
-
-# Run these commands in your terminal so you can use NEWSAPI
-```bash
-echo 'export NEWSAPI_KEY="your_api_key_here"' >> ~/.zshrc
-source ~/.zshrc
-
+**Dependencies**
 ```bash
 pip install requests transformers newsapi newsapi-python
+```
+
+**NEWSAPI**
+```bash
+# Run these commands in your terminal so you can use NEWSAPI
+echo 'export NEWSAPI_KEY="your_api_key_here"' >> ~/.zshrc
+source ~/.zshrc
+```
