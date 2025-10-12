@@ -14,7 +14,7 @@ Features:
 - Returns structured JSON with sources, per-source verdicts, aggregate verdict, confidence and a simple badge
 
 Notes:
-- pip install requests transformers newsapi 
+- pip install requests transformers newsapi newsapi-python
     - using torch to allow the classifier to run the model is slow but pretty accurate
     - using tensorflow or flax to allow the classifier to run the model allows for faster runtime but extremely inaccurate results.
 - If transformers pipeline is not available, falls back to simple similarity heuristic
@@ -223,7 +223,7 @@ def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str
 
     wiki_results = wiki_search(claim, limit = top_k)
     news_results = []
-    news_api_key = os.environ.get(NEWSAPI_ENV_VAR)
+    news_api_key = os.environ.get("NEWSAPI_KEY")
     
     if use_news and news_api_key:
         news_results = news_search(claim, limit = top_k, api_key = news_api_key)
