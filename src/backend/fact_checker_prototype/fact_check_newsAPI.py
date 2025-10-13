@@ -15,9 +15,17 @@ try:
 except Exception:
     ZERO_SHOT_AVAILABLE = False
 
+# Additional NewsAPI client
+try:
+    from newsapi import NewsApiClient
+    NEWSAPI_AVAILABLE = True
+except Exception:
+    NEWSAPI_AVAILABLE = False
+
 # Configuration
 WIKI_API_URL = "https://en.wikipedia.org/w/api.php"
 ZERO_SHOT_MODEL = "facebook/bart-large-mnli"
+NEWSAPI_ENV_VAR = "NEWSAPI_KEY"
 HEADERS = {"User-Agent": "DebateMatch/1.0 (pavanarani00@gmail.com)" }
 
 # Wikipedia helper function
@@ -167,6 +175,33 @@ def check_categorical_contradiction(claim: str, text: str) -> bool:
     
     return any(re.search(p, text_lower) for p in patterns)
 
+# News helper    
+# Search news using NewsAPI. Requires NEWSAPI_KEY in env or passed explicitly.
+# Returns top articles with title + description + url.
+def news_search(query: str, limit: int = 3, api_key: Optional[str] = None) -> List[Dict[str, Any]]:
+
+    if not NEWSAPI_AVAILABLE or not api_key:
+        return []
+    
+    client = NewsApiClient(api_key = api_key)
+    try:
+        result = client.get_everything(q = query, language = 'en', page_size = limit, sort_by = 'relevancy')
+    except Exception:
+        return []
+    
+    articles = result.get("articles", [])[:limit]
+    output = []
+
+    for article in articles:
+        output.append({
+            "source": article.get("source", {}).get("name", "news"),
+            "title": article.get("title"),
+            "snippet": article.get("description") or "",
+            "url": article.get("url")
+        })
+
+    return output
+
 # Classifier helper
 # Return a zero-shot pipeline instance if available, else None.
 def safe_zero_shot_classifier():
@@ -295,14 +330,19 @@ def aggregate_judgments(judgments: List[Dict[str, Any]]) -> Dict[str, Any]:
     }
 
 # Main entry for verdicts
-# Evaluates a claim using Wikipedia sources.
-def claim_verdict(claim: str, top_k: int = 5) -> Dict[str, Any]:
+# Evaluates a claim using Wikipedia and news sources.
+def claim_verdict(claim: str, top_k: int = 5, use_news: bool = True) -> Dict[str, Any]:
 
     if not claim or not claim.strip():
         raise ValueError("Claim must be non-empty")
     
     wiki_results = wiki_search(claim, limit = top_k)
-    
+    news_results = []
+    news_api_key = os.environ.get("NEWSAPI_KEY")
+
+    if use_news and news_api_key:
+        news_results = news_search(claim, limit = top_k, api_key = news_api_key)
+
     if not wiki_results:
         return {
             "claim": claim,
@@ -325,6 +365,18 @@ def claim_verdict(claim: str, top_k: int = 5) -> Dict[str, Any]:
             "source": "wikipedia",
             "title": entry.get("title"),
             "url": entry.get("url"),
+            "snippet": text,
+            "label": judgment["label"],
+            "score": judgment["score"]
+        })
+
+    for news_entry in news_results:
+        text = (news_entry.get("snippet") or "") + " " + (news_entry.get("title") or "")
+        judgment = classify_snippet(text, claim, classifier)
+        per_source.append({
+            "source": news_entry.get("source"),
+            "title": news_entry.get("title"),
+            "url": news_entry.get("url"),
             "snippet": text,
             "label": judgment["label"],
             "score": judgment["score"]
@@ -358,10 +410,11 @@ def run_cli():
     parser = argparse.ArgumentParser(description = "Fact-checker for Debate Match")
     parser.add_argument("claim", type = str, help = "Claim to fact-check")
     parser.add_argument("--top", type = int, default = 5, help = "Top K results")
+    parser.add_argument("--no-news", action = "store_true", help = "Skip NewsAPI search.")
     parser.add_argument("--raw", action = "store_true", help = "Print raw JSON")
     args = parser.parse_args()
     
-    result = claim_verdict(args.claim, top_k = args.top)
+    result = claim_verdict(args.claim, top_k = args.top, use_news = (not args.no_news))
     
     if args.raw:
         print(json.dumps(result, indent = 2))
