@@ -1,7 +1,10 @@
 from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
+from flask import Flask, render_template
 
-def main():
+app = Flask(__name__, template_folder="frontend/templates", static_folder="frontend/static")
+
+def setup_database():
     print("Setting up Debate AI Database...")
     
     # Initialize database connection
@@ -26,5 +29,10 @@ def main():
     
     database.close_connection()
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 if __name__ == "__main__":
-    main()
+    setup_database()
+    app.run(debug=False)
