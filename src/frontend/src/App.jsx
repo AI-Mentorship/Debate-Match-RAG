@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function App() {
     const [message, setMessage] = useState("");
+    const [echoedMessage, setEchoedMessage] = useState("");
 
     // GET /api/message
     useEffect(() => {
@@ -13,16 +14,19 @@ export default function App() {
 
     // POST /api/echo
     const sendEcho = () => {
-    axios.post("http://127.0.0.1:5000/api/echo", { text: "Hello :D" })
-        .then(res => console.log("Flask response:", res.data))
+    axios.post("http://127.0.0.1:5000/api/echo", { text: "Hello :D (from App.jsx)" })
+        .then(res => {
+            setEchoedMessage(res.data.echo.text);
+        })
         .catch(err => console.error(err));
     };
 
     return (
         <div>
-            <h1>Debate Match RAG</h1>
+            <h1>Debate AI</h1>
             <p>Backend says: {message}</p>
             <button onClick={sendEcho}>Send Data to Flask</button>
+            {echoedMessage && <p>Echoed message: {echoedMessage}</p>}
         </div>
     );
 }

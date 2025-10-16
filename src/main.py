@@ -36,13 +36,14 @@ def setup_database():
 
 @app.route("/api/message", methods=["GET"])
 def message():
-    return jsonify({"message": "Hello from Flask!"})
+    return jsonify({"message": "Hello there :D (from main.py)"})
 
 @app.route("/api/echo", methods=["POST"])
 def echo():
     data = request.get_json()
     if not data:
         return jsonify({"status": "error", "message": "No JSON received"}), 400
+    
     return jsonify({"status": "success", "echo": data})
 
 if __name__ == "__main__":
