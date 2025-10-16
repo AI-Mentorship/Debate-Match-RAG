@@ -1,45 +1,26 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function App() {
     const [message, setMessage] = useState("");
 
+    // GET /api/message
     useEffect(() => {
-    fetch("/api/message")
-        .then((res) => res.json())
-        .then((data) => setMessage(data.message)) // save the response
-        .catch((err) => console.error("ERROR: Failed to fetch from Flask:", err));
+    axios.get("http://127.0.0.1:5000/api/message")
+        .then(res => setMessage(res.data.message))
+        .catch(err => console.error(err));
     }, []);
 
-    const sendEcho = async () => {
-        try {
-            const res = await fetch("/api/echo", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: "Hello :D" }),
-            });
-
-            const text = await res.text();
-            console.log("Raw response:", text);
-
-            if (!text) {
-                console.error("Empty response from server");
-                return;
-            }
-
-            const data = JSON.parse(text);
-            console.log("Parsed JSON:", data);
-
-        }
-        
-        catch (err) {
-            console.error("Fetch error:", err);
-        }
+    // POST /api/echo
+    const sendEcho = () => {
+    axios.post("http://127.0.0.1:5000/api/echo", { text: "Hello :D" })
+        .then(res => console.log("Flask response:", res.data))
+        .catch(err => console.error(err));
     };
-
 
     return (
         <div>
-            <h1>Debate AI</h1>
+            <h1>Debate Match RAG</h1>
             <p>Backend says: {message}</p>
             <button onClick={sendEcho}>Send Data to Flask</button>
         </div>
