@@ -8,6 +8,7 @@ dnspython==2.8.0
 faiss-cpu==1.12.0
 filelock==3.20.0
 flask==3.0.3
+flask-cors==6.0.1
 fsspec==2025.9.0
 h11==0.16.0
 httpcore==1.0.9

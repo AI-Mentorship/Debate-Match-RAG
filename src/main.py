@@ -1,8 +1,13 @@
 from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
-from flask import Flask, render_template
+from flask import Flask, jsonify, request
+from flask_cors import CORS
 
-app = Flask(__name__, template_folder="frontend/templates", static_folder="frontend/static")
+# Flask with frontend paths
+app = Flask(__name__)
+
+# React can fetch from Flask with CORS
+CORS(app)
 
 def setup_database():
     print("Setting up Debate AI Database...")
@@ -29,13 +34,16 @@ def setup_database():
     
     database.close_connection()
 
-@app.route("/")
-def index():
-    return render_template("index.html")
+@app.route("/api/message", methods=["GET"])
+def message():
+    return jsonify({"message": "Hello from Flask!"})
 
-@app.route("/about")
-def about():
-    return render_template("about.html")
+@app.route("/api/echo", methods=["POST"])
+def echo():
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "No JSON received"}), 400
+    return jsonify({"status": "success", "echo": data})
 
 if __name__ == "__main__":
     setup_database()
