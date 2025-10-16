@@ -1,6 +1,6 @@
-# Debate Match Fact-Checking Module (Prototype)
+# Debate Match Fact-Checking Module
 
-This module is a prototype fact-checking system for the Debate Match RAG pipeline. It verifies claims made in debates by leveraging external sources and a zero-shot classifier.
+This module is a fact-checking system for the Debate Match RAG pipeline. It verifies claims made in debates by leveraging external sources and a zero-shot classifier.
 
 The module performs the following:
 
@@ -64,14 +64,85 @@ Searches news articles via NewsAPI using the provided query.
 
 ---
 
-### 4. `safe_zero_shot_classifier()`
+### Helper Functions
+
+#### 4. `extract_key_terms`
+Extracts significant terms from text by removing common stop words and short words.
+
+**Parameters:**  
+- `text`: Input text string  
+
+**Returns:** List of filtered lowercase words (minimum 3 characters) excluding stop words.
+
+**Stop words removed:** Common English words like 'the', 'is', 'at', 'which', 'a', 'an', 'in', 'of', 'to', etc.
+
+---
+
+#### 5. `extract_numbers`
+Extracts all numerical values from text, including integers and decimals.
+
+**Parameters:**  
+- `text`: Input text string  
+
+**Returns:** List of floats representing all numbers found in the text.
+
+---
+
+#### 6. `enhanced_similarity`
+Calculates text similarity with emphasis on key term overlap rather than raw character matching.
+
+**Parameters:**  
+- `claim`: Claim text  
+- `text`: Text to compare against  
+
+**Returns:** Float similarity score (0–1) weighted as:
+- 40% base sequence similarity  
+- 60% key term overlap ratio
+
+**Use case:** More accurate than simple string matching for evaluating whether a text passage addresses the claim's core concepts.
+
+---
+
+#### 7. `check_numerical_contradiction`
+Detects contradictions between numerical values in the claim and source text.
+
+**Parameters:**  
+- `claim`: Claim containing numbers  
+- `text`: Source text containing numbers  
+
+**Returns:** Boolean indicating whether a numerical contradiction exists.
+
+**Logic:**
+1. Extracts numbers from both texts
+2. Checks if contexts are related (at least 2 shared key terms)
+3. Allows 5% tolerance for matching numbers
+4. Flags contradiction if numbers differ by >10%
+
+---
+
+#### 8. `check_categorical_contradiction`
+Detects contradictions in categorical claims following the pattern "X is/are Y".
+
+**Parameters:**  
+- `claim`: Categorical claim (e.g., "The Earth is flat")  
+- `text`: Source text to check for contradictions  
+
+**Returns:** Boolean indicating whether a categorical contradiction exists.
+
+**Detection methods:**
+1. **Debunking detection**: Checks if text describes the predicate as "disproven", "false", "myth", "misconception", "archaic", "incorrect", "untrue", or "debunk" within 50 characters
+2. **Negation patterns**: Detects explicit negations like "X is not Y" or "X isn't Y"
+
+---
+
+### 9. `safe_zero_shot_classifier()`
 Attempts to create a **zero-shot classification pipeline** using Hugging Face Transformers. Falls back to `None` if unavailable.
 
 **Returns:** Zero-shot pipeline object or `None`.
 
 ---
 
-### 5. `classify_snippet`
+### 10. `classify_snippet`
 Classifies whether a snippet:
 - Supports the claim  
 - Refutes the claim  
@@ -90,7 +161,7 @@ Uses a fallback heuristic if zero-shot classifier is not available, based on tex
 
 ---
 
-### 6. `aggregate_judgments`
+### 11. `aggregate_judgments`
 Aggregates multiple snippet-level judgments into a **final verdict**.
 
 **Parameters:**  
@@ -103,7 +174,7 @@ Aggregates multiple snippet-level judgments into a **final verdict**.
 
 ---
 
-### 7. `claim_verdict`
+### 12. `claim_verdict`
 Main function to evaluate a claim using Wikipedia and optionally NewsAPI.
 
 **Parameters:**  
@@ -121,7 +192,7 @@ Main function to evaluate a claim using Wikipedia and optionally NewsAPI.
 
 ---
 
-### 8. `make_badge_html`
+### 13. `make_badge_html`
 Generates a **colored HTML badge** representing the verdict and confidence.  
 Colors:  
 - Green (`SUPPORTED`)  
@@ -130,7 +201,7 @@ Colors:
 
 ---
 
-### 9. `run_cli()`
+### 14. `run_cli()`
 Command-line interface for testing the fact-checker.
 
 **Features:**  
