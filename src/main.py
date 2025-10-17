@@ -7,7 +7,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 # React can fetch from Flask with CORS
-CORS(app)
+cors = CORS(app, origins="*")
 
 def setup_database():
     print("Setting up Debate AI Database...")
@@ -36,16 +36,16 @@ def setup_database():
 
 @app.route("/api/message", methods=["GET"])
 def message():
-    return jsonify({"message": "Hello there :D (from main.py)"})
-
-@app.route("/api/echo", methods=["POST"])
-def echo():
-    data = request.get_json()
-    if not data:
-        return jsonify({"status": "error", "message": "No JSON received"}), 400
-    
-    return jsonify({"status": "success", "echo": data})
+    return jsonify(
+        {
+            "message": [
+                "Hello",
+                "World",
+                "main.py"
+            ]
+        }
+    )
 
 if __name__ == "__main__":
     setup_database()
-    app.run(debug=False)
+    app.run(debug=False, port=8080)
