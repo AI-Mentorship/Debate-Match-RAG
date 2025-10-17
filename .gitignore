@@ -1,67 +1,85 @@
-# macOS system files
+# Operating System Files
 .DS_Store
 .AppleDouble
 .LSOverride
 
 # Python
-.env
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
 .Python
 env/
 venv/
 .venv/
+*.egg-info/
+*.egg
+.pytest_cache/
+.coverage
+.coverage.*
 
-# IDEs
+# Node.js/JavaScript
+node_modules/
+**/node_modules/
+
+# Build outputs
+/dist/
+/build/
+/.next/
+/out/
+*.tsbuildinfo
+
+# Package manager files
+.npm/
+.yarn/
+.pnp.*
+.yarn-integrity
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# IDEs and Editors
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.astro/
 
-# MongoDB
+# Database
 *.mongodb
+*.db
+*.sqlite
+*.sqlite3
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Testing
+/coverage/
+/.nyc_output/
+/.jest/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
+# Production
+/build/
+/dist/
 /.next/
 /out/
 
-# production
-/build
+# Logs
+*.log
+logs/
 
-# misc
-.DS_Store
+# Runtime Data
+*.pid
+*.seed
+*.pid.lock
+
+# Misc
 *.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+.cache/
+.parcel-cache/
+.next-env.d.ts
