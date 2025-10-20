@@ -51,22 +51,9 @@ Retrieves the introductory extract (plain text) of a Wikipedia page.
 
 ---
 
-### 3. `news_search`
-Searches news articles via NewsAPI using the provided query.
-
-**Parameters:**  
-- `query`: Claim or topic to search  
-- `limit`: Number of articles to retrieve (default 3)  
-- `api_key`: Optional API key (defaults to `NEWSAPI_KEY` environment variable)  
-
-**Returns:** List of articles with:
-- `source`, `title`, `snippet` (description), `url`
-
----
-
 ### Helper Functions
 
-#### 4. `extract_key_terms`
+#### 3. `extract_key_terms`
 Extracts significant terms from text by removing common stop words and short words.
 
 **Parameters:**  
@@ -78,7 +65,7 @@ Extracts significant terms from text by removing common stop words and short wor
 
 ---
 
-#### 5. `extract_numbers`
+#### 4. `extract_numbers`
 Extracts all numerical values from text, including integers and decimals.
 
 **Parameters:**  
@@ -88,7 +75,7 @@ Extracts all numerical values from text, including integers and decimals.
 
 ---
 
-#### 6. `enhanced_similarity`
+#### 5. `enhanced_similarity`
 Calculates text similarity with emphasis on key term overlap rather than raw character matching.
 
 **Parameters:**  
@@ -103,7 +90,7 @@ Calculates text similarity with emphasis on key term overlap rather than raw cha
 
 ---
 
-#### 7. `check_numerical_contradiction`
+#### 6. `check_numerical_contradiction`
 Detects contradictions between numerical values in the claim and source text.
 
 **Parameters:**  
@@ -120,7 +107,7 @@ Detects contradictions between numerical values in the claim and source text.
 
 ---
 
-#### 8. `check_categorical_contradiction`
+#### 7. `check_categorical_contradiction`
 Detects contradictions in categorical claims following the pattern "X is/are Y".
 
 **Parameters:**  
@@ -135,14 +122,64 @@ Detects contradictions in categorical claims following the pattern "X is/are Y".
 
 ---
 
-### 9. `safe_zero_shot_classifier()`
+### 8. `number_matches_with_context`
+Checks if a number in a snippet is relevant to the claim by verifying its proximity to key entity terms.  
+
+**Parameters:**  
+- `claim`: Claim string potentially containing numbers  
+- `snippet`: Text snippet to evaluate  
+
+**Returns:** Boolean indicating whether the snippet contains a number in the same context as the claim.  
+
+---
+
+### 9. `is_snippet_relevant`
+Determines whether a snippet is relevant to a claim.  
+
+**Parameters:**  
+- `claim`: Claim text  
+- `snippet`: Text snippet  
+
+**Returns:** Boolean indicating relevance.  
+
+---
+
+### 10. `get_most_relevant_snippets`
+Selects the most relevant sentences from a larger text with respect to a claim.  
+
+**Parameters:**  
+- `claim`: Claim string  
+- `text`: Source text to process  
+- `classifier`: Optional zero-shot classifier  
+- `top_n`: Number of sentences to return (default 3)  
+
+**Returns:** List of top_n sentences most relevant to the claim. 
+
+---
+
+
+### 11. `news_search`
+Searches NewsAPI for articles relevant to a claim.  
+
+**Parameters:**  
+- `claim`: Claim string to search  
+- `limit`: Number of articles to retrieve (default 3)  
+- `api_key`: Optional API key (defaults to `NEWSAPI_KEY` environment variable)  
+- `classifier`: Optional zero-shot classifier  
+
+**Returns:** List of article dictionaries containing:
+- `source`, `title`, `snippet`, `url`, `similarity`, `text`  
+
+---
+
+### 12. `safe_zero_shot_classifier()`
 Attempts to create a **zero-shot classification pipeline** using Hugging Face Transformers. Falls back to `None` if unavailable.
 
 **Returns:** Zero-shot pipeline object or `None`.
 
 ---
 
-### 10. `classify_snippet`
+### 13. `classify_snippet`
 Classifies whether a snippet:
 - Supports the claim  
 - Refutes the claim  
@@ -161,7 +198,7 @@ Uses a fallback heuristic if zero-shot classifier is not available, based on tex
 
 ---
 
-### 11. `aggregate_judgments`
+### 14. `aggregate_judgments`
 Aggregates multiple snippet-level judgments into a **final verdict**.
 
 **Parameters:**  
@@ -174,7 +211,7 @@ Aggregates multiple snippet-level judgments into a **final verdict**.
 
 ---
 
-### 12. `claim_verdict`
+### 15. `claim_verdict`
 Main function to evaluate a claim using Wikipedia and optionally NewsAPI.
 
 **Parameters:**  
@@ -192,7 +229,7 @@ Main function to evaluate a claim using Wikipedia and optionally NewsAPI.
 
 ---
 
-### 13. `make_badge_html`
+### 16. `make_badge_html`
 Generates a **colored HTML badge** representing the verdict and confidence.  
 Colors:  
 - Green (`SUPPORTED`)  
@@ -201,7 +238,7 @@ Colors:
 
 ---
 
-### 14. `run_cli()`
+### 17. `run_cli()`
 Command-line interface for testing the fact-checker.
 
 **Features:**  
