@@ -30,7 +30,7 @@ HEADERS = {"User-Agent": "DebateMatch/1.0 (pavanarani00@gmail.com)" }
 
 # Wikipedia helper function
 # Search Wikipedia and return list of candidate pages with title and snippet (extract).
-def wiki_search(query: str, limit: int = 5) -> List[Dict[str, Any]]:
+def wiki_search(query: str, limit: int = 3) -> List[Dict[str, Any]]:
     
     parameters = {
         "action": "query",
@@ -175,32 +175,70 @@ def check_categorical_contradiction(claim: str, text: str) -> bool:
     
     return any(re.search(p, text_lower) for p in patterns)
 
-# News helper    
 # Search news using NewsAPI. Requires NEWSAPI_KEY in env or passed explicitly.
 # Returns top articles with title + description + url.
-def news_search(query: str, limit: int = 3, api_key: Optional[str] = None) -> List[Dict[str, Any]]:
-
+def news_search(claim: str, limit: int = 3, api_key: Optional[str] = None) -> List[Dict[str, Any]]:
+    """
+    Pull top news articles relevant to any claim in a topic-agnostic way.
+    Combines title, description, and content for similarity, uses credibility as a boost,
+    but does NOT filter aggressively.
+    """
     if not NEWSAPI_AVAILABLE or not api_key:
         return []
-    
-    client = NewsApiClient(api_key = api_key)
-    try:
-        result = client.get_everything(q = query, language = 'en', page_size = limit, sort_by = 'relevancy')
-    except Exception:
-        return []
-    
-    articles = result.get("articles", [])[:limit]
-    output = []
 
+    client = NewsApiClient(api_key=api_key)
+
+    try:
+        result = client.get_everything(
+            q=claim,
+            language="en",
+            sort_by="relevancy",
+            page_size=limit * 6  # fetch more to rank later
+        )
+    except Exception as e:
+        print("NewsAPI error:", e)
+        return []
+
+    articles = result.get("articles", [])
+    if not articles:
+        print(f"No NewsAPI results for query: {claim}")
+        return []
+
+    credible_names = {
+        "BBC News", "Reuters", "Associated Press", "The Guardian", "Al Jazeera English",
+        "The Washington Post", "The New York Times", "Time", "Politico", "Bloomberg",
+        "National Geographic", "New Scientist", "Scientific American", "Nature",
+        "Medical News Today", "Live Science", "NPR", "The Hill", "ABC News",
+        "CBS News", "NBC News", "USA Today", "Axios"
+    }
+
+    candidates = []
     for article in articles:
-        output.append({
-            "source": article.get("source", {}).get("name", "news"),
-            "title": article.get("title"),
-            "snippet": article.get("description") or "",
-            "url": article.get("url")
+        source_name = article.get("source", {}).get("name", "Unknown")
+        title = article.get("title") or ""
+        description = article.get("description") or ""
+        content = article.get("content") or ""
+
+        # Combine text fields for maximum context
+        combined_text = " ".join(filter(None, [title, description, content]))
+
+        # Calculate similarity (topic-agnostic)
+        sim = enhanced_similarity(claim, combined_text)
+        credibility_boost = 0.1 if source_name in credible_names else 0.0
+        final_score = sim + credibility_boost
+
+        candidates.append({
+            "source": source_name,
+            "title": title,
+            "snippet": description,
+            "url": article.get("url"),
+            "similarity": final_score,
+            "text": combined_text
         })
 
-    return output
+    # Sort by similarity + credibility
+    candidates.sort(key=lambda x: x["similarity"], reverse=True)
+    return candidates[:limit]  # return top-K articles
 
 # Classifier helper
 # Return a zero-shot pipeline instance if available, else None.
@@ -331,35 +369,28 @@ def aggregate_judgments(judgments: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 # Main entry for verdicts
 # Evaluates a claim using Wikipedia and news sources.
-def claim_verdict(claim: str, top_k: int = 5, use_news: bool = True) -> Dict[str, Any]:
-
-    if not claim or not claim.strip():
+def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str, Any]:
+    """
+    Evaluate a claim using Wikipedia and NewsAPI in a fully topic-agnostic way.
+    """
+    if not claim.strip():
         raise ValueError("Claim must be non-empty")
-    
-    wiki_results = wiki_search(claim, limit = top_k)
+
+    wiki_results = wiki_search(claim, limit=top_k)
     news_results = []
     news_api_key = os.environ.get("NEWSAPI_KEY")
 
     if use_news and news_api_key:
-        news_results = news_search(claim, limit = top_k, api_key = news_api_key)
+        news_results = news_search(claim, limit=top_k, api_key=news_api_key)
 
-    if not wiki_results:
-        return {
-            "claim": claim,
-            "verdict": "NOT ENOUGH EVIDENCE",
-            "confidence": 0.0,
-            "sources": [],
-            "per_source": []
-        }
-    
     classifier = safe_zero_shot_classifier()
     per_source = []
-    
+
+    # Process Wikipedia results
     for entry in wiki_results:
         text = entry.get("extract") or entry.get("snippet") or ""
         if not text:
             continue
-        
         judgment = classify_snippet(text, claim, classifier)
         per_source.append({
             "source": "wikipedia",
@@ -370,27 +401,38 @@ def claim_verdict(claim: str, top_k: int = 5, use_news: bool = True) -> Dict[str
             "score": judgment["score"]
         })
 
-    for news_entry in news_results:
-        text = (news_entry.get("snippet") or "") + " " + (news_entry.get("title") or "")
+    # Process NewsAPI results
+    for entry in news_results:
+        text = entry.get("text") or ""
+        if not text:
+            continue
         judgment = classify_snippet(text, claim, classifier)
         per_source.append({
-            "source": news_entry.get("source"),
-            "title": news_entry.get("title"),
-            "url": news_entry.get("url"),
-            "snippet": text,
+            "source": entry.get("source"),
+            "title": entry.get("title"),
+            "url": entry.get("url"),
+            "snippet": entry.get("snippet"),
             "label": judgment["label"],
             "score": judgment["score"]
         })
-    
-    result = aggregate_judgments(per_source)
-    
+
+    # Aggregate judgment in a topic-agnostic way
+    if not per_source:
+        verdict_data = {
+            "verdict": "NOT ENOUGH EVIDENCE",
+            "confidence": 0.0,
+            "counts": {"supports": 0, "refutes": 0, "not enough evidence": 0}
+        }
+    else:
+        verdict_data = aggregate_judgments(per_source)
+
     return {
         "claim": claim,
-        "verdict": result["verdict"],
-        "confidence": result["confidence"],
-        "sources": wiki_results,
+        "verdict": verdict_data["verdict"],
+        "confidence": verdict_data["confidence"],
+        "sources": wiki_results + news_results,
         "per_source": per_source,
-        "badge_html": make_badge_html(result["verdict"], result["confidence"])
+        "badge_html": make_badge_html(verdict_data["verdict"], verdict_data["confidence"])
     }
 
 # Generate a simple colored badge for verdict and confidence.
@@ -409,7 +451,7 @@ def make_badge_html(verdict: str, confidence: float) -> str:
 def run_cli():
     parser = argparse.ArgumentParser(description = "Fact-checker for Debate Match")
     parser.add_argument("claim", type = str, help = "Claim to fact-check")
-    parser.add_argument("--top", type = int, default = 5, help = "Top K results")
+    parser.add_argument("--top", type = int, default = 3, help = "Top K results")
     parser.add_argument("--no-news", action = "store_true", help = "Skip NewsAPI search.")
     parser.add_argument("--raw", action = "store_true", help = "Print raw JSON")
     args = parser.parse_args()
