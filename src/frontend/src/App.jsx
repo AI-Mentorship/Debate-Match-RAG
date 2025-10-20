@@ -1,63 +1,70 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import axios from "axios"
+import axios from 'axios'
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [array, setArray] = useState([]);
+  const [message, setMessage] = useState([])
+  const [loading, setLoading] = useState(false)
 
-  const fetchAPI = async () => {
-    const response = await axios.get("http://localhost:3000/api/message");
-    setArray(response.data.message);
+  const fetchMessage = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get('http://localhost:3000/api/message')
+      setMessage(response.data.message)
+    }
+    
+    catch (error) {
+      setMessage(['Error connecting to backend'])
+    }
+    
+    finally {
+      setLoading(false)
+    }
   }
 
-  useEffect(() => {
-    fetchAPI()
-  }, [])
+  useEffect(() => { fetchMessage() }, [])
 
   return (
-    <>
-      <div className="max-w-1280px mx-auto p-8 text-center">
-        <div>
-          <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
-            <img
-              src={viteLogo}
-              className="h-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_#646cffaa]"
-              alt="Vite logo"
-            />
-          </a>
-          <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-            <img
-              src={reactLogo}
-              className="h-24 p-6 transition-filter duration-300 hover:drop-shadow-[0_0_2em_#61dafbaa] animate-spin"
-              style={{ animationDuration: '20s' }}
-              alt="React logo"
-            />
-          </a>
-        </div>
-        <h1>Vite + React</h1>
-
-        <div className="p-8">
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition-colors"
-          >
-            count is {count}
-          </button>
-          {array.map((user, index) => (
-            <div key={index}>
-              <span>{user}</span>
-              <br />
-            </div>
-          ))}
-        </div>
-
-        <p className="text-gray-500">
-          Click on the Vite and React logos to learn more
-        </p>
+    <div className="min-h-screen bg-gradient-to-br from-deep-indigo to-misty-plum flex flex-col">
+      <div className="text-center py-12">
+        <h1 className="text-4xl font-bold text-pale-fog mb-3">Debate Match RAG</h1>
+        <p className="text-lg text-sea-mist">Testing</p>
       </div>
-    </>
+
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-deep-ocean-fog rounded-2xl shadow-lg p-8 border border-sea-mist">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-pale-fog">Backend Message</h2>
+            <button
+              onClick={fetchMessage}
+              disabled={loading}
+              className="bg-sea-mist hover:bg-deep-ocean-fog text-pale-fog px-4 py-2 rounded-lg border border-pale-fog transition-colors disabled:opacity-50"
+            >
+              {loading ? '...' : 'Refresh'}
+            </button>
+          </div>
+
+          <div className="bg-misty-plum rounded-lg p-4 border border-sea-mist">
+            {loading ? (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-pale-fog"></div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {message.map((item, index) => (
+                  <div key={index} className="bg-deep-indigo text-pale-fog px-3 py-2 rounded border border-sea-mist">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="text-center text-sea-mist text-sm mt-4">
+            <p>Database Connected</p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
