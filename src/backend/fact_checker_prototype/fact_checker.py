@@ -1,9 +1,9 @@
 import os
 from typing import Dict, Any
-from wikipedia_api import wiki_search
-from news_api import news_search
-from classifier import safe_zero_shot_classifier, classify_snippet, aggregate_judgments
-from text_utils import get_most_relevant_snippets
+from .wikipedia_api import wiki_search
+from .news_api import news_search
+from .classifier import safe_zero_shot_classifier, classify_snippet, aggregate_judgments
+from .text_utils import get_most_relevant_snippets
 
 
 def make_badge_html(verdict: str, confidence: float) -> str:

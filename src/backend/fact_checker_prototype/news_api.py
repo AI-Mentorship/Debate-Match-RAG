@@ -1,6 +1,6 @@
 from typing import List, Dict, Any, Optional
-from config import NEWSAPI_AVAILABLE
-from text_utils import enhanced_similarity, get_most_relevant_snippets
+from .config import NEWSAPI_AVAILABLE
+from .text_utils import enhanced_similarity, get_most_relevant_snippets
 
 if NEWSAPI_AVAILABLE:
     from newsapi import NewsApiClient

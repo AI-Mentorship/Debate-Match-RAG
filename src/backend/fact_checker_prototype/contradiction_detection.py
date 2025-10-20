@@ -1,6 +1,6 @@
 import re
 from typing import List
-from text_utils import extract_numbers, extract_key_terms
+from .text_utils import extract_numbers, extract_key_terms
 
 # Detect if numbers in claim contradict those in text.
 def check_numerical_contradiction(claim: str, text: str) -> bool:

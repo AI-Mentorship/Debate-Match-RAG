@@ -1,7 +1,7 @@
 from typing import Dict, Any, List
-from config import ZERO_SHOT_AVAILABLE, ZERO_SHOT_MODEL
-from text_utils import enhanced_similarity
-from contradiction_detection import check_categorical_contradiction, check_numerical_contradiction
+from .config import ZERO_SHOT_AVAILABLE, ZERO_SHOT_MODEL
+from .text_utils import enhanced_similarity
+from .contradiction_detection import check_categorical_contradiction, check_numerical_contradiction
 
 if ZERO_SHOT_AVAILABLE:
     from transformers import pipeline

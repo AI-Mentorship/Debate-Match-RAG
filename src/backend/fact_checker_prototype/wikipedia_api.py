@@ -1,6 +1,6 @@
 import requests
 from typing import List, Dict, Any
-from config import WIKI_API_URL, HEADERS
+from .config import WIKI_API_URL, HEADERS
 
 # Search Wikipedia and return list of candidate pages with title and snippet (extract).
 def wiki_search(query: str, limit: int = 3) -> List[Dict[str, Any]]:

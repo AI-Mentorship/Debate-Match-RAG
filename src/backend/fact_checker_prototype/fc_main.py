@@ -1,6 +1,6 @@
 import json
 import argparse
-from fact_checker import claim_verdict
+from .fact_checker import claim_verdict
 
 # Command-line interface for testing fact-checker.
 def run_cli():
