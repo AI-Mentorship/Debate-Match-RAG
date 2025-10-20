@@ -1,12 +1,12 @@
 from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
-from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask import Flask, jsonify # type: ignore
+from flask_cors import CORS # type: ignore
 
-# Flask with frontend paths
+# Flask
 app = Flask(__name__)
 
-# React can fetch from Flask with CORS
+# Flask with CORS for React
 cors = CORS(app, origins="*")
 
 def setup_database():
