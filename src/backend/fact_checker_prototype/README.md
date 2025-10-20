@@ -51,9 +51,7 @@ Retrieves the introductory extract (plain text) of a Wikipedia page.
 
 ---
 
-### Helper Functions
-
-#### 3. `extract_key_terms`
+### 3. `extract_key_terms`
 Extracts significant terms from text by removing common stop words and short words.
 
 **Parameters:**  
@@ -65,7 +63,7 @@ Extracts significant terms from text by removing common stop words and short wor
 
 ---
 
-#### 4. `extract_numbers`
+### 4. `extract_numbers`
 Extracts all numerical values from text, including integers and decimals.
 
 **Parameters:**  
@@ -75,7 +73,7 @@ Extracts all numerical values from text, including integers and decimals.
 
 ---
 
-#### 5. `enhanced_similarity`
+### 5. `enhanced_similarity`
 Calculates text similarity with emphasis on key term overlap rather than raw character matching.
 
 **Parameters:**  
@@ -90,7 +88,7 @@ Calculates text similarity with emphasis on key term overlap rather than raw cha
 
 ---
 
-#### 6. `check_numerical_contradiction`
+### 6. `check_numerical_contradiction`
 Detects contradictions between numerical values in the claim and source text.
 
 **Parameters:**  
@@ -107,7 +105,7 @@ Detects contradictions between numerical values in the claim and source text.
 
 ---
 
-#### 7. `check_categorical_contradiction`
+### 7. `check_categorical_contradiction`
 Detects contradictions in categorical claims following the pattern "X is/are Y".
 
 **Parameters:**  
