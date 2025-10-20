@@ -175,25 +175,75 @@ def check_categorical_contradiction(claim: str, text: str) -> bool:
     
     return any(re.search(p, text_lower) for p in patterns)
 
+# Helper to pick the sentence most relevant to the claim
+def number_matches_with_context(claim: str, snippet: str) -> bool:
+    claim_nums = extract_numbers(claim)
+    snippet_nums = extract_numbers(snippet)
+    snippet_lower = snippet.lower()
+
+    # Identify key entity terms in claim (excluding stop words)
+    claim_terms = extract_key_terms(claim)
+    entity_terms = [t for t in claim_terms if t.lower() not in {"the","of","and","is","are","a","an"}]
+
+    for cn in claim_nums:
+        for sn in snippet_nums:
+            if cn > 0 and abs(cn - sn)/max(cn, sn) <= 0.05:
+                for term in entity_terms:
+                    # Check if the term appears within ~5 words of the number
+                    pattern = rf'\b{sn}\b(?:\W+\w+){{0,5}}\W+\b{term}\b'
+                    if re.search(pattern, snippet_lower):
+                        return True
+    return False
+
+def is_snippet_relevant(claim: str, snippet: str) -> bool:
+    claim_terms = set(extract_key_terms(claim))
+    snippet_terms = set(extract_key_terms(snippet))
+
+    if len(claim_terms & snippet_terms) < 1:
+        return False
+
+    claim_nums = extract_numbers(claim)
+    if claim_nums and not number_matches_with_context(claim, snippet):
+        return False
+
+    return True
+
+# Snippet selection
+def get_most_relevant_snippets(claim: str, text: str, classifier=None, top_n: int = 3) -> List[str]:
+    if not text:
+        return []
+
+    sentences = re.split(r'(?<=[.!?])\s+', text)
+    if not sentences:
+        return [text[:200]]
+
+    # Filter by relevance
+    candidate_sentences = [s for s in sentences if is_snippet_relevant(claim, s)]
+    if not candidate_sentences:
+        candidate_sentences = sentences  # fallback
+
+    # Rank top_n by similarity
+    top_candidates = sorted(candidate_sentences, key=lambda s: enhanced_similarity(claim, s), reverse=True)[:top_n]
+
+    if classifier:
+        # Further rank by classifier confidence
+        top_candidates.sort(key=lambda s: classify_snippet(s, claim, classifier)["score"], reverse=True)
+
+    return top_candidates
+
 # Search news using NewsAPI. Requires NEWSAPI_KEY in env or passed explicitly.
 # Returns top articles with title + description + url.
-def news_search(claim: str, limit: int = 3, api_key: Optional[str] = None) -> List[Dict[str, Any]]:
-    """
-    Pull top news articles relevant to any claim in a topic-agnostic way.
-    Combines title, description, and content for similarity, uses credibility as a boost,
-    but does NOT filter aggressively.
-    """
+def news_search(claim: str, limit: int = 3, api_key: Optional[str] = None, classifier=None) -> List[Dict[str, Any]]:
     if not NEWSAPI_AVAILABLE or not api_key:
         return []
 
     client = NewsApiClient(api_key=api_key)
-
     try:
         result = client.get_everything(
             q=claim,
             language="en",
             sort_by="relevancy",
-            page_size=limit * 6  # fetch more to rank later
+            page_size=limit * 6
         )
     except Exception as e:
         print("NewsAPI error:", e)
@@ -201,7 +251,6 @@ def news_search(claim: str, limit: int = 3, api_key: Optional[str] = None) -> Li
 
     articles = result.get("articles", [])
     if not articles:
-        print(f"No NewsAPI results for query: {claim}")
         return []
 
     credible_names = {
@@ -218,27 +267,26 @@ def news_search(claim: str, limit: int = 3, api_key: Optional[str] = None) -> Li
         title = article.get("title") or ""
         description = article.get("description") or ""
         content = article.get("content") or ""
-
-        # Combine text fields for maximum context
         combined_text = " ".join(filter(None, [title, description, content]))
 
-        # Calculate similarity (topic-agnostic)
         sim = enhanced_similarity(claim, combined_text)
         credibility_boost = 0.1 if source_name in credible_names else 0.0
         final_score = sim + credibility_boost
 
+        snippets = get_most_relevant_snippets(claim, combined_text, classifier)
+        snippet_text = " ".join(snippets) if snippets else ""
+
         candidates.append({
             "source": source_name,
             "title": title,
-            "snippet": description,
+            "snippet": snippet_text,
             "url": article.get("url"),
             "similarity": final_score,
             "text": combined_text
         })
 
-    # Sort by similarity + credibility
     candidates.sort(key=lambda x: x["similarity"], reverse=True)
-    return candidates[:limit]  # return top-K articles
+    return candidates[:limit]
 
 # Classifier helper
 # Return a zero-shot pipeline instance if available, else None.
@@ -370,9 +418,6 @@ def aggregate_judgments(judgments: List[Dict[str, Any]]) -> Dict[str, Any]:
 # Main entry for verdicts
 # Evaluates a claim using Wikipedia and news sources.
 def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str, Any]:
-    """
-    Evaluate a claim using Wikipedia and NewsAPI in a fully topic-agnostic way.
-    """
     if not claim.strip():
         raise ValueError("Claim must be non-empty")
 
@@ -380,43 +425,47 @@ def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str
     news_results = []
     news_api_key = os.environ.get("NEWSAPI_KEY")
 
-    if use_news and news_api_key:
-        news_results = news_search(claim, limit=top_k, api_key=news_api_key)
-
     classifier = safe_zero_shot_classifier()
+
+    if use_news and news_api_key:
+        news_results = news_search(claim, limit=top_k, api_key=news_api_key, classifier=classifier)
+
     per_source = []
 
-    # Process Wikipedia results
+    # Wikipedia
     for entry in wiki_results:
         text = entry.get("extract") or entry.get("snippet") or ""
         if not text:
             continue
+        snippets = get_most_relevant_snippets(claim, text, classifier)
+        snippet_text = " ".join(snippets)
         judgment = classify_snippet(text, claim, classifier)
         per_source.append({
             "source": "wikipedia",
             "title": entry.get("title"),
             "url": entry.get("url"),
-            "snippet": text,
+            "snippet": snippet_text,
             "label": judgment["label"],
             "score": judgment["score"]
         })
 
-    # Process NewsAPI results
+    # NewsAPI
     for entry in news_results:
         text = entry.get("text") or ""
         if not text:
             continue
+        snippets = get_most_relevant_snippets(claim, text, classifier)
+        snippet_text = " ".join(snippets)
         judgment = classify_snippet(text, claim, classifier)
         per_source.append({
             "source": entry.get("source"),
             "title": entry.get("title"),
             "url": entry.get("url"),
-            "snippet": entry.get("snippet"),
+            "snippet": snippet_text,
             "label": judgment["label"],
             "score": judgment["score"]
         })
 
-    # Aggregate judgment in a topic-agnostic way
     if not per_source:
         verdict_data = {
             "verdict": "NOT ENOUGH EVIDENCE",
