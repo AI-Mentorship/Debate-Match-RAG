@@ -78,7 +78,7 @@ def get_most_relevant_snippets(claim: str, text: str, classifier=None, top_n: in
     top_candidates = sorted(candidate_sentences, key = lambda s: enhanced_similarity(claim, s), reverse = True)[:top_n]
     
     if classifier:
-        from classifier import classify_snippet
+        from .classifier import classify_snippet
         top_candidates.sort(key = lambda s: classify_snippet(s, claim, classifier)["score"], reverse = True)
     
     return top_candidates
