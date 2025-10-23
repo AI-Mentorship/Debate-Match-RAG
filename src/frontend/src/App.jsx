@@ -36,7 +36,19 @@ function App() {
 
           {/* Navigation Links - Truly Centered */}
           <div className="hidden md:flex flex-1 justify-center">
-            
+            <div className="bg-white/10 backdrop-blur-md rounded-full px-8 py-3 border border-white/20">
+              <div className="flex items-center space-x-10">
+                {['Home', 'About Us', 'Team', 'Contact'].map((item) => (
+                  <button
+                    key={item}
+                    className="text-light-silver hover:text-white transition-colors duration-200 font-medium text-base"
+                    onClick={() => setCurrentPage(item.toLowerCase())}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Get Started Button - Top Right */}
