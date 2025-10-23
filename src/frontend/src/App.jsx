@@ -34,7 +34,7 @@ function App() {
             </h1>
           </div>
 
-          {/* Navigation Links - Truly Centered */}
+          {/* Navigation Links*/}
           <div className="hidden md:flex flex-1 justify-center">
             <div className="bg-white/10 backdrop-blur-md rounded-full px-8 py-3 border border-white/20">
               <div className="flex items-center space-x-10">
@@ -53,7 +53,14 @@ function App() {
 
           {/* Get Started Button - Top Right */}
           <div className="flex-1 flex justify-end">
-            
+            <button
+              onClick={handleGetStarted}
+              className="bg-transparent border-2 border-electric-purple text-white px-4 py-1 rounded-full font-semibold hover:bg-electric-purple/20 hover:border-lavender hover:shadow-glow transition-all duration-300 shadow-lg text-sm relative overflow-hidden group"
+            >
+              {/* Shine effect */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+              Get Started
+            </button>
           </div>
         </nav>
       </div>
