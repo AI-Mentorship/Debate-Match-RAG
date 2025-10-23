@@ -4,26 +4,26 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 import faiss
 
-df = pd.read_csv("debates.csv")  # make sure debates.csv is in the same folder
 
-#print("Loaded passages:")
-#print(df.head())
+def run_retriever():
 
-#generate embedding
-model = SentenceTransformer('all-MiniLM-L6-v2')  # small & fast model
+    df = pd.read_csv("debates.csv")
+    
+    # Generate embeddings
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-passages = df['Evidence Quote'].tolist()
-embeddings = model.encode(passages, convert_to_numpy=True)  
-print("Generated embeddings shape:", embeddings.shape)
+    passages = df['Evidence Quote'].tolist()
+    embeddings = model.encode(passages, convert_to_numpy=True)
+    print("Generated embeddings shape:", embeddings.shape)
+    
+    # Build FAISS index
+    dimension = embeddings.shape[1]
+    index = faiss.IndexFlatL2(dimension)
+    index.add(embeddings)
 
-# Build FAISS index
-dimension = embeddings.shape[1]  # 384
-index = faiss.IndexFlatL2(dimension)  # simple L2 distance index
-index.add(embeddings)
-
-print("FAISS index built with", index.ntotal, "passages")
-
-def retrieve(query, top_k=3):
+    print("FAISS index built with", index.ntotal, "passages")
+    
+    def retrieve(query, top_k=3):
         query_emb = model.encode([query], convert_to_numpy=True)
         distances, indices = index.search(query_emb, top_k) 
         results = []
@@ -36,9 +36,9 @@ def retrieve(query, top_k=3):
             }) 
         return results
 
-user_query = "What did Candidate A say about healthcare?"
-top_k = retrieve(user_query, top_k=3)
+    user_query = "What did Candidate A say about healthcare?"
+    top_k = retrieve(user_query, top_k=3)
 
-print("\nTop-k results:")
-for r in top_k:
-    print(r)
+    print("\nTop-k results:")
+    for r in top_k:
+        print(r)

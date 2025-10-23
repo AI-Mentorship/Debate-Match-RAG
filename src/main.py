@@ -3,6 +3,7 @@ from backend.database.insert import DataInserter
 from backend.preprocessing.preprocess_script import main
 from backend.fact_checker_prototype.fact_checker import claim_verdict
 from backend.qa_pipeline.QA_pipeline import query_rag
+from backend.retriever.retriever import run_retriever
 from flask import Flask, jsonify # type: ignore
 from flask_cors import CORS # type: ignore
 from backend.embeddings_faiss.build_index import build_index
@@ -94,7 +95,7 @@ if __name__ == "__main__":
     build_index()
 
     # Retriever
-    
+    run_retriever()
 
     # QA
     user_question = input(" Enter your question: ")
