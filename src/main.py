@@ -92,7 +92,6 @@ if __name__ == "__main__":
 
     # Embedding + FAISS
     build_index()
-    app.run(debug=False, port=3000)
 
     # Retriever
     
@@ -103,3 +102,5 @@ if __name__ == "__main__":
 
     # Pavan
     run_cli()
+
+    app.run(debug=False, port=3000)
