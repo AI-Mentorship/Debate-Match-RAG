@@ -3,6 +3,7 @@ from backend.database.insert import DataInserter
 from backend.fact_checker_prototype.fact_checker import claim_verdict
 from flask import Flask, jsonify # type: ignore
 from flask_cors import CORS # type: ignore
+from backend.embeddings_faiss.build_index import build_index
 
 import json
 import argparse
@@ -83,4 +84,5 @@ def message():
 if __name__ == "__main__":
     run_cli()
     setup_database()
+    build_index()
     app.run(debug=False, port=3000)
