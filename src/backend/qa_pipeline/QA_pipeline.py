@@ -113,8 +113,3 @@ def query_rag(query_text):
     #last_candidate, last_timestamp = unique_sources_list[-1]
         #print(f"   - {candidate} ({timestamp})")
 
-if __name__ == "__main__":
-    # Prompt user for a question and run the RAG query
-    user_question = input(" Enter your question: ")
-    query_rag(user_question)
-
