@@ -63,6 +63,26 @@ function App() {
             </button>
           </div>
         </nav>
+
+        {/* Main Section */}
+        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center">
+          {/* Name */}
+          <div className="mb-10">
+            <h1 className="text-6xl md:text-6xl font-bold text-white mb-10 leading-tight">
+              D&nbsp;&nbsp;E&nbsp;&nbsp;B&nbsp;&nbsp;A&nbsp;&nbsp;T&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp;A&nbsp;&nbsp;T&nbsp;&nbsp;C&nbsp;&nbsp;H
+            </h1>
+            <h2 className="text-3xl md:text-3xl font-bold bg-gradient-to-r from-electric-purple via-lavender to-soft-lavender bg-clip-text text-transparent mb-5 leading-tight">
+              Retrieval-Augmented Generation
+            </h2>
+          </div>
+
+          {/* Description and Button */}
+          <div className="mb-40">
+            <p className="mb-15 text-md md:text-md text-dark-silver max-w-5xl leading-relaxed">
+              An AI-powered debate matcher that allows users to ask political questions and receive factually grounded answers based on political debate transcripts
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Hide scrollbar */}
