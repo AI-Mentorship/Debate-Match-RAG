@@ -4,13 +4,14 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Team from './pages/Team'
 import Contact from './pages/Contact'
+import ChatInterface from './pages/ChatInterface'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
 
   const handleGetStarted = () => {
-    console.log('Get Started clicked')
-    alert('Wassup Gangs :D')
+    console.log('Navigating to chat interface')
+    setCurrentPage('chat')
   }
 
   const handlePageChange = (page) => {
@@ -27,6 +28,8 @@ function App() {
         return <Team />
       case 'contact':
         return <Contact />
+      case 'chat':
+        return <ChatInterface onBackToHome={() => setCurrentPage('home')} />
       default:
         return <Home onGetStarted={handleGetStarted} />
     }
