@@ -1,9 +1,9 @@
-function About() {
+function Contribution() {
   return (
     <div className="flex-1 flex items-center justify-center text-white text-4xl">
-      About
+      Contribution
     </div>
   )
 }
 
-export default About
+export default Contribution

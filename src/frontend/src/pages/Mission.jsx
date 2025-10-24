@@ -1,9 +1,9 @@
-function Team() {
+function Mission() {
   return (
     <div className="flex-1 flex items-center justify-center text-white text-4xl">
-      Team
+      Mission
     </div>
   )
 }
 
-export default Team
+export default Mission
