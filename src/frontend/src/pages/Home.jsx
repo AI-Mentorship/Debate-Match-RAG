@@ -21,7 +21,7 @@ function Home({ onGetStarted }) {
     }
 
     // Create stars
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 100; i++) {
       setTimeout(createStar, i * 300)
     }
 
