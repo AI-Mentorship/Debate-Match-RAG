@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import Header from './components/Header'
 import Home from './pages/Home'
-import About from './pages/About'
-import Team from './pages/Team'
+import Mission from './pages/Mission'
+import Contribution from './pages/Contribution'
 import Contact from './pages/Contact'
 import ChatInterface from './pages/ChatInterface'
 
@@ -22,10 +22,10 @@ function App() {
     switch(currentPage) {
       case 'home':
         return <Home onGetStarted={handleGetStarted} />
-      case 'about':
-        return <About />
-      case 'team':
-        return <Team />
+      case 'mission':
+        return <Mission />
+      case 'contribution':
+        return <Contribution />
       case 'contact':
         return <Contact />
       case 'chat':
