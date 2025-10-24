@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
 function ChatInterface({ onBackToHome }) {
+  const [stars, setStars] = useState([])
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -9,12 +10,32 @@ function ChatInterface({ onBackToHome }) {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
   useEffect(() => {
-    scrollToBottom()
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 20; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 800)
+
+    return () => clearInterval(interval)
   }, [messages, typingMessage])
 
   const typeText = (text, onComplete) => {
