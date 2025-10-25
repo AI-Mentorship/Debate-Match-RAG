@@ -86,22 +86,22 @@ def message():
 
 if __name__ == "__main__":
     # Preprocessing
-    #main()
+    main()
 
     # Database setip
-    #setup_database()
+    setup_database()
 
     # Embedding + FAISS
-    #build_index()
+    build_index()
 
     # Retriever
-    #run_retriever()
+    run_retriever()
 
     # QA
     user_question = input(" Enter your question: ")
     query_rag(user_question)
 
     # Pavan
-    #run_cli()
+    run_cli()
 
     app.run(debug=False, port=3000)
