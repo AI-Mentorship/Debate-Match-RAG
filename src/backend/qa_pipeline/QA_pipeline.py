@@ -14,7 +14,7 @@ CHROMA_PATH = "chroma"
 embedding_function = get_embedding_function()
 
 # Step 1: Load passages from JSON 
-with open("backend/qa_pipeline/passages.json", "r") as f:
+with open("passages.json", "r") as f:
     passages = json.load(f)
 
 # Step 2: Convert each JSON entry into a Document 
