@@ -1,6 +1,6 @@
 from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
-from backend.preprocessing.preprocess_script import main
+from backend.preprocessing.preprocess_script import preprocess
 from backend.fact_checker_prototype.fact_checker import claim_verdict
 from backend.qa_pipeline.QA_pipeline import query_rag
 from backend.retriever.retriever import run_retriever
@@ -86,22 +86,22 @@ def message():
 
 if __name__ == "__main__":
     # Preprocessing
-    main()
+    preprocess()
 
     # Database setip
-    setup_database()
+    #setup_database()
 
     # Embedding + FAISS
-    build_index()
+    #build_index()
 
     # Retriever
-    run_retriever()
+    #run_retriever()
 
     # QA
     user_question = input(" Enter your question: ")
-    query_rag(user_question)
+    #query_rag(user_question)
 
     # Pavan
-    run_cli()
+    #run_cli()
 
     app.run(debug=False, port=3000)

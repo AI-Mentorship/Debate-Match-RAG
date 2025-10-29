@@ -204,7 +204,7 @@ def detect_format(text):
                 break
 
 
-def main():
+def preprocess():
     """
     Main preprocessing function.
     """
@@ -273,4 +273,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    preprocess()
