@@ -11,6 +11,7 @@ import csv
 import json
 import sys
 from pathlib import Path
+from datetime import datetime
 
 
 def clean_transcript(raw_text):
@@ -57,16 +58,18 @@ def clean_transcript(raw_text):
     return text
 
 
-def extract_speaker_turns(cleaned_text):
+def extract_speaker_turns(cleaned_text, source, date):
     """
     Split cleaned text into speaker turns with timestamps.
     Handles multiple formats automatically.
     
     Args:
         cleaned_text: Cleaned transcript text
+        source: Name of the debate/source
+        date: Date of the debate (YYYY-MM-DD format)
         
     Returns:
-        List of dicts with speaker, timestamp, and text
+        List of dicts with line_number, speaker, timestamp, text, source, and date
     """
     turns = []
     lines = cleaned_text.split('\n')
@@ -109,7 +112,9 @@ def extract_speaker_turns(cleaned_text):
                             'line_number': line_number,
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
-                            'text': text
+                            'text': text,
+                            'source': source,
+                            'date': date
                         })
                 
                 # Extract based on which pattern matched
@@ -145,7 +150,9 @@ def extract_speaker_turns(cleaned_text):
                 'line_number': line_number,
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
-                'text': text
+                'text': text,
+                'source': source,
+                'date': date
             })
     
     return turns
@@ -161,7 +168,7 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['line_number', 'speaker', 'timestamp', 'text']
+            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source', 'date']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
@@ -204,14 +211,49 @@ def detect_format(text):
                 break
 
 
+def get_debate_metadata():
+    """
+    Prompt user for debate metadata (source and date).
+    
+    Returns:
+        Tuple of (source, date)
+    """
+    print("\n Enter debate metadata:")
+    
+    # Get source/name
+    source = input("  Debate name/source: ").strip()
+    if not source:
+        source = "Unknown Debate"
+        print(f"No source provided, using: {source}")
+    
+    # Get date
+    while True:
+        date_input = input("Debate date (YYYY-MM-DD): ").strip()
+        
+        # If empty, use today's date
+        if not date_input:
+            date = datetime.now().strftime("%Y-%m-%d")
+            print(f"No date provided, using today: {date}")
+            break
+        
+        # Validate date format
+        try:
+            datetime.strptime(date_input, "%Y-%m-%d")
+            date = date_input
+            break
+        except ValueError:
+            print("Invalid format! Please use YYYY-MM-DD (e.g., 2006-07-29)")
+    
+    return source, date
+
 def preprocess():
     """
     Main preprocessing function.
     """
     # Check for input file argument
     if len(sys.argv) < 2:
-        print("Usage: python main.py <input_file.txt>")
-        print("Example: python main.py debate_raw.txt")
+        print("Usage: python preprocess_script.py <input_file.txt>")
+        print("Example: python preprocess_script.py debate_raw.txt")
         sys.exit(1)
     
     input_file = Path(sys.argv[1])
@@ -227,6 +269,9 @@ def preprocess():
     with open(input_file, 'r', encoding='utf-8') as f:
         raw_text = f.read()
     
+    # Get debate metadata from user
+    source, date = get_debate_metadata()
+    
     # Show format detection
     detect_format(raw_text)
     
@@ -234,7 +279,7 @@ def preprocess():
     cleaned_text = clean_transcript(raw_text)
     
     print("✂️  Extracting speaker turns...")
-    speaker_turns = extract_speaker_turns(cleaned_text)
+    speaker_turns = extract_speaker_turns(cleaned_text, source, date)
     
     if not speaker_turns:
         print("\n⚠️  Warning: No speaker turns found!")
@@ -248,6 +293,8 @@ def preprocess():
         sys.exit(1)
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
+    print(f"   Source: {source}")
+    print(f"   Date: {date}")
     
     # Generate output filenames
     base_name = input_file.stem  # filename without extension
@@ -269,6 +316,8 @@ def preprocess():
     for i, turn in enumerate(speaker_turns[:3], 1):
         print(f"\n{i}. Speaker: {turn['speaker']}")
         print(f"   Timestamp: {turn['timestamp']}")
+        print(f"   Source: {turn['source']}")
+        print(f"   Date: {turn['date']}")
         print(f"   Text: {turn['text'][:100]}...")
 
 

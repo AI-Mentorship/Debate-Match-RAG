@@ -89,7 +89,7 @@ if __name__ == "__main__":
     preprocess()
 
     # Database setip
-    #setup_database()
+    setup_database()
 
     # Embedding + FAISS
     #build_index()
