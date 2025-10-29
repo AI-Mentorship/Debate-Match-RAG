@@ -172,8 +172,6 @@ def save_as_csv(data, output_path):
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
-    
-    print(f"✅ CSV saved to: {output_path}")
 
 
 def save_as_json(data, output_path):
@@ -186,8 +184,6 @@ def save_as_json(data, output_path):
     """
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    
-    print(f"✅ JSON saved to: {output_path}")
 
 
 def detect_format(text):
@@ -199,7 +195,7 @@ def detect_format(text):
     """
     lines = text.split('\n')[:20]  # Check first 20 lines
     
-    print("\n🔍 Detecting transcript format...")
+    print("\nDetecting transcript format...")
     print("First few non-empty lines:")
     count = 0
     for line in lines:
@@ -218,10 +214,10 @@ def get_debate_metadata():
     Returns:
         Tuple of (source, date)
     """
-    print("\n Enter debate metadata:")
+    print("\nEnter debate metadata:")
     
     # Get source/name
-    source = input("  Debate name/source: ").strip()
+    source = input("Debate name/source: ").strip()
     if not source:
         source = "Unknown Debate"
         print(f"No source provided, using: {source}")
@@ -263,7 +259,7 @@ def preprocess():
         print(f"❌ Error: Input file '{input_file}' not found!")
         sys.exit(1)
     
-    print(f"📄 Reading: {input_file}")
+    print(f"Reading: {input_file}")
     
     # Read raw transcript
     with open(input_file, 'r', encoding='utf-8') as f:
@@ -282,7 +278,7 @@ def preprocess():
     speaker_turns = extract_speaker_turns(cleaned_text, source, date)
     
     if not speaker_turns:
-        print("\n⚠️  Warning: No speaker turns found!")
+        print("\nWarning: No speaker turns found!")
         print("\nExpected formats:")
         print("  - Speaker Name ([timestamp]): text")
         print("  - Speaker Name (timestamp): text")
@@ -302,7 +298,6 @@ def preprocess():
     output_json = input_file.parent / f"{base_name}_clean.json"
     
     # Save both formats
-    print("\n💾 Saving output files...")
     save_as_csv(speaker_turns, output_csv)
     save_as_json(speaker_turns, output_json)
     
@@ -310,16 +305,6 @@ def preprocess():
     print(f"\nOutput files:")
     print(f"  - {output_csv}")
     print(f"  - {output_json}")
-    
-    # Show sample of first 3 entries
-    print("\n📋 Sample output (first 3 entries):")
-    for i, turn in enumerate(speaker_turns[:3], 1):
-        print(f"\n{i}. Speaker: {turn['speaker']}")
-        print(f"   Timestamp: {turn['timestamp']}")
-        print(f"   Source: {turn['source']}")
-        print(f"   Date: {turn['date']}")
-        print(f"   Text: {turn['text'][:100]}...")
-
 
 if __name__ == "__main__":
     preprocess()

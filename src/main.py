@@ -29,7 +29,7 @@ def setup_database():
 
         # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("backend/data/sample_data.csv")
+        inserter.process_transcript_file("debate_raw_transcript_clean.csv")
 
         print("\nDatabase setup complete!")
         print("Available collections:")
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     # Preprocessing
     preprocess()
 
-    # Database setip
+    # Database setup
     setup_database()
 
     # Embedding + FAISS
@@ -98,10 +98,10 @@ if __name__ == "__main__":
     #run_retriever()
 
     # QA
-    user_question = input(" Enter your question: ")
+    #user_question = input(" Enter your question: ")
     #query_rag(user_question)
 
     # Pavan
     #run_cli()
 
-    app.run(debug=False, port=3000)
+    #app.run(debug=False, port=3000)

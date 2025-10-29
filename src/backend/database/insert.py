@@ -33,7 +33,11 @@ class DataInserter(DebateDatabase):
 
         except FileNotFoundError:
             print(f"CSV file not found: {csv_file_path}")
-            print("Please make sure the file exists in src/backend/data folder")
+            print("Please make sure the file exists")
+
+        except KeyError as e:
+            print(f"Missing column in CSV: {e}")
+            print("Expected columns: line_number, speaker, timestamp, text, source, date")
 
         except Exception as e:
             print(f"Error loading CSV: {e}")
@@ -70,10 +74,18 @@ class DataInserter(DebateDatabase):
         if key in debates_dict:
             return debates_dict[key]
         
+        # Parse date string to datetime object
+        try:
+            date_obj = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            # If date parsing fails, use current date
+            print(f"Warning: Invalid date format '{date}', using current date")
+            date_obj = datetime.now()
+        
         # Check duplicate in the database
         existing_debate = self.debates.find_one({
             "name": source,
-            "date": datetime.strptime(date, "%Y-%m-%d")
+            "date": date_obj
         })
 
         if existing_debate:
@@ -85,7 +97,7 @@ class DataInserter(DebateDatabase):
         self.debates.insert_one({
             "debate_id": debate_id,
             "name": source,
-            "date": datetime.strptime(date, "%Y-%m-%d")
+            "date": date_obj
         })
 
         debates_dict[key] = debate_id
