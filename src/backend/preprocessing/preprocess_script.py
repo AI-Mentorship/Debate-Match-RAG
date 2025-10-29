@@ -210,8 +210,8 @@ def preprocess():
     """
     # Check for input file argument
     if len(sys.argv) < 2:
-        print("Usage: python preprocess.py <input_file.txt>")
-        print("Example: python preprocess.py debate_raw.txt")
+        print("Usage: python main.py <input_file.txt>")
+        print("Example: python main.py debate_raw.txt")
         sys.exit(1)
     
     input_file = Path(sys.argv[1])
