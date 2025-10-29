@@ -185,28 +185,6 @@ def save_as_json(data, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-
-def detect_format(text):
-    """
-    Detect and display the format of the transcript for debugging.
-    
-    Args:
-        text: Sample text from transcript
-    """
-    lines = text.split('\n')[:20]  # Check first 20 lines
-    
-    print("\nDetecting transcript format...")
-    print("First few non-empty lines:")
-    count = 0
-    for line in lines:
-        line = line.strip()
-        if line and not line.startswith('='):
-            print(f"   {line[:100]}")
-            count += 1
-            if count >= 5:
-                break
-
-
 def get_debate_metadata():
     """
     Prompt user for debate metadata (source and date).
@@ -256,7 +234,7 @@ def preprocess():
     
     # Verify input file exists
     if not input_file.exists():
-        print(f"❌ Error: Input file '{input_file}' not found!")
+        print(f"Error: Input file '{input_file}' not found!")
         sys.exit(1)
     
     print(f"Reading: {input_file}")
@@ -267,9 +245,6 @@ def preprocess():
     
     # Get debate metadata from user
     source, date = get_debate_metadata()
-    
-    # Show format detection
-    detect_format(raw_text)
     
     print("\n🧹 Cleaning transcript...")
     cleaned_text = clean_transcript(raw_text)
