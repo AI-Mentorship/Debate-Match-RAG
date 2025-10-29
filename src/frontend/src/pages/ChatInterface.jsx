@@ -153,7 +153,7 @@ function ChatInterface({ onBackToHome }) {
       {/* Input Area */}
       <div className="px-6 py-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex space-x-4 items-end">
+          <div className="flex space-x-4 items-center"> {/* changed items-end to items-center */}
             <div className="flex-1">
               <textarea
                 value={input}
