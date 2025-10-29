@@ -1,10 +1,15 @@
 from pymongo import MongoClient
 from .config import DatabaseConfig
+import certifi
 
 class DebateDatabase:
     def __init__(self):
         # Connection
-        self.client = MongoClient(DatabaseConfig.MONGODB_URI)
+        # self.client = MongoClient(DatabaseConfig.MONGODB_URI) < - more secure but broken for me :(
+        self.client = MongoClient(
+        DatabaseConfig.MONGODB_URI,
+        tlsCAFile=certifi.where()
+        )
         self.db = self.client[DatabaseConfig.DATABASE_NAME]
         
         # Tables
