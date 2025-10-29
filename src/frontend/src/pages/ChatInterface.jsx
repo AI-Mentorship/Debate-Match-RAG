@@ -53,7 +53,7 @@ function ChatInterface({ onBackToHome }) {
     if (!input.trim()) return
 
     const userMessage = { role: 'user', content: input }
-    setMessages(prev => [...prev, userMessage]) // ✅ append instead of reset
+    setMessages(prev => [...prev, userMessage]) // append instead of reset
     setInput('')
     setLoading(true)
 
@@ -63,7 +63,7 @@ function ChatInterface({ onBackToHome }) {
 
       typeText(aiResponse, () => {
         const aiMessage = { role: 'assistant', content: aiResponse }
-        setMessages(prev => [...prev, aiMessage]) // ✅ append AI message
+        setMessages(prev => [...prev, aiMessage]) // append AI message
         setLoading(false)
       })
     } catch (error) {
@@ -87,7 +87,7 @@ function ChatInterface({ onBackToHome }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, typingMessage])
 
-  // 🧠 Render
+  // Render
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
       {/* Messages Area */}
