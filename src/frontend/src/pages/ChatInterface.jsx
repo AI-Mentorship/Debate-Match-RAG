@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { motion, AnimatePresence } from "framer-motion";
 
 function ChatInterface({ onBackToHome }) {
   const [stars, setStars] = useState([])
@@ -151,30 +152,70 @@ function ChatInterface({ onBackToHome }) {
       </div>
 
       {/* Input Area */}
-      <div className="px-6 py-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex space-x-4 items-center"> {/* changed items-end to items-center */}
-            <div className="flex-1">
-              <textarea
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Enter your debate topic, argument, or analysis request..."
-                className="w-full bg-white/10 backdrop-blur-md text-white rounded-2xl px-6 py-4 border border-white/20 resize-none focus:outline-none focus:border-white placeholder-light-silver transition-all duration-200"
-                rows="2"
-                disabled={loading}
-              />
+      <AnimatePresence mode="wait">
+        {messages.length === 0 ? (
+          <motion.div
+            key="centerInput"
+            initial={{ y: -250, opacity: 0 }}
+            animate={{ y: -250, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 2.5, type: 'spring' }}
+            className="flex-1 flex items-center justify-center"
+          >
+            <div className="w-full max-w-2xl">
+              {/* Your merged input+send code here */}
+              <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                <textarea
+                  className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                  placeholder="Type your message..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || !input.trim()}
+                  className="ml-2 px-4 py-2 rounded-2xl bg-electric-purple text-white hover:bg-purple-700 transition"
+                >
+                  Send
+                </button>
+              </div>
             </div>
-            <button
-              onClick={sendMessage}
-              disabled={loading || !input.trim()}
-              className="bg-transparent border-2 border-electric-purple text-white px-8 py-4 rounded-2xl hover:bg-electric-purple/20 hover:border-lavender transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-            >
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="bottomInput"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 1.0, type: "spring" }}
+            className="px-6 py-6"
+          >
+            <div className="max-w-4xl mx-auto">
+              {/* Same input+send code as above */}
+              <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                <textarea
+                  className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                  placeholder="Type your message..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || !input.trim()}
+                  className="ml-2 px-4 py-2 rounded-2xl bg-electric-purple text-white hover:bg-purple-700 transition"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   )
 }
