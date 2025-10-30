@@ -11,7 +11,7 @@ function ChatInterface({ onBackToHome }) {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
 
-  // 🌌 Star background animation (unchanged)
+  // Star background animation (unchanged)
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -32,7 +32,7 @@ function ChatInterface({ onBackToHome }) {
     return () => clearInterval(interval)
   }, [messages, typingMessage])
 
-  // ⌨️ Typing animation handler
+  // Typing animation handler
   const typeText = (text, onComplete) => {
     setIsTyping(true)
     setTypingMessage('')
@@ -49,7 +49,7 @@ function ChatInterface({ onBackToHome }) {
     }, 30)
   }
 
-  // 🚀 Send message — now appends properly instead of resetting
+  // Send message — now appends properly instead of resetting
   const sendMessage = async () => {
     if (!input.trim()) return
 
