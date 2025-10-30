@@ -92,7 +92,7 @@ if __name__ == "__main__":
     setup_database()
 
     # Embedding + FAISS
-    #build_index()
+    build_index()
 
     # Retriever
     #run_retriever()
