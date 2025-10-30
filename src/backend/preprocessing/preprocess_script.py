@@ -58,7 +58,7 @@ def clean_transcript(raw_text):
     return text
 
 
-def extract_speaker_turns(cleaned_text, source, date):
+def extract_speaker_turns(cleaned_text, source):
     """
     Split cleaned text into speaker turns with timestamps.
     Handles multiple formats automatically.
@@ -113,8 +113,7 @@ def extract_speaker_turns(cleaned_text, source, date):
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
                             'text': text,
-                            'source': source,
-                            'date': date
+                            'source': source
                         })
                 
                 # Extract based on which pattern matched
@@ -151,8 +150,7 @@ def extract_speaker_turns(cleaned_text, source, date):
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
-                'source': source,
-                'date': date
+                'source': source
             })
     
     return turns
@@ -168,7 +166,7 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source', 'date']
+            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
@@ -200,25 +198,7 @@ def get_debate_metadata():
         source = "Unknown Debate"
         print(f"No source provided, using: {source}")
     
-    # Get date
-    while True:
-        date_input = input("Debate date (YYYY-MM-DD): ").strip()
-        
-        # If empty, use today's date
-        if not date_input:
-            date = datetime.now().strftime("%Y-%m-%d")
-            print(f"No date provided, using today: {date}")
-            break
-        
-        # Validate date format
-        try:
-            datetime.strptime(date_input, "%Y-%m-%d")
-            date = date_input
-            break
-        except ValueError:
-            print("Invalid format! Please use YYYY-MM-DD (e.g., 2006-07-29)")
-    
-    return source, date
+    return source
 
 def preprocess():
     """
@@ -244,13 +224,13 @@ def preprocess():
         raw_text = f.read()
     
     # Get debate metadata from user
-    source, date = get_debate_metadata()
+    source = get_debate_metadata()
     
     print("\n🧹 Cleaning transcript...")
     cleaned_text = clean_transcript(raw_text)
     
     print("✂️  Extracting speaker turns...")
-    speaker_turns = extract_speaker_turns(cleaned_text, source, date)
+    speaker_turns = extract_speaker_turns(cleaned_text, source)
     
     if not speaker_turns:
         print("\nWarning: No speaker turns found!")
@@ -265,7 +245,6 @@ def preprocess():
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
     print(f"   Source: {source}")
-    print(f"   Date: {date}")
     
     # Generate output filenames
     base_name = input_file.stem  # filename without extension
