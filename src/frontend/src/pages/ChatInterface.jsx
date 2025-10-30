@@ -156,10 +156,10 @@ function ChatInterface({ onBackToHome }) {
         {messages.length === 0 ? (
           <motion.div
             key="centerInput"
-            initial={{ y: -250, opacity: 0 }}
-            animate={{ y: -250, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            transition={{ duration: 2.5, type: 'spring' }}
+            initial={{opacity: 0 }}
+            animate={{ y: -275, opacity: 1 }}
+            // exit={{opacity: 0 }}
+            transition={{ duration: 1.2, type: 'spring' }}
             className="flex-1 flex items-center justify-center"
           >
             <div className="w-full max-w-2xl">
@@ -167,7 +167,7 @@ function ChatInterface({ onBackToHome }) {
               <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
                 <textarea
                   className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
-                  placeholder="Type your message..."
+                  placeholder="Ask something..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -176,7 +176,11 @@ function ChatInterface({ onBackToHome }) {
                 <button
                   onClick={sendMessage}
                   disabled={loading || !input.trim()}
-                  className="ml-2 px-4 py-2 rounded-2xl bg-electric-purple text-white hover:bg-purple-700 transition"
+                  className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition 
+                            ${loading || !input.trim()
+                              ? 'bg-gray-600 cursor-not-allowed opacity-60'
+                              : 'bg-electric-purple hover:bg-purple-700 active:scale-95'
+                            }`}
                 >
                   Send
                 </button>
@@ -186,18 +190,18 @@ function ChatInterface({ onBackToHome }) {
         ) : (
           <motion.div
             key="bottomInput"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ y: -325, opacity: 1 }}
+            animate={{ y: -70, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ duration: 1.0, type: "spring" }}
             className="px-6 py-6"
           >
-            <div className="max-w-4xl mx-auto">
-              {/* Same input+send code as above */}
+            <div className="max-w-2xl mx-auto">
+              {/* Your merged input+send code here */}
               <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
                 <textarea
                   className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
-                  placeholder="Type your message..."
+                  placeholder="Ask something..."
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -206,7 +210,11 @@ function ChatInterface({ onBackToHome }) {
                 <button
                   onClick={sendMessage}
                   disabled={loading || !input.trim()}
-                  className="ml-2 px-4 py-2 rounded-2xl bg-electric-purple text-white hover:bg-purple-700 transition"
+                  className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition 
+                            ${loading || !input.trim()
+                              ? 'bg-gray-600 cursor-not-allowed opacity-60'
+                              : 'bg-electric-purple hover:bg-purple-700 active:scale-95'
+                            }`}
                 >
                   Send
                 </button>
