@@ -36,38 +36,36 @@ class DebateRetriever:
     def retrieve(self, query, top_k=3):
         """
         Retrieve top-k most relevant passages for a query.
-        
+
         Args:
             query: String query to search for
             top_k: Number of results to return
-            
+
         Returns:
-            List of dicts with speaker, debate, text, timestamp, and score
+            List of dicts with speaker, role, text, and timestamp
         """
-        # Generate query embedding using OpenAI (same as build_index.py)
+        # Generate query embedding using OpenAI
         response = self.client.embeddings.create(
             model="text-embedding-3-small",
             input=[query]
         )
         query_emb = np.array([response.data[0].embedding], dtype='float32')
-        
+
         # Search FAISS index
         distances, indices = self.index.search(query_emb, top_k)
-        
-        # Format results
+
+        # Format results (omit debate name and score)
         results = []
-        for idx, distance in zip(indices[0], distances[0]):
+        for idx in indices[0]:
             meta = self.metadata[idx]
             results.append({
                 'speaker': meta['speaker'],
-                'role': meta['role'],
-                'debate': meta['debate_name'],
                 'timestamp': meta['timestamp'],
-                'text': meta['text'],
-                'score': float(distance)  # L2 distance (lower is better)
+                'text': meta['text']
             })
-        
+
         return results
+
     
     def save_results(self, results, filename="passages.json"):
         """Save retrieval results to a JSON file."""
