@@ -109,7 +109,3 @@ def run_retriever():
         
     # Save results to passages.json
     retriever.save_results(results)
-
-if __name__ == "__main__":
-    # Run interactive mode by default
-    run_retriever()
