@@ -84,34 +84,33 @@ def run_retriever():
     
     # Initialize retriever
     retriever = DebateRetriever()
-    
-    # Interactive loop
-    while True:
-        print("\n" + "-"*80)
-        query = input("\nEnter your query (or 'quit' to exit): ").strip()
         
+    while True:
+        query = input("\nEnter your query (or 'quit' to exit): ").strip()
+    
         if query.lower() in ['quit', 'exit', 'q']:
             print("👋 Goodbye!")
-            break
-        
+            exit()
+    
         if not query:
-            print("⚠️  Please enter a query")
-            continue
+            print("⚠️  Please enter a valid query.")
+            continue  # Ask again
+        break  
         
-        # Get number of results
-        try:
-            top_k_input = input("📊 How many results? (default 3): ").strip()
-            top_k = int(top_k_input) if top_k_input else 3
-        except ValueError:
-            top_k = 3
-            print("⚠️  Invalid number, using default: 3")
+    # Get number of results
+    try:
+        top_k_input = input("📊 How many results? (default 3): ").strip()
+        top_k = int(top_k_input) if top_k_input else 3
+    except ValueError:
+        top_k = 3
+        print("⚠️  Invalid number, using default: 3")
         
-        # Retrieve results
-        print(f"\n🔎 Searching for: '{query}'...")
-        results = retriever.retrieve(query, top_k=top_k)
+    # Retrieve results
+    print(f"\n🔎 Searching for: '{query}'...")
+    results = retriever.retrieve(query, top_k=top_k)
         
-        # Save results to passages.json
-        retriever.save_results(results)
+    # Save results to passages.json
+    retriever.save_results(results)
 
 if __name__ == "__main__":
     # Run interactive mode by default
