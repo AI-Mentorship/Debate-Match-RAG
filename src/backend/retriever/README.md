@@ -25,29 +25,21 @@ HEAD
 - Output is a **list of JSON-like objects** (printed in console).  
 - Each result includes:
   - `Speaker`
-  - `Role`
   - `Timestamp`
   - `Text`
-  - `Score`
 
 **Example output for query: _"healthcare_"**
 ```json
 [
     {
         "speaker": "Jake Tapper",
-        "role": "Candidate",
-        "debate": "2024 CNN PRESIDENTIAL DEBATE",
         "timestamp": "02:40",
         "text": "Now, please welcome the 46th President of the United States, Joe Biden.",
-        "score": 0.9359586238861084
     },
     {
         "speaker": "Dana Bash",
-        "role": "Candidate",
-        "debate": "2024 CNN PRESIDENTIAL DEBATE",
         "timestamp": "13:37",
         "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states.",
-        "score": 1.0521624088287354
     }
 ]
 =======
