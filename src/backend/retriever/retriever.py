@@ -69,17 +69,11 @@ class DebateRetriever:
         
         return results
     
-    def format_results(self, results):
-        """Pretty print retrieval results."""
-        print("\n" + "="*80)
-        print(f"Found {len(results)} relevant passages:")
-        print("="*80)
-        
-        for i, r in enumerate(results, 1):
-            print(f"\n[{i}] {r['speaker']} ({r['role']}) - {r['debate']}")
-            print(f"    Timestamp: {r['timestamp']}")
-            print(f"    Score: {r['score']:.4f}")
-            print(f"    Text: {r['text'][:200]}..." if len(r['text']) > 200 else f"    Text: {r['text']}")
+    def save_results(self, results, filename="passages.json"):
+        """Save retrieval results to a JSON file."""
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(results, f, indent=4, ensure_ascii=False)
+        print(f"\n✅ Results saved to '{filename}' ({len(results)} passages)\n")
 
 
 def run_retriever():
@@ -116,8 +110,8 @@ def run_retriever():
         print(f"\n🔎 Searching for: '{query}'...")
         results = retriever.retrieve(query, top_k=top_k)
         
-        # Display results
-        retriever.format_results(results)
+        # Save results to passages.json
+        retriever.save_results(results)
 
 if __name__ == "__main__":
     # Run interactive mode by default

@@ -1,0 +1,26 @@
+[
+    {
+        "speaker": "Jake Tapper",
+        "role": "Candidate",
+        "debate": "2024 CNN PRESIDENTIAL DEBATE",
+        "timestamp": "02:40",
+        "text": "Now, please welcome the 46th President of the United States, Joe Biden.",
+        "score": 0.9359586238861084
+    },
+    {
+        "speaker": "Dana Bash",
+        "role": "Candidate",
+        "debate": "2024 CNN PRESIDENTIAL DEBATE",
+        "timestamp": "13:37",
+        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states.",
+        "score": 1.0521624088287354
+    },
+    {
+        "speaker": "Jake Tapper",
+        "role": "Candidate",
+        "debate": "2024 CNN PRESIDENTIAL DEBATE",
+        "timestamp": "02:57",
+        "text": "And please welcome the 45th President of the United States, Donald Trump. Gentlemen, thanks so much for being here, let's begin the debate and let's start with the issue that voters consistently say is their top concern, the economy. President Biden, inflation has slowed, but prices remain high. Since you took office, the price of essentials has increased. For example, a basket of groceries that cost $100 then now costs more than $120, and typical home prices have jumped more than 30%. What do you say to voters who feel they are worse off under your presidency than they were under President Trump?",
+        "score": 1.138167381286621
+    }
+]
