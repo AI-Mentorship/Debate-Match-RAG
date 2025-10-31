@@ -95,7 +95,7 @@ if __name__ == "__main__":
     build_index()
 
     # Retriever
-    #run_retriever()
+    run_retriever()
 
     # QA
     #user_question = input(" Enter your question: ")
