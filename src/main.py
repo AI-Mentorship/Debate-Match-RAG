@@ -45,7 +45,7 @@ def setup_database():
 
 # User Query for Retriver and QA Pipeline
 def get_user_query():
-    """Get query input from user - shared by both retriever and QA."""
+    # Get query input from user - shared by both retriever and QA.
     print("\n" + "="*80)
     print("QUERY INPUT")
     print("="*80)
@@ -113,11 +113,10 @@ if __name__ == "__main__":
 
     # Embedding + FAISS
     build_index()
-
-    # Get user query (shared input)
-    query = get_user_query()
     
-    # Get number of results for retriever
+    # Get user query and number of results for retriever
+    query = get_user_query()
+
     try:
         top_k_input = input("📊 How many results? (default 3): ").strip()
         top_k = int(top_k_input) if top_k_input else 3
