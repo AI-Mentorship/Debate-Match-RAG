@@ -46,8 +46,6 @@ if unique_documents:
     db.add_documents(unique_documents)
     db.persist()
     print(f"✅ Added {len(unique_documents)} new unique passages.")
-else:
-    print("⚙️ No new passages to add. Everything is already stored.")
 
 # Optional: Inspect database content
 # all_docs = db.get()
