@@ -43,6 +43,26 @@ def setup_database():
     
     database.close_connection()
 
+# User Query for Retriver and QA Pipeline
+def get_user_query():
+    """Get query input from user - shared by both retriever and QA."""
+    print("\n" + "="*80)
+    print("QUERY INPUT")
+    print("="*80)
+    
+    while True:
+        query = input("\nEnter your query (or 'quit' to exit): ").strip()
+        
+        if query.lower() in ['quit', 'exit', 'q']:
+            print("👋 Goodbye!")
+            exit()
+        
+        if not query:
+            print("⚠️  Please enter a valid query.")
+            continue
+        
+        return query
+
 # Fact Checker Prototype
 # Command-line interface for testing fact-checker.
 def run_cli():
@@ -94,12 +114,22 @@ if __name__ == "__main__":
     # Embedding + FAISS
     build_index()
 
-    # Retriever
-    run_retriever()
+    # Get user query (shared input)
+    query = get_user_query()
+    
+    # Get number of results for retriever
+    try:
+        top_k_input = input("📊 How many results? (default 3): ").strip()
+        top_k = int(top_k_input) if top_k_input else 3
+    except ValueError:
+        top_k = 3
+        print("⚠️  Invalid number, using default: 3")
 
-    # QA
-    #user_question = input(" Enter your question: ")
-    #query_rag(user_question)
+    # Retriever - pass query and top_k
+    run_retriever(query, top_k)
+
+    # QA 
+    #query_rag(query)
 
     # Pavan
     #run_cli()

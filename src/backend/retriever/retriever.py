@@ -42,7 +42,7 @@ class DebateRetriever:
             top_k: Number of results to return
 
         Returns:
-            List of dicts with speaker, role, text, and timestamp
+            List of dicts with speaker, timestamp, and text
         """
         # Generate query embedding using OpenAI
         response = self.client.embeddings.create(
@@ -54,7 +54,7 @@ class DebateRetriever:
         # Search FAISS index
         distances, indices = self.index.search(query_emb, top_k)
 
-        # Format results (omit debate name and score)
+        # Format results
         results = []
         for idx in indices[0]:
             meta = self.metadata[idx]
@@ -74,35 +74,24 @@ class DebateRetriever:
         print(f"\n✅ Results saved to '{filename}' ({len(results)} passages)\n")
 
 
-def run_retriever():
-    """Interactive retrieval demo."""
+def run_retriever(query, top_k):
+    """
+    Run retriever with query parameter.
+    
+    Args:
+        query: Optional query string.
+        top_k: Number of results to return (default 3)
+    
+    Returns:
+        Tuple of (query, results)
+    """
     print("\n" + "="*80)
     print("DEBATE RETRIEVER")
     print("="*80)
     
     # Initialize retriever
     retriever = DebateRetriever()
-        
-    while True:
-        query = input("\nEnter your query (or 'quit' to exit): ").strip()
     
-        if query.lower() in ['quit', 'exit', 'q']:
-            print("👋 Goodbye!")
-            exit()
-    
-        if not query:
-            print("⚠️  Please enter a valid query.")
-            continue  # Ask again
-        break  
-        
-    # Get number of results
-    try:
-        top_k_input = input("📊 How many results? (default 3): ").strip()
-        top_k = int(top_k_input) if top_k_input else 3
-    except ValueError:
-        top_k = 3
-        print("⚠️  Invalid number, using default: 3")
-        
     # Retrieve results
     print(f"\n🔎 Searching for: '{query}'...")
     results = retriever.retrieve(query, top_k=top_k)
