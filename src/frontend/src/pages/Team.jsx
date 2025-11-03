@@ -31,6 +31,65 @@ function Team() {
     return () => clearInterval(interval)
   }, [])
 
+  const members = [
+    {
+      id: 1,
+      name: "Adya Dhanasekar",
+      role: "Project Lead",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
+    },
+    {
+      id: 2,
+      name: "Shivam Singh",
+      role: "Project Lead",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
+    },
+    {
+      id: 3,
+      name: "Satyank Nadimpalli",
+      role: "Full Stack Developer",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
+    },
+    {
+      id: 4,
+      name: "Khang Doan",
+      role: "Full Stack Developer",
+      description: "B.S. in Computer Science with focus on AI/ML",
+      linkedin: "https://www.linkedin.com/in/khangdoan514/",
+    },
+    {
+      id: 5,
+      name: "Pavan Arani",
+      role: "Full Stack Developer",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
+    },
+    {
+      id: 6,
+      name: "Raisa Reza",
+      role: "UX/UI Designer",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/raisa-reza/",
+    },
+    {
+      id: 7,
+      name: "Yakina Azza",
+      role: "Back-End Developer",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/yakina-azza/",
+    },
+    {
+      id: 8,
+      name: "Sadwitha Thopucharla",
+      role: "QA Pipeline Lead",
+      description: "",
+      linkedin: "https://www.linkedin.com/in/sadwitha1161/",
+    }
+  ]
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">      
       {/* Shooting stars effect */}
