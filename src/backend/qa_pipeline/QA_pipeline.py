@@ -75,8 +75,6 @@ def query_rag(query_text):
 
     # Retrieves similar passages to the query
     results = db.similarity_search_with_score(query_text, k=40)
-    
-    print(f"Found {len(results)} relevant passages")
 
     # Build context text
     context_text = "\n\n---\n\n".join([
@@ -96,5 +94,4 @@ def query_rag(query_text):
     response = model.invoke(prompt_str)
 
     # Print the model's response
-    print("RESPONSE:")
-    print(response)
+    print("\nRESPONSE:", response)

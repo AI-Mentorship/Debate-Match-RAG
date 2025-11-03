@@ -38,4 +38,4 @@ class DebateDatabase:
     
     def close_connection(self):
         self.client.close()
-        print("Connection closed.")
+        print("Connection closed.\n")

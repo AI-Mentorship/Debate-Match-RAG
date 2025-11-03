@@ -258,7 +258,7 @@ def preprocess():
     print("\n✨ Done! Preprocessing complete.")
     print(f"\nOutput files:")
     print(f"  - {output_csv}")
-    print(f"  - {output_json}")
+    print(f"  - {output_json}\n")
 
 if __name__ == "__main__":
     preprocess()
