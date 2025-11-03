@@ -128,7 +128,7 @@ if __name__ == "__main__":
     run_retriever(query, top_k)
 
     # QA 
-    #query_rag(query)
+    query_rag(query)
 
     # Pavan
     #run_cli()
