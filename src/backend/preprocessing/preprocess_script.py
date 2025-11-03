@@ -11,6 +11,7 @@ import csv
 import json
 import sys
 from pathlib import Path
+from datetime import datetime
 
 
 def clean_transcript(raw_text):
@@ -57,16 +58,17 @@ def clean_transcript(raw_text):
     return text
 
 
-def extract_speaker_turns(cleaned_text):
+def extract_speaker_turns(cleaned_text, source):
     """
     Split cleaned text into speaker turns with timestamps.
     Handles multiple formats automatically.
     
     Args:
         cleaned_text: Cleaned transcript text
+        source: Name of the debate/source
         
     Returns:
-        List of dicts with speaker, timestamp, and text
+        List of dicts with line_number, speaker, timestamp, text, and source
     """
     turns = []
     lines = cleaned_text.split('\n')
@@ -109,7 +111,8 @@ def extract_speaker_turns(cleaned_text):
                             'line_number': line_number,
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
-                            'text': text
+                            'text': text,
+                            'source': source
                         })
                 
                 # Extract based on which pattern matched
@@ -145,7 +148,8 @@ def extract_speaker_turns(cleaned_text):
                 'line_number': line_number,
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
-                'text': text
+                'text': text,
+                'source': source
             })
     
     return turns
@@ -161,12 +165,10 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['line_number', 'speaker', 'timestamp', 'text']
+            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(data)
-    
-    print(f"✅ CSV saved to: {output_path}")
 
 
 def save_as_json(data, output_path):
@@ -179,65 +181,48 @@ def save_as_json(data, output_path):
     """
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
-    
-    print(f"✅ JSON saved to: {output_path}")
 
 
-def detect_format(text):
-    """
-    Detect and display the format of the transcript for debugging.
-    
-    Args:
-        text: Sample text from transcript
-    """
-    lines = text.split('\n')[:20]  # Check first 20 lines
-    
-    print("\n🔍 Detecting transcript format...")
-    print("First few non-empty lines:")
-    count = 0
-    for line in lines:
-        line = line.strip()
-        if line and not line.startswith('='):
-            print(f"   {line[:100]}")
-            count += 1
-            if count >= 5:
-                break
+def preprocess(debate_name):
+    # Main preprocessing function.
 
-
-def main():
-    """
-    Main preprocessing function.
-    """
     # Check for input file argument
     if len(sys.argv) < 2:
-        print("Usage: python preprocess.py <input_file.txt>")
-        print("Example: python preprocess.py debate_raw.txt")
+        print("Usage: python main.py <input_file.txt>")
+        print("Example: python main.py debate_raw.txt")
         sys.exit(1)
     
     input_file = Path(sys.argv[1])
     
     # Verify input file exists
     if not input_file.exists():
-        print(f"❌ Error: Input file '{input_file}' not found!")
+        print(f"Error: Input file '{input_file}' not found!")
         sys.exit(1)
     
-    print(f"📄 Reading: {input_file}")
+    # Use debate_name from parameter or prompt user
+    if debate_name:
+        source = debate_name
+        print(f"Using debate name: {source}")
+    else:
+        source = input("\nEnter Debate name/source: ").strip()
+        if not source:
+            source = "Unknown Debate"
+            print(f"No source provided, using: {source}")
+
+    print(f"Reading: {input_file}")
     
     # Read raw transcript
     with open(input_file, 'r', encoding='utf-8') as f:
         raw_text = f.read()
     
-    # Show format detection
-    detect_format(raw_text)
-    
     print("\n🧹 Cleaning transcript...")
     cleaned_text = clean_transcript(raw_text)
     
     print("✂️  Extracting speaker turns...")
-    speaker_turns = extract_speaker_turns(cleaned_text)
+    speaker_turns = extract_speaker_turns(cleaned_text, source)
     
     if not speaker_turns:
-        print("\n⚠️  Warning: No speaker turns found!")
+        print("\nWarning: No speaker turns found!")
         print("\nExpected formats:")
         print("  - Speaker Name ([timestamp]): text")
         print("  - Speaker Name (timestamp): text")
@@ -248,6 +233,7 @@ def main():
         sys.exit(1)
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
+    print(f"   Source: {source}")
     
     # Generate output filenames
     base_name = input_file.stem  # filename without extension
@@ -255,22 +241,13 @@ def main():
     output_json = input_file.parent / f"{base_name}_clean.json"
     
     # Save both formats
-    print("\n💾 Saving output files...")
     save_as_csv(speaker_turns, output_csv)
     save_as_json(speaker_turns, output_json)
     
     print("\n✨ Done! Preprocessing complete.")
     print(f"\nOutput files:")
     print(f"  - {output_csv}")
-    print(f"  - {output_json}")
-    
-    # Show sample of first 3 entries
-    print("\n📋 Sample output (first 3 entries):")
-    for i, turn in enumerate(speaker_turns[:3], 1):
-        print(f"\n{i}. Speaker: {turn['speaker']}")
-        print(f"   Timestamp: {turn['timestamp']}")
-        print(f"   Text: {turn['text'][:100]}...")
-
+    print(f"  - {output_json}\n")
 
 if __name__ == "__main__":
-    main()
+    preprocess()
