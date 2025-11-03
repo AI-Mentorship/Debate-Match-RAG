@@ -2,6 +2,7 @@ from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
 from backend.preprocessing.preprocess_script import preprocess
 from backend.fact_checker_prototype.fact_checker import claim_verdict
+from backend.qa_pipeline.QA_pipeline import build_chroma_db
 from backend.qa_pipeline.QA_pipeline import query_rag
 from backend.retriever.retriever import run_retriever
 from flask import Flask, jsonify # type: ignore
@@ -128,6 +129,7 @@ if __name__ == "__main__":
     run_retriever(query, top_k)
 
     # QA 
+    build_chroma_db()
     query_rag(query)
 
     # Pavan

@@ -15,6 +15,9 @@ embedding_function = get_embedding_function()
 
 def build_chroma_db():
     # Step 1: Load passages from JSON 
+    print("="*80)
+    print("DEBATE RETRIEVER")
+    print("="*80)
     print(f"Loading passages from passages.json...")
     with open("passages.json", "r") as f:
         passages = json.load(f)
@@ -48,7 +51,6 @@ def build_chroma_db():
     # Step 5: Add only unique documents 
     if unique_documents:
         db.add_documents(unique_documents)
-        db.persist()
         print(f"✅ Added {len(unique_documents)} new unique passages to Chroma DB.")
 
 from langchain_core.prompts import ChatPromptTemplate
