@@ -59,6 +59,7 @@ class DebateRetriever:
         for idx in indices[0]:
             meta = self.metadata[idx]
             results.append({
+                'debate name': meta['debate_name'],
                 'speaker': meta['speaker'],
                 'timestamp': meta['timestamp'],
                 'text': meta['text']

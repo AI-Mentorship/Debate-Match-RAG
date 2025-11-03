@@ -190,10 +190,9 @@ def get_debate_metadata():
     Returns:
         Tuple of (source, date)
     """
-    print("\nEnter debate metadata below...")
     
     # Get source/name
-    source = input("Debate name/source: ").strip()
+    source = input("\nEnter Debate name/source: ").strip()
     if not source:
         source = "Unknown Debate"
         print(f"No source provided, using: {source}")

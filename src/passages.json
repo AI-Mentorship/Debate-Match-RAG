@@ -1,17 +1,20 @@
 [
     {
-        "speaker": "Jake Tapper",
-        "timestamp": "02:40",
-        "text": "Now, please welcome the 46th President of the United States, Joe Biden."
+        "debate name": "ABC News Presidential Debate: Race for the White House",
+        "speaker": "Kamala Harris",
+        "timestamp": "20:26",
+        "text": "But understand, if Donald Trump were to be re-elected, he will sign a national abortion ban. Understand in his Project 2025 there would be a national abortion ban."
     },
     {
-        "speaker": "Jake Tapper",
-        "timestamp": "06:40",
-        "text": "Thank you. President Biden?"
+        "debate name": "2024 CNN PRESIDENTIAL DEBATE",
+        "speaker": "Donald Trump",
+        "timestamp": "14:18",
+        "text": "First of all, the Supreme Court just approved the abortion bill and I agree with their decision to have done that, and I will not block it."
     },
     {
+        "debate name": "2024 CNN PRESIDENTIAL DEBATE",
         "speaker": "Dana Bash",
-        "timestamp": "16:19",
-        "text": "Thank you. President Biden?"
+        "timestamp": "14:02",
+        "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?"
     }
 ]
