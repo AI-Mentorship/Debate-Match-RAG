@@ -62,6 +62,89 @@ function Team() {
         </div>
       </div>
 
+      {/* Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Adya Dhanasekar */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Adya Dhanasekar</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Project Mentor
+            </p>
+          </div>
+        </div>
+
+        {/* Shivam Singh */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Shivam Singh</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Project Mentor
+            </p>
+          </div>
+        </div>
+
+        {/* Satyank Nadimpalli */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Satyank Nadimpalli</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Full Stack Developer
+            </p>
+          </div>
+        </div>
+
+        {/* Khang Doan */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Khang Doan</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Full Stack Developer
+            </p>
+          </div>
+        </div>
+
+        {/* Pavan Arani */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Pavan Arani</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Full Stack Developer
+            </p>
+          </div>
+        </div>
+
+        {/* Raisa Reza */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Raisa Reza</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Back End Developer
+            </p>
+          </div>
+        </div>
+
+        {/* Yakina Azza */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Yakina Azza</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Back End Developer
+            </p>
+          </div>
+        </div>
+
+        {/* Sadwitha Thopucharla */}
+        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
+          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+            <h3 className="text-base font-bold text-white mb-1">Sadwitha Thopucharla</h3>
+            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
+              Back End Developer
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Shooting star animation */}
       <style jsx global>{`
         @keyframes shooting-star {
