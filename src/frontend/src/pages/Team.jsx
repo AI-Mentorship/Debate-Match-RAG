@@ -1,9 +1,9 @@
-function Contribution() {
+function Team() {
   return (
     <div className="flex-1 flex items-center justify-center text-white text-4xl">
-      Contribution
+      Team
     </div>
   )
 }
 
-export default Contribution
+export default Team
