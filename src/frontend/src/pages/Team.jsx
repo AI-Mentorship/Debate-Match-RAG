@@ -51,6 +51,17 @@ function Team() {
         ))}
       </div>
 
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Description */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-4">Our Contributors</h1>
+          <p className="text-light-silver max-w-2xl mx-auto text-sm leading-relaxed">
+            Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
+            engineering, and design to create the future of debate analysis.
+          </p>
+        </div>
+      </div>
+
       {/* Shooting star animation */}
       <style jsx global>{`
         @keyframes shooting-star {
