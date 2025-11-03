@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 function Team() {
+  const [hoveredCard, setHoveredCard] = useState(null)
   const [stars, setStars] = useState([])
   
   useEffect(() => {
@@ -38,6 +39,8 @@ function Team() {
       role: "Project Lead",
       description: "",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
+      color: "from-cyan-400 to-blue-500",
+      background: "bg-gradient-to-br from-cyan-400/20 to-blue-500/20"
     },
     {
       id: 2,
@@ -45,6 +48,8 @@ function Team() {
       role: "Project Lead",
       description: "",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
+      color: "from-pink-400 to-purple-500",
+      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20"
     },
     {
       id: 3,
@@ -52,6 +57,8 @@ function Team() {
       role: "Full Stack Developer",
       description: "",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
+      color: "from-green-400 to-emerald-500",
+      background: "bg-gradient-to-br from-green-400/20 to-emerald-500/20"
     },
     {
       id: 4,
@@ -59,6 +66,8 @@ function Team() {
       role: "Full Stack Developer",
       description: "B.S. in Computer Science with focus on AI/ML",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
+      color: "from-yellow-400 to-orange-500",
+      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20"
     },
     {
       id: 5,
@@ -66,6 +75,8 @@ function Team() {
       role: "Full Stack Developer",
       description: "",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
+      color: "from-indigo-400 to-purple-500",
+      background: "bg-gradient-to-br from-indigo-400/20 to-purple-500/20"
     },
     {
       id: 6,
@@ -73,6 +84,8 @@ function Team() {
       role: "UX/UI Designer",
       description: "",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
+      color: "from-red-400 to-pink-500",
+      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20"
     },
     {
       id: 7,
@@ -80,6 +93,8 @@ function Team() {
       role: "Back-End Developer",
       description: "",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
+      color: "from-teal-400 to-cyan-500",
+      background: "bg-gradient-to-br from-teal-400/20 to-cyan-500/20"
     },
     {
       id: 8,
@@ -87,6 +102,8 @@ function Team() {
       role: "QA Pipeline Lead",
       description: "",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
+      color: "from-amber-400 to-yellow-500",
+      background: "bg-gradient-to-br from-amber-400/20 to-yellow-500/20"
     }
   ]
 
@@ -119,88 +136,29 @@ function Team() {
             engineering, and design to create the future of debate analysis.
           </p>
         </div>
-      </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Adya Dhanasekar */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Adya Dhanasekar</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Project Mentor
-            </p>
-          </div>
-        </div>
-
-        {/* Shivam Singh */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Shivam Singh</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Project Mentor
-            </p>
-          </div>
-        </div>
-
-        {/* Satyank Nadimpalli */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Satyank Nadimpalli</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Full Stack Developer
-            </p>
-          </div>
-        </div>
-
-        {/* Khang Doan */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Khang Doan</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Full Stack Developer
-            </p>
-          </div>
-        </div>
-
-        {/* Pavan Arani */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Pavan Arani</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Full Stack Developer
-            </p>
-          </div>
-        </div>
-
-        {/* Raisa Reza */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Raisa Reza</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Back End Developer
-            </p>
-          </div>
-        </div>
-
-        {/* Yakina Azza */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Yakina Azza</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Back End Developer
-            </p>
-          </div>
-        </div>
-
-        {/* Sadwitha Thopucharla */}
-        <div className="relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group">
-          <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-            <h3 className="text-base font-bold text-white mb-1">Sadwitha Thopucharla</h3>
-            <p className={`text-transparent bg-clip-text bg-gradient-to-r text-white font-semibold text-xs`}>
-              Back End Developer
-            </p>
-          </div>
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {members.map((member) => (
+            <div
+              key={member.id}
+              className={`relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group ${
+                hoveredCard === member.id 
+                  ? 'scale-105 rotate-1 shadow-2xl' 
+                  : 'scale-100 rotate-0 hover:scale-102'
+              } ${member.background}`}
+              onMouseEnter={() => setHoveredCard(member.id)}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              {/* Name and Role */}
+              <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
+                <p className={`text-transparent bg-clip-text bg-gradient-to-r ${member.color} font-semibold text-xs`}>
+                  {member.role}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
