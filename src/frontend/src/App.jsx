@@ -2,8 +2,7 @@ import { useState } from 'react'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Mission from './pages/Mission'
-import Contribution from './pages/Contribution'
-import Contact from './pages/Contact'
+import Team from './pages/Team'
 import ChatInterface from './pages/ChatInterface'
 
 function App() {
@@ -24,10 +23,8 @@ function App() {
         return <Home onGetStarted={handleGetStarted} />
       case 'mission':
         return <Mission />
-      case 'contribution':
-        return <Contribution />
-      case 'contact':
-        return <Contact />
+      case 'team':
+        return <Team />
       case 'chat':
         return <ChatInterface onBackToHome={() => setCurrentPage('home')} />
       default:

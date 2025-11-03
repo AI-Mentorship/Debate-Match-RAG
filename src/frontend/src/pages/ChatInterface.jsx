@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
+import { motion, AnimatePresence } from "framer-motion";
 
 function ChatInterface({ onBackToHome }) {
   const [stars, setStars] = useState([])
@@ -10,6 +11,7 @@ function ChatInterface({ onBackToHome }) {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
 
+  // Star background animation (unchanged)
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -17,32 +19,24 @@ function ChatInterface({ onBackToHome }) {
         left: Math.random() * 100,
         delay: Math.random() * 5,
         duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
+        size: 1 + Math.random() * 2,
       }
       setStars(prev => [...prev, newStar])
-
-      // Animation completes
       setTimeout(() => {
         setStars(prev => prev.filter(star => star.id !== newStar.id))
       }, (newStar.duration + newStar.delay) * 1000)
     }
 
-    // Create stars
-    for (let i = 0; i < 20; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
+    for (let i = 0; i < 20; i++) setTimeout(createStar, i * 300)
     const interval = setInterval(createStar, 800)
-
     return () => clearInterval(interval)
   }, [messages, typingMessage])
 
+  // Typing animation handler
   const typeText = (text, onComplete) => {
     setIsTyping(true)
     setTypingMessage('')
     let index = 0
-    
     const typingInterval = setInterval(() => {
       if (index < text.length) {
         setTypingMessage(prev => prev + text.charAt(index))
@@ -52,55 +46,51 @@ function ChatInterface({ onBackToHome }) {
         setIsTyping(false)
         onComplete()
       }
-    }, 30) // Adjust typing speed here (lower = faster)
+    }, 30)
   }
 
+  // Send message — now appends properly instead of resetting
   const sendMessage = async () => {
     if (!input.trim()) return
 
-    // Reset conversation and start fresh with user message
     const userMessage = { role: 'user', content: input }
-    setMessages([userMessage]) // Reset to only this message
+    setMessages(prev => [...prev, userMessage]) // append instead of reset
     setInput('')
     setLoading(true)
 
     try {
       const response = await axios.get('http://localhost:3000/api/message')
-      
-      // Start typing animation for AI response
       const aiResponse = `Analysis for "${input}": ${response.data.message.join(', ')}`
+
       typeText(aiResponse, () => {
-        // When typing is complete, add the final message
-        const aiMessage = { 
-          role: 'assistant', 
-          content: aiResponse
-        }
-        setMessages(prev => [...prev, aiMessage])
+        const aiMessage = { role: 'assistant', content: aiResponse }
+        setMessages(prev => [...prev, aiMessage]) // append AI message
         setLoading(false)
       })
-      
     } catch (error) {
       const errorResponse = 'Error connecting to debate analysis service. Please try again.'
       typeText(errorResponse, () => {
-        const errorMessage = { 
-          role: 'assistant', 
-          content: errorResponse
-        }
+        const errorMessage = { role: 'assistant', content: errorResponse }
         setMessages(prev => [...prev, errorMessage])
         setLoading(false)
       })
     }
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = e => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
     }
   }
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, typingMessage])
+
+  // Render
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
         {messages.length === 0 && !loading ? (
@@ -114,28 +104,25 @@ function ChatInterface({ onBackToHome }) {
           </div>
         ) : (
           <>
-            {/* Display existing messages */}
+            {/* Messages */}
             {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
-              >
+              <div key={index} className="flex justify-center">
                 <div
-                  className={`max-w-2xl rounded-2xl p-6 ${
+                  className={`max-w-2xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
                     message.role === 'user'
-                      ? 'bg-white/10 backdrop-blur-md text-white border border-white/20'
-                      : 'bg-white/10 backdrop-blur-md text-white border border-white/20'
+                      ? 'bg-electric-purple/10 border-electric-purple/30 text-white'
+                      : 'bg-white/10 border-white/20 text-white'
                   }`}
                 >
-                  <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  <p className="whitespace-pre-wrap">{message.content}</p>
                 </div>
               </div>
             ))}
-            
-            {/* Display typing animation */}
+
+            {/* Typing animation */}
             {isTyping && (
-              <div className="flex justify-start">
-                <div className="max-w-2xl rounded-2xl p-6 bg-white/10 backdrop-blur-md text-white border border-white/20">
+              <div className="flex justify-center">
+                <div className="max-w-2xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
                   <p className="whitespace-pre-wrap leading-relaxed">
                     {typingMessage}
                     <span className="animate-pulse">▊</span>
@@ -143,11 +130,11 @@ function ChatInterface({ onBackToHome }) {
                 </div>
               </div>
             )}
-            
-            {/* Display loading indicator when not typing */}
+
+            {/* Loading indicator */}
             {loading && !isTyping && (
-              <div className="flex justify-start">
-                <div className="max-w-2xl rounded-2xl p-6 bg-white/10 backdrop-blur-md text-white border border-white/20">
+              <div className="flex justify-center">
+                <div className="max-w-2xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
                   <div className="flex items-center space-x-4">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
@@ -165,30 +152,78 @@ function ChatInterface({ onBackToHome }) {
       </div>
 
       {/* Input Area */}
-      <div className="px-6 py-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex space-x-4 items-end">
-            <div className="flex-1">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Enter your debate topic, argument, or analysis request..."
-                className="w-full bg-white/10 backdrop-blur-md text-white rounded-2xl px-6 py-4 border border-white/20 resize-none focus:outline-none focus:border-white placeholder-light-silver transition-all duration-200"
-                rows="2"
-                disabled={loading}
-              />
+      <AnimatePresence mode="wait">
+        {messages.length === 0 ? (
+          <motion.div
+            key="centerInput"
+            initial={{opacity: 0 }}
+            animate={{ y: -275, opacity: 1 }}
+            // exit={{opacity: 0 }}
+            transition={{ duration: 1.2, type: 'spring' }}
+            className="flex-1 flex items-center justify-center"
+          >
+            <div className="w-full max-w-2xl">
+              {/* Your merged input+send code here */}
+              <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                <textarea
+                  className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                  placeholder="Ask something..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || !input.trim()}
+                  className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition 
+                            ${loading || !input.trim()
+                              ? 'bg-gray-600 cursor-not-allowed opacity-60'
+                              : 'bg-electric-purple hover:bg-purple-700 active:scale-95'
+                            }`}
+                >
+                  Send
+                </button>
+              </div>
             </div>
-            <button
-              onClick={sendMessage}
-              disabled={loading || !input.trim()}
-              className="bg-transparent border-2 border-electric-purple text-white px-8 py-4 rounded-2xl hover:bg-electric-purple/20 hover:border-lavender transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-            >
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="bottomInput"
+            initial={{ y: -325, opacity: 1 }}
+            animate={{ y: -70, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 1.0, type: "spring" }}
+            className="px-6 py-6"
+          >
+            <div className="max-w-2xl mx-auto">
+              {/* Your merged input+send code here */}
+              <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                <textarea
+                  className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                  placeholder="Ask something..."
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || !input.trim()}
+                  className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition 
+                            ${loading || !input.trim()
+                              ? 'bg-gray-600 cursor-not-allowed opacity-60'
+                              : 'bg-electric-purple hover:bg-purple-700 active:scale-95'
+                            }`}
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   )
 }
