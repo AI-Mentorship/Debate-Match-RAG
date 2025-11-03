@@ -18,6 +18,15 @@ app = Flask(__name__)
 # Flask with CORS for React
 cors = CORS(app, origins="*")
 
+# Get debate name once - used throughout pipeline
+def get_debate_name():
+    source = input("\nEnter Debate name/source: ").strip()
+    if not source:
+        source = "Unknown Debate"
+        print(f"No source provided, using: {source}")
+    
+    return source
+
 # Database
 def setup_database():
     print("Setting up Debate AI Database...")
@@ -107,7 +116,8 @@ def message():
 
 if __name__ == "__main__":
     # Preprocessing
-    preprocess()
+    debate_name = get_debate_name()
+    preprocess(debate_name)
 
     # Database setup
     setup_database()
@@ -125,8 +135,8 @@ if __name__ == "__main__":
         top_k = 3
         print("⚠️  Invalid number, using default: 3")
 
-    # Retriever - pass query and top_k
-    run_retriever(query, top_k)
+    # Retriever - pass query, debate_name, and top_k
+    query, results = run_retriever(query, debate_name, top_k)
 
     # QA 
     build_chroma_db()

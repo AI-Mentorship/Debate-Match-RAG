@@ -66,10 +66,9 @@ def extract_speaker_turns(cleaned_text, source):
     Args:
         cleaned_text: Cleaned transcript text
         source: Name of the debate/source
-        date: Date of the debate (YYYY-MM-DD format)
         
     Returns:
-        List of dicts with line_number, speaker, timestamp, text, source, and date
+        List of dicts with line_number, speaker, timestamp, text, and source
     """
     turns = []
     lines = cleaned_text.split('\n')
@@ -183,26 +182,10 @@ def save_as_json(data, output_path):
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
-def get_debate_metadata():
-    """
-    Prompt user for debate metadata (source and date).
-    
-    Returns:
-        Tuple of (source, date)
-    """
-    
-    # Get source/name
-    source = input("\nEnter Debate name/source: ").strip()
-    if not source:
-        source = "Unknown Debate"
-        print(f"No source provided, using: {source}")
-    
-    return source
 
-def preprocess():
-    """
-    Main preprocessing function.
-    """
+def preprocess(debate_name):
+    # Main preprocessing function.
+
     # Check for input file argument
     if len(sys.argv) < 2:
         print("Usage: python main.py <input_file.txt>")
@@ -216,14 +199,21 @@ def preprocess():
         print(f"Error: Input file '{input_file}' not found!")
         sys.exit(1)
     
+    # Use debate_name from parameter or prompt user
+    if debate_name:
+        source = debate_name
+        print(f"Using debate name: {source}")
+    else:
+        source = input("\nEnter Debate name/source: ").strip()
+        if not source:
+            source = "Unknown Debate"
+            print(f"No source provided, using: {source}")
+
     print(f"Reading: {input_file}")
     
     # Read raw transcript
     with open(input_file, 'r', encoding='utf-8') as f:
         raw_text = f.read()
-    
-    # Get debate metadata from user
-    source = get_debate_metadata()
     
     print("\n🧹 Cleaning transcript...")
     cleaned_text = clean_transcript(raw_text)
