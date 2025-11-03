@@ -22,7 +22,7 @@ class DataInserter(DebateDatabase):
                     speaker_id = self.insert_speaker(row["speaker"], speakers_dict)
                     
                     # Insert debate
-                    debate_id = self.insert_debate(row["source"], row["date"], debates_dict)
+                    debate_id = self.insert_debate(row["source"], debates_dict)
                     
                     # Insert utterance
                     self.insert_utterance(debate_id, speaker_id, row["text"], row["timestamp"])
@@ -33,7 +33,11 @@ class DataInserter(DebateDatabase):
 
         except FileNotFoundError:
             print(f"CSV file not found: {csv_file_path}")
-            print("Please make sure the file exists in src/backend/data folder")
+            print("Please make sure the file exists")
+
+        except KeyError as e:
+            print(f"Missing column in CSV: {e}")
+            print("Expected columns: line_number, speaker, timestamp, text, source, date")
 
         except Exception as e:
             print(f"Error loading CSV: {e}")
@@ -63,8 +67,8 @@ class DataInserter(DebateDatabase):
         speakers_dict[speaker] = speaker_id
         return speaker_id
     
-    def insert_debate(self, source, date, debates_dict):
-        key = (source, date)
+    def insert_debate(self, source, debates_dict):
+        key = source
 
         # Check duplicate
         if key in debates_dict:
@@ -72,8 +76,7 @@ class DataInserter(DebateDatabase):
         
         # Check duplicate in the database
         existing_debate = self.debates.find_one({
-            "name": source,
-            "date": datetime.strptime(date, "%Y-%m-%d")
+            "name": source
         })
 
         if existing_debate:
@@ -84,8 +87,7 @@ class DataInserter(DebateDatabase):
         debate_id = self.generate_unique_id()
         self.debates.insert_one({
             "debate_id": debate_id,
-            "name": source,
-            "date": datetime.strptime(date, "%Y-%m-%d")
+            "name": source
         })
 
         debates_dict[key] = debate_id

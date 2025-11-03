@@ -5,6 +5,7 @@ import numpy as np
 import faiss
 from openai import OpenAI
 from dotenv import load_dotenv
+import certifi
 
 # -----------------------------
 # CONFIG
@@ -25,7 +26,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 # -----------------------------
 # MongoDB Connection
 # -----------------------------
-mongo_client = MongoClient(MONGO_URI)
+mongo_client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
 db = mongo_client[DB_NAME]
 
 # -----------------------------
