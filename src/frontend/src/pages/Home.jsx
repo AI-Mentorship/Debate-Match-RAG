@@ -21,12 +21,12 @@ function Home({ onGetStarted }) {
     }
 
     // Create stars
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 8; i++) {
       setTimeout(createStar, i * 300)
     }
 
     // Continue creating stars
-    const interval = setInterval(createStar, 800)
+    const interval = setInterval(createStar, 100)
 
     return () => clearInterval(interval)
   }, [])
