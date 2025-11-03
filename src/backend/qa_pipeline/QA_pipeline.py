@@ -16,7 +16,7 @@ embedding_function = get_embedding_function()
 def build_chroma_db():
     # Step 1: Load passages from JSON 
     print("="*80)
-    print("DEBATE RETRIEVER")
+    print("DEBATE QA Pipeline")
     print("="*80)
     print(f"Loading passages from passages.json...")
     with open("passages.json", "r") as f:
