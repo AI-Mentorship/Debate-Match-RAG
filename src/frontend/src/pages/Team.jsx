@@ -37,25 +37,25 @@ function Team() {
       id: 1,
       name: "Adya Dhanasekar",
       role: "Project Lead",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      color: "from-cyan-400 to-blue-500",
-      background: "bg-gradient-to-br from-cyan-400/20 to-blue-500/20"
+      color: "from-red-400 to-pink-500",
+      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20"
     },
     {
       id: 2,
       name: "Shivam Singh",
       role: "Project Lead",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      color: "from-pink-400 to-purple-500",
-      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20"
+      color: "from-yellow-400 to-orange-500",
+      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20"
     },
     {
       id: 3,
       name: "Satyank Nadimpalli",
       role: "Full Stack Developer",
-      description: "",
+      description: "M.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
       color: "from-green-400 to-emerald-500",
       background: "bg-gradient-to-br from-green-400/20 to-emerald-500/20"
@@ -66,32 +66,32 @@ function Team() {
       role: "Full Stack Developer",
       description: "B.S. in Computer Science with focus on AI/ML",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
-      color: "from-yellow-400 to-orange-500",
-      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20"
+      color: "from-pink-400 to-purple-500",
+      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20"
     },
     {
       id: 5,
       name: "Pavan Arani",
       role: "Full Stack Developer",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
-      color: "from-indigo-400 to-purple-500",
-      background: "bg-gradient-to-br from-indigo-400/20 to-purple-500/20"
+      color: "from-cyan-400 to-blue-500",
+      background: "bg-gradient-to-br from-cyan-400/20 to-blue-500/20"
     },
     {
       id: 6,
       name: "Raisa Reza",
       role: "UX/UI Designer",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      color: "from-red-400 to-pink-500",
-      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20"
+      color: "from-indigo-400 to-purple-500",
+      background: "bg-gradient-to-br from-indigo-400/20 to-purple-500/20"
     },
     {
       id: 7,
       name: "Yakina Azza",
       role: "Back-End Developer",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
       color: "from-teal-400 to-cyan-500",
       background: "bg-gradient-to-br from-teal-400/20 to-cyan-500/20"
@@ -100,7 +100,7 @@ function Team() {
       id: 8,
       name: "Sadwitha Thopucharla",
       role: "QA Pipeline Lead",
-      description: "",
+      description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
       color: "from-amber-400 to-yellow-500",
       background: "bg-gradient-to-br from-amber-400/20 to-yellow-500/20"
@@ -157,6 +157,11 @@ function Team() {
                   {member.role}
                 </p>
               </div>
+
+              {/* Description */}
+              <p className="text-light-silver text-xs leading-relaxed mb-3 text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                {member.description}
+              </p>
             </div>
           ))}
         </div>
