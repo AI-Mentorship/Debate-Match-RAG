@@ -1,11 +1,5 @@
 [
     {
-        "debate name": "ABC News Presidential Debate: Race for the White House",
-        "speaker": "Kamala Harris",
-        "timestamp": "20:26",
-        "text": "But understand, if Donald Trump were to be re-elected, he will sign a national abortion ban. Understand in his Project 2025 there would be a national abortion ban."
-    },
-    {
         "debate name": "2024 CNN PRESIDENTIAL DEBATE",
         "speaker": "Donald Trump",
         "timestamp": "14:18",
@@ -16,5 +10,11 @@
         "speaker": "Dana Bash",
         "timestamp": "14:02",
         "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?"
+    },
+    {
+        "debate name": "2024 CNN PRESIDENTIAL DEBATE",
+        "speaker": "Dana Bash",
+        "timestamp": "13:37",
+        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states."
     }
 ]

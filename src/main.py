@@ -136,7 +136,7 @@ if __name__ == "__main__":
         print("⚠️  Invalid number, using default: 3")
 
     # Retriever - pass query, debate_name, and top_k
-    query, results = run_retriever(query, debate_name, top_k)
+    run_retriever(query, debate_name, top_k)
 
     # QA 
     build_chroma_db()
