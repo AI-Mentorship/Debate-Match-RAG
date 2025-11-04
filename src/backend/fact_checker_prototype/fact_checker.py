@@ -5,16 +5,6 @@ from .news_api import news_search
 from .classifier import safe_zero_shot_classifier, classify_snippet, aggregate_judgments
 from .text_utils import get_most_relevant_snippets
 
-
-def make_badge_html(verdict: str, confidence: float) -> str:
-    confidence_percent = int(round(confidence * 100))
-    color_map = {
-        "SUPPORTED": "#00ff6a",
-        "REFUTED": "#ff1900",
-        "NOT ENOUGH EVIDENCE": "#ffcc00"
-    }
-    color = color_map.get(verdict, "#494949")
-
 # Main entry for verdicts
 # Evaluates a claim using Wikipedia and news sources.
 def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str, Any]:
@@ -80,6 +70,5 @@ def claim_verdict(claim: str, top_k: int = 3, use_news: bool = True) -> Dict[str
         "verdict": verdict_data["verdict"],
         "confidence": verdict_data["confidence"],
         "sources": wiki_results + news_results,
-        "per_source": per_source,
-        "badge_html": make_badge_html(verdict_data["verdict"], verdict_data["confidence"])
+        "per_source": per_source
     }
