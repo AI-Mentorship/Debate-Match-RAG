@@ -74,23 +74,26 @@ def get_user_query():
         return query
 
 # Fact Checker Prototype
-# Command-line interface for testing fact-checker.
-def run_cli():
-    parser = argparse.ArgumentParser(description = "Fact-checker for Debate Match")
-    parser.add_argument("claim", type = str, help = "Claim to fact-check")
-    parser.add_argument("--top", type = int, default = 3, help = "Top K results")
-    parser.add_argument("--no-news", action="store_true", help = "Skip NewsAPI search.")
-    parser.add_argument("--raw", action = "store_true", help = "Print raw JSON")
-    args = parser.parse_args()
-    
-    result = claim_verdict(args.claim, top_k = args.top, use_news = (not args.no_news))
-    
-    if args.raw:
-        print(json.dumps(result, indent = 2))
-    else:
-        print("Claim:", result["claim"])
-        print("Verdict:", result["verdict"], f"(confidence {result['confidence']:.2f})")
-        print("Badge:", result["badge_html"])
+def run_cli(top_k=3, use_news=True):
+    print("\n" + "="*80)
+    print("Fact Checking")
+    print("="*80)
+
+
+    claim = input("\nEnter the claim to fact-check based on the response (or 'quit' to exit): ").strip()
+        
+    if claim.lower() in ['quit', 'exit', 'q']:
+        print("👋 Goodbye!")        
+    if not claim:
+        print("⚠️  Please enter a valid claim.")
+        
+    # Run fact check with provided args
+    print(f"🔍 Fact-checking: '{claim}'")
+    try:
+        result = claim_verdict(claim, top_k, use_news)
+        
+        print(f"\nClaim: {result['claim']}")
+        print(f"Verdict: {result['verdict']} (confidence {result['confidence']:.2f})")
         print("\nPer-source evidence:")
         for entry in result["per_source"]:
             print(f"- [{entry['source']}] {entry.get('title')} -> {entry['label']} ({entry['score']:.2f})")
@@ -99,6 +102,8 @@ def run_cli():
             snippet_preview = (entry.get("snippet") or "")[:200]
             if snippet_preview:
                 print("  Snippet:", snippet_preview.replace("\n", " "))
+    except Exception as e:
+        print(f"❌ Error: {e}")
 
 # Front end
 @app.route("/api/message", methods=["GET"])
@@ -142,7 +147,7 @@ if __name__ == "__main__":
     build_chroma_db()
     query_rag(query)
 
-    # Pavan
-    #run_cli()
+    # Fact Checker
+    run_cli()
 
     #app.run(debug=False, port=3000)
