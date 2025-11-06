@@ -1,23 +1,5 @@
 [
     {
-        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "speaker": "Jake Tapper",
-        "timestamp": "20:45",
-        "text": "Let's turn now to the issue of immigration and border security. President Biden, a record number of migrants have illegally crossed the southern border on your watch, overwhelming border states and overburdening cities such as New York and Chicago.",
-        "topics": [
-            "immigration"
-        ]
-    },
-    {
-        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "speaker": "Jake Tapper",
-        "timestamp": "02:57",
-        "text": "And please welcome the 45th President of the United States, Donald Trump. Gentlemen, thanks so much for being here, let's begin the debate and let's start with the issue that voters consistently say is their top concern, the economy. President Biden, inflation has slowed, but prices remain high. Since you took office, the price of essentials has increased. For example, a basket of groceries that cost $100 then now costs more than $120, and typical home prices have jumped more than 30%. What do you say to voters who feel they are worse off under your presidency than they were under President Trump?",
-        "topics": [
-            "economy_jobs"
-        ]
-    },
-    {
         "debate_name": "ABC News Presidential Debate: Race for the White House",
         "speaker": "Kamala Harris",
         "timestamp": "20:26",
@@ -26,22 +8,24 @@
     },
     {
         "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "speaker": "Donald Trump",
-        "timestamp": "01:00:50",
-        "text": "Well, let me just go back to what he said about the police, how close the police are to him. Almost every police group in the nation from every state is supporting Donald J. Trump.",
+        "speaker": "Dana Bash",
+        "timestamp": "14:02",
+        "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?",
         "topics": [
-            "general_political_commentary"
+            "abortion",
+            "healthcare",
+            "civil_rights"
         ]
     },
     {
         "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "speaker": "Jake Tapper",
-        "timestamp": "07:39",
-        "text": "President Trump, I want to follow up, if I can.",
+        "speaker": "Donald Trump",
+        "timestamp": "14:18",
+        "text": "First of all, the Supreme Court just approved the abortion bill and I agree with their decision to have done that, and I will not block it.",
         "topics": [
-            "economy_jobs",
-            "healthcare",
-            "foreign_policy"
+            "abortion",
+            "civil_rights",
+            "crime_justice"
         ]
     }
 ]

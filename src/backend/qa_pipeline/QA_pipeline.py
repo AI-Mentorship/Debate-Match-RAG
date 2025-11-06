@@ -30,7 +30,9 @@ def build_chroma_db():
             page_content=p["text"],
             metadata={
                 "debate_name": p.get("debate_name", "Unknown"),
-                "timestamp": p.get("timestamp")
+                "speaker": p.get("speaker", "Unknown"),
+                "timestamp": p.get("timestamp"),
+                "topics": ','.join(p.get("topics", [])) if isinstance(p.get("topics"), list) else p.get("topics", "")
             }
         )
         for p in passages
@@ -100,5 +102,4 @@ def query_rag(query_text):
     # Generate the response from the model
     response = model.invoke(prompt_str)
 
-    # Print the model's response
-    print("\nRESPONSE:", response)
+    return response

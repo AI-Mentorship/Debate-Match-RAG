@@ -163,7 +163,8 @@ def initiate_pipline():
 
     # QA
     build_chroma_db()
-    query_rag(query)
+    response = query_rag(query)
+    print(response)
 
     # Fact Checker
     #run_cli()
