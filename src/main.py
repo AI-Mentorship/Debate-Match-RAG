@@ -105,7 +105,7 @@ def run_cli(top_k=3, use_news=True):
                 print("  Snippet:", snippet_preview.replace("\n", " "))
     except Exception as e:
         print(f"❌ Error: {e}")
-
+'''
 # Front end
 @app.route("/api/message", methods=["GET"])
 def message():
@@ -135,9 +135,9 @@ def retrieve_response():
 
     response = "Test Response returned by the API"
     return jsonify(response), 200
-
+'''
 def initiate_pipline():
-    log.info("**********INITIATING ALL COMPONENTS**********")
+    #log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
     debate_name = get_debate_name()
     preprocess(debate_name)
@@ -167,8 +167,8 @@ def initiate_pipline():
 
     # Fact Checker
     run_cli()
-    log.info("**********ALL COMPONENTS EXECUTED**********")
+    #log.info("**********ALL COMPONENTS EXECUTED**********")
 
 if __name__ == "__main__":
-    # initiate_pipline()
-    app.run(debug=False, port=3000)
+    initiate_pipline()
+    #app.run(debug=False, port=3000)
