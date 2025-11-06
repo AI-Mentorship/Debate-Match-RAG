@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import datetime
 from transformers import pipeline
 import warnings
+import torch
 
 
 def clean_transcript(raw_text):
@@ -63,14 +64,15 @@ warnings.filterwarnings("ignore")
 
 # Initialize AI classifier once at module level
 print("Loading topic classification model...")
+device = 0 if torch.cuda.is_available() or torch.backends.mps.is_available() else -1
 topic_classifier = pipeline(
     "zero-shot-classification", 
     model="facebook/bart-large-mnli",
-    device=-1  # Use CPU, change to 0 for GPU
+    device=device
 )
 print("Topic classifier loaded!")
 
-def classify_topic_ai(text, threshold=0.3):
+def classify_topics_batch(text, threshold=0.3):
 
     # Expanded topic list with more variety
     candidate_labels = [
@@ -137,26 +139,31 @@ def classify_topic_ai(text, threshold=0.3):
         "general political commentary"
     ]
     
+    all_topics = []
+    
     try:
-        # Run classification
-        result = topic_classifier(
-            text[:512],  # Limit text length for efficiency
-            candidate_labels,
-            multi_label=True
-        )
-        
-        # Filter topics by threshold and return top 3
-        topics = [
-            label.replace(" and ", "_").replace(" ", "_")  # Format for consistency
-            for label, score in zip(result['labels'], result['scores']) 
-            if score > threshold
-        ]
-        
-        return topics[:3] if topics else ["general_political_commentary"]
-        
+        # Process in batches
+        for text in text:
+            result = topic_classifier(
+                text[:512],
+                candidate_labels,
+                multi_label=True
+            )
+            
+            topics = [
+                label.replace(" and ", "_").replace(" ", "_")
+                for label, score in zip(result['labels'], result['scores']) 
+                if score > threshold
+            ]
+            
+            all_topics.append(topics[:3] if topics else ["general_political_commentary"])
+            
     except Exception as e:
-        print(f"⚠️  Topic classification failed: {e}")
-        return ["general_political_commentary"]
+        print(f"⚠️  Batch classification failed: {e}")
+        all_topics = [["general_political_commentary"] for _ in text]
+    
+    return all_topics
+
 
 def extract_speaker_turns(cleaned_text, source):
     """
@@ -205,13 +212,11 @@ def extract_speaker_turns(cleaned_text, source):
                 if current_speaker and current_text:
                     text = ' '.join(current_text).strip()
                     if text:
-                        topics = classify_topic_ai(text)
                         turns.append({
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
                             'text': text,
-                            'source': source,
-                            'topics': topics 
+                            'source': source
                         })
                 
                 # Extract based on which pattern matched
@@ -242,13 +247,11 @@ def extract_speaker_turns(cleaned_text, source):
     if current_speaker and current_text:
         text = ' '.join(current_text).strip()
         if text:
-            topics = classify_topic_ai(text)
             turns.append({
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
-                'source': source,
-                'topics': topics
+                'source': source
             })
     
     return turns
@@ -337,6 +340,17 @@ def preprocess(debate_name):
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
     print(f"   Source: {source}")
+    
+    # Classify topics in batch (much faster)
+    print("🏷️  Classifying topics (this may take a moment)...")
+    texts = [turn['text'] for turn in speaker_turns]
+    all_topics = classify_topics_batch(texts)
+    
+    # Add topics to turns
+    for turn, topics in zip(speaker_turns, all_topics):
+        turn['topics'] = topics
+    
+    print(f"✅ Topic classification complete!")
     
     # Generate output filenames
     base_name = input_file.stem  # filename without extension
