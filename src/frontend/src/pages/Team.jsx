@@ -35,83 +35,83 @@ function Team() {
   const members = [
     {
       id: 1,
-      name: "Shivam Singh",
-      role: "Project Lead",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      color: "from-purple-400 to-indigo-500",
-      background: "bg-gradient-to-br from-purple-400/20 to-indigo-500/20",
-      image: ""
-    },
-    {
-      id: 2,
-      name: "Pavan Arani",
-      role: "Full Stack Developer",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
-      color: "from-blue-300 to-blue-500",
-      background: "bg-gradient-to-br from-blue-300/20 to-blue-500/20",
-      image: ""
-    },
-    {
-      id: 3,
-      name: "Khang Doan",
-      role: "Full Stack Developer",
-      description: "B.S. in Computer Science with focus on AI/ML",
-      linkedin: "https://www.linkedin.com/in/khangdoan514/",
-      color: "from-cyan-400 to-teal-500",
-      background: "bg-gradient-to-br from-cyan-400/20 to-teal-500/20",
-      image: "src/assets/img/Sample_PFP.jpeg"
-    },
-    {
-      id: 4,
-      name: "Satyank Nadimpalli",
-      role: "Full Stack Developer",
-      description: "M.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
-      color: "from-green-400 to-emerald-500",
-      background: "bg-gradient-to-br from-green-400/20 to-emerald-500/20",
-      image: ""
-    },
-    {
-      id: 5,
       name: "Adya Dhanasekar",
       role: "Project Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      color: "from-red-400 to-pink-500",
-      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20",
-      image: ""
+      color: "from-[#ffc49c] to-[#ffc49c]",
+      background: "bg-gradient-to-br from-[#ffc49c]/20 to-[#ffc49c]/20",
+      image: "src/assets/img/Adya_Dhanasekar.png"
     },
     {
-      id: 6,
+      id: 2,
       name: "Raisa Reza",
       role: "UX/UI Designer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      color: "from-orange-400 to-amber-500",
-      background: "bg-gradient-to-br from-orange-400/20 to-amber-500/20",
+      color: "from-[#FB9590] to-[#FB9590]",
+      background: "bg-gradient-to-br from-[#FB9590]/20 to-[#FB9590]/20",
       image: ""
     },
     {
-      id: 7,
+      id: 3,
       name: "Yakina Azza",
       role: "Back-End Developer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      color: "from-yellow-400 to-orange-500",
-      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20",
+      color: "from-[#FF6686] to-[#FF6686]",
+      background: "bg-gradient-to-br from-[#FF6686]/20 to-[#FF6686]/20",
       image: ""
     },
     {
-      id: 8,
+      id: 4,
       name: "Sadwitha Thopucharla",
       role: "QA Pipeline Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
-      color: "from-amber-300 to-yellow-400",
-      background: "bg-gradient-to-br from-amber-300/20 to-yellow-400/20",
+      color: "from-[#965E81] to-[#965E81]",
+      background: "bg-gradient-to-br from-[#965E81]/20 to-[#965E81]/20",
       image: ""
+    },
+    {
+      id: 5,
+      name: "Shivam Singh",
+      role: "Project Lead",
+      description: "B.S. in Computer Science",
+      linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
+      color: "from-[#00579f] to-[#00579f]",
+      background: "bg-gradient-to-br from-[#00579f]/20 to-[#00579f]/20",
+      image: ""
+    },
+    {
+      id: 6,
+      name: "Khang Doan",
+      role: "Full Stack Developer",
+      description: "B.S. in Computer Science with focus on AI/ML",
+      linkedin: "https://www.linkedin.com/in/khangdoan514/",
+      color: "from-[#3987fc] to-[#3987fc]",
+      background: "bg-gradient-to-br from-[#3987fc]/20 to-[#3987fc]/20",
+      image: "src/assets/img/Sample_PFP.jpeg"
+    },
+    {
+      id: 7,
+      name: "Pavan Arani",
+      role: "Full Stack Developer",
+      description: "B.S. in Computer Science",
+      linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
+      color: "from-[#00d0ff] to-[#00d0ff]",
+      background: "bg-gradient-to-br from-[#00d0ff]/20 to-[#00d0ff]/20",
+      image: "src/assets/img/Pavan_Arani.png"
+    },
+    {
+      id: 8,
+      name: "Satyank Nadimpalli",
+      role: "Full Stack Developer",
+      description: "M.S. in Computer Science",
+      linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
+      color: "from-[#16F7C9] to-[#16F7C9]",
+      background: "bg-gradient-to-br from-[#16F7C9]/20 to-[#16F7C9]/20",
+      image: "src/assets/img/Satyank_Nadimpalli.jpg"
     }
   ]
 
