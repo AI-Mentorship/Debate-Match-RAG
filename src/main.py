@@ -162,8 +162,8 @@ def initiate_pipline():
     run_retriever(query, top_k)
 
     # QA
-    #build_chroma_db()
-    #query_rag(query)
+    build_chroma_db()
+    query_rag(query)
 
     # Fact Checker
     #run_cli()
