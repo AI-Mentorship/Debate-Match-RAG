@@ -39,8 +39,6 @@ function Team() {
       role: "Project Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      color: "from-[#ffc49c] to-[#ffc49c]",
-      background: "bg-gradient-to-br from-[#ffc49c]/20 to-[#ffc49c]/20",
       image: "src/assets/img/Adya_Dhanasekar.png"
     },
     {
@@ -49,8 +47,6 @@ function Team() {
       role: "UX/UI Designer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      color: "from-[#FB9590] to-[#FB9590]",
-      background: "bg-gradient-to-br from-[#FB9590]/20 to-[#FB9590]/20",
       image: ""
     },
     {
@@ -59,8 +55,6 @@ function Team() {
       role: "Back-End Developer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      color: "from-[#FF6686] to-[#FF6686]",
-      background: "bg-gradient-to-br from-[#FF6686]/20 to-[#FF6686]/20",
       image: ""
     },
     {
@@ -69,8 +63,6 @@ function Team() {
       role: "QA Pipeline Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
-      color: "from-[#965E81] to-[#965E81]",
-      background: "bg-gradient-to-br from-[#965E81]/20 to-[#965E81]/20",
       image: ""
     },
     {
@@ -79,8 +71,6 @@ function Team() {
       role: "Project Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      color: "from-[#00579f] to-[#00579f]",
-      background: "bg-gradient-to-br from-[#00579f]/20 to-[#00579f]/20",
       image: ""
     },
     {
@@ -89,8 +79,6 @@ function Team() {
       role: "Full Stack Developer",
       description: "B.S. in Computer Science with focus on AI/ML",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
-      color: "from-[#3987fc] to-[#3987fc]",
-      background: "bg-gradient-to-br from-[#3987fc]/20 to-[#3987fc]/20",
       image: "src/assets/img/Sample_PFP.jpeg"
     },
     {
@@ -99,8 +87,6 @@ function Team() {
       role: "Full Stack Developer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
-      color: "from-[#00d0ff] to-[#00d0ff]",
-      background: "bg-gradient-to-br from-[#00d0ff]/20 to-[#00d0ff]/20",
       image: "src/assets/img/Pavan_Arani.png"
     },
     {
@@ -109,8 +95,6 @@ function Team() {
       role: "Full Stack Developer",
       description: "M.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
-      color: "from-[#16F7C9] to-[#16F7C9]",
-      background: "bg-gradient-to-br from-[#16F7C9]/20 to-[#16F7C9]/20",
       image: "src/assets/img/Satyank_Nadimpalli.jpg"
     }
   ]
@@ -157,14 +141,14 @@ function Team() {
                   hoveredCard === member.id 
                     ? 'scale-105 rotate-1 shadow-2xl' 
                     : 'scale-100 rotate-0 hover:scale-102'
-                } ${member.background}`}
+                } bg-gradient-to-br from-[#16F7C9]/20 to-[#16F7C9]/20`}
                 onMouseEnter={() => setHoveredCard(member.id)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Profile Image */}
                 <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
                   {/* Gradient Border */}
-                  <div className={`absolute -inset-1 rounded-full bg-gradient-to-r ${member.color} animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500`}></div>
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#16F7C9] to-[#16F7C9] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
                   
                   {/* Inner Container with Clip Path */}
                   <div className="relative w-full h-full rounded-full bg-transparent">
@@ -181,7 +165,7 @@ function Team() {
                 {/* Name and Role */}
                 <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                   <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
-                  <p className={`text-transparent bg-clip-text bg-gradient-to-r ${member.color} font-semibold text-xs`}>
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#16F7C9] to-[#16F7C9] font-semibold text-xs">
                     {member.role}
                   </p>
                 </div>
@@ -210,7 +194,7 @@ function Team() {
                 </div>
                 
                 {/* Hover Glow Effect */}
-                <div className={`absolute inset-0 rounded-xl ${member.color} opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500`}></div>
+                <div className="absolute inset-0 rounded-xl from-[#16F7C9] to-[#16F7C9] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
               </div>
             ))}
           </div>
