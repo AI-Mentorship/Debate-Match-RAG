@@ -150,6 +150,16 @@ function Team() {
               onMouseEnter={() => setHoveredCard(member.id)}
               onMouseLeave={() => setHoveredCard(null)}
             >
+              {/* Profile Image */}
+              <div className={`relative z-10 w-16 h-16 ${member.color} rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-lg`}>
+                <span className="text-white font-bold text-sm">
+                  {member.name.split(' ').map(n => n[0]).join('')}
+                </span>
+                
+                {/* Pulsing Ring */}
+                <div className={`absolute inset-0 ${member.color} rounded-full animate-ping opacity-20 group-hover:animate-none`}></div>
+              </div>
+
               {/* Name and Role */}
               <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                 <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
