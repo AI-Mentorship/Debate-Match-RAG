@@ -35,26 +35,36 @@ function Team() {
   const members = [
     {
       id: 1,
-      name: "Adya Dhanasekar",
-      role: "Project Lead",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      color: "from-red-400 to-pink-500",
-      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20",
-      image: ""
-    },
-    {
-      id: 2,
       name: "Shivam Singh",
       role: "Project Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      color: "from-yellow-400 to-orange-500",
-      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20",
+      color: "from-purple-400 to-indigo-500",
+      background: "bg-gradient-to-br from-purple-400/20 to-indigo-500/20",
+      image: ""
+    },
+    {
+      id: 2,
+      name: "Pavan Arani",
+      role: "Full Stack Developer",
+      description: "B.S. in Computer Science",
+      linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
+      color: "from-blue-300 to-blue-500",
+      background: "bg-gradient-to-br from-blue-300/20 to-blue-500/20",
       image: ""
     },
     {
       id: 3,
+      name: "Khang Doan",
+      role: "Full Stack Developer",
+      description: "B.S. in Computer Science with focus on AI/ML",
+      linkedin: "https://www.linkedin.com/in/khangdoan514/",
+      color: "from-cyan-400 to-teal-500",
+      background: "bg-gradient-to-br from-cyan-400/20 to-teal-500/20",
+      image: "src/assets/img/Sample_PFP.jpeg"
+    },
+    {
+      id: 4,
       name: "Satyank Nadimpalli",
       role: "Full Stack Developer",
       description: "M.S. in Computer Science",
@@ -64,23 +74,13 @@ function Team() {
       image: ""
     },
     {
-      id: 4,
-      name: "Khang Doan",
-      role: "Full Stack Developer",
-      description: "B.S. in Computer Science with focus on AI/ML",
-      linkedin: "https://www.linkedin.com/in/khangdoan514/",
-      color: "from-pink-400 to-purple-500",
-      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20",
-      image: "src/assets/img/Sample_PFP.jpeg"
-    },
-    {
       id: 5,
-      name: "Pavan Arani",
-      role: "Full Stack Developer",
+      name: "Adya Dhanasekar",
+      role: "Project Lead",
       description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
-      color: "from-cyan-400 to-blue-500",
-      background: "bg-gradient-to-br from-cyan-400/20 to-blue-500/20",
+      linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
+      color: "from-red-400 to-pink-500",
+      background: "bg-gradient-to-br from-red-400/20 to-pink-500/20",
       image: ""
     },
     {
@@ -89,8 +89,8 @@ function Team() {
       role: "UX/UI Designer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      color: "from-indigo-400 to-purple-500",
-      background: "bg-gradient-to-br from-indigo-400/20 to-purple-500/20",
+      color: "from-orange-400 to-amber-500",
+      background: "bg-gradient-to-br from-orange-400/20 to-amber-500/20",
       image: ""
     },
     {
@@ -99,8 +99,8 @@ function Team() {
       role: "Back-End Developer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      color: "from-teal-400 to-cyan-500",
-      background: "bg-gradient-to-br from-teal-400/20 to-cyan-500/20",
+      color: "from-yellow-400 to-orange-500",
+      background: "bg-gradient-to-br from-yellow-400/20 to-orange-500/20",
       image: ""
     },
     {
@@ -109,8 +109,8 @@ function Team() {
       role: "QA Pipeline Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
-      color: "from-amber-400 to-yellow-500",
-      background: "bg-gradient-to-br from-amber-400/20 to-yellow-500/20",
+      color: "from-amber-300 to-yellow-400",
+      background: "bg-gradient-to-br from-amber-300/20 to-yellow-400/20",
       image: ""
     }
   ]
@@ -136,7 +136,7 @@ function Team() {
       </div>
 
       {/* Description */}
-      <div className="pt-16 pb-8 px-8 text-center relative z-10">
+      <div className="pt-8 pb-16 px-8 text-center relative z-10">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl font-bold text-white mb-4">Our Contributors</h1>
           <p className="text-light-silver max-w-2xl mx-auto text-sm leading-relaxed">
@@ -162,17 +162,17 @@ function Team() {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Profile Image */}
-                <div className="relative z-10 w-16 h-16 mx-auto mb-3">
-                  <div className={`relative w-full h-full ${member.color} rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-lg`}>
-                    {/* Pulsing Ring */}
-                    <div className={`absolute inset-0 ${member.color} rounded-full animate-ping opacity-30 group-hover:animate-none`}></div>
-                    
-                    {/* Image */}
-                    <div className="relative z-20 w-full h-full rounded-full overflow-hidden">
+                <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
+                  {/* Gradient Border */}
+                  <div className={`absolute -inset-1 rounded-full bg-gradient-to-r ${member.color} animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500`}></div>
+                  
+                  {/* Inner Container with Clip Path */}
+                  <div className="relative w-full h-full rounded-full bg-transparent">
+                    <div className="w-full h-full rounded-full">
                       <img 
                         src={member.image} 
                         alt={member.name}
-                        className="w-full h-full rounded-full object-cover"
+                        className="w-full h-full rounded-full object-cover relative z-10"
                       />
                     </div>
                   </div>
