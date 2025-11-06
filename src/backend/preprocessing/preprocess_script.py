@@ -74,69 +74,23 @@ print("Topic classifier loaded!")
 
 def classify_topics_batch(text, threshold=0.3):
 
-    # Expanded topic list with more variety
+    # Reduced to most important topics only
     candidate_labels = [
-        # Core Political Topics
         "economy and jobs",
-        "healthcare and insurance",
-        "immigration and border security",
-        "foreign policy and international relations",
-        "climate change and environment",
-        "education and schools",
-        "crime and public safety",
-        "taxes and government spending",
-        
-        # Social Issues
-        "abortion and reproductive rights",
-        "gun rights and gun control",
-        "LGBTQ rights and equality",
-        "racial justice and civil rights",
-        "religious freedom",
-        "free speech and censorship",
-        
-        # Governance & Democracy
-        "election integrity and voting rights",
-        "government transparency and corruption",
-        "constitutional rights",
-        "federalism and states rights",
-        "judiciary and supreme court",
-        
-        # Economic Subcategories
-        "inflation and cost of living",
-        "trade and tariffs",
-        "minimum wage and labor rights",
-        "small business and entrepreneurship",
-        "housing and real estate",
-        "energy policy",
-        
-        # Security & Defense
-        "national security and terrorism",
-        "military and veterans affairs",
-        "cybersecurity",
-        "border wall and enforcement",
-        
-        # Social Programs
-        "social security and retirement",
-        "welfare and poverty",
-        "drug policy and opioid crisis",
-        "mental health",
-        
-        # Technology & Innovation
-        "technology and innovation",
-        "artificial intelligence regulation",
-        "privacy and data protection",
-        "social media regulation",
-        
-        # Infrastructure & Urban
-        "infrastructure and transportation",
-        "urban development",
-        "agriculture and farming",
-        
-        # Other
-        "pandemic response and public health",
-        "debate moderation and format",
-        "personal character and conduct",
-        "general political commentary"
+        "healthcare",
+        "immigration",
+        "foreign policy",
+        "climate change",
+        "education",
+        "crime and justice",
+        "taxes",
+        "abortion",
+        "gun rights",
+        "civil rights",
+        "election integrity",
+        "social security",
+        "military and defense",
+        "general politics"
     ]
     
     all_topics = []
