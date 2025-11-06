@@ -67,7 +67,7 @@ print("Loading topic classification model...")
 device = 0 if torch.cuda.is_available() or torch.backends.mps.is_available() else -1
 topic_classifier = pipeline(
     "zero-shot-classification", 
-    model="facebook/bart-large-mnli",
+    model="facebook/bart-large-mnli", # model="typeform/distilbert-base-uncased-mnli", faster but less accurate, 0.3s per utterance
     device=device
 )
 print("Topic classifier loaded!")
