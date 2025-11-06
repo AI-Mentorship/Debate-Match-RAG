@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Mission from './pages/Mission'
@@ -6,7 +6,43 @@ import Team from './pages/Team'
 import ChatInterface from './pages/ChatInterface'
 
 function App() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [trailingPosition, setTrailingPosition] = useState({ x: 0, y: 0 })
   const [currentPage, setCurrentPage] = useState('home')
+  const trailingRef = useRef({ x: 0, y: 0 })
+
+  // Mouse follower effect
+  useEffect(() => {
+    let animationFrameId
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+
+    // Smooth follow effect
+    const updateTrailingPosition = () => {
+      setTrailingPosition(prev => {
+        // New position
+        const newX = prev.x + (mousePosition.x - prev.x) * 0.1 // Slow follow-through
+        const newY = prev.y + (mousePosition.y - prev.y) * 0.1
+        trailingRef.current = { x: newX, y: newY }
+        
+        return { x: newX, y: newY }
+      })
+      animationFrameId = requestAnimationFrame(updateTrailingPosition)
+    }
+
+    // Start animation immediately
+    animationFrameId = requestAnimationFrame(updateTrailingPosition)
+    window.addEventListener('mousemove', handleMouseMove)
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId)
+      }
+    }
+  }, [mousePosition])
 
   const handleGetStarted = () => {
     console.log('Navigating to chat interface')
@@ -34,6 +70,23 @@ function App() {
 
   return (
     <div className="min-h-screen font-noto-sans overflow-hidden">
+      {/* Mouse Follower */}
+      <div 
+        className="fixed pointer-events-none z-50"
+        style={{
+          left: `${trailingPosition.x}px`,
+          top: `${trailingPosition.y}px`,
+          transform: 'translate(-50%, -50%)',
+          transition: 'none'
+        }}
+      >
+        {/* Outer Circle */}
+        <div className="w-14 h-14 border-1 border-white/30 rounded-full"></div>
+        
+        {/* Dot */}
+        <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+      </div>
+
       {/* Background */}
       <div 
         className="fixed inset-0 z-0"
