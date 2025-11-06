@@ -33,49 +33,65 @@ function ChatInterface({ onBackToHome }) {
   }, [messages, typingMessage])
 
   // Typing animation handler
-  const typeText = (text, onComplete) => {
-    setIsTyping(true)
-    setTypingMessage('')
-    let index = 0
-    const typingInterval = setInterval(() => {
-      if (index < text.length) {
-        setTypingMessage(prev => prev + text.charAt(index))
-        index++
-      } else {
-        clearInterval(typingInterval)
-        setIsTyping(false)
-        onComplete()
-      }
-    }, 30)
+  const typeText = async (text, onComplete) => {
+  setIsTyping(true);
+  setTypingMessage('');
+
+  // Adjust typing speed dynamically
+  // Short messages = slower typing; long = faster
+  const baseDelay = 40; // average human typing speed
+  const minDelay = 15;  // cap for long responses
+  const maxDelay = 50;  // cap for very short responses
+
+  // Calculate adaptive delay based on length
+  const adaptiveDelay = Math.max(
+    minDelay,
+    maxDelay - Math.min(text.length / 5, maxDelay - minDelay)
+  );
+
+  for (let i = 0; i < text.length; i++) {
+    setTypingMessage(prev => prev + text[i]);
+    await new Promise(res => setTimeout(res, adaptiveDelay));
   }
+
+  setIsTyping(false);
+  onComplete();
+  };
+
+
 
   // Send message — now appends properly instead of resetting
-  const sendMessage = async () => {
-    if (!input.trim()) return
+const sendMessage = async () => {
+  if (!input.trim()) return;
 
-    const userMessage = { role: 'user', content: input }
-    setMessages(prev => [...prev, userMessage]) // append instead of reset
-    setInput('')
-    setLoading(true)
+  const userMessage = { role: 'user', content: input };
+  setMessages(prev => [...prev, userMessage]);
+  setInput('');
+  setLoading(true);
 
-    try {
-      const response = await axios.get('http://localhost:3000/api/message')
-      const aiResponse = `Analysis for "${input}": ${response.data.message.join(', ')}`
+  try {
+    const response = await axios.post('http://localhost:3000/api/retrieve-response', {
+      user_query: input
+    });
 
-      typeText(aiResponse, () => {
-        const aiMessage = { role: 'assistant', content: aiResponse }
-        setMessages(prev => [...prev, aiMessage]) // append AI message
-        setLoading(false)
-      })
-    } catch (error) {
-      const errorResponse = 'Error connecting to debate analysis service. Please try again.'
-      typeText(errorResponse, () => {
-        const errorMessage = { role: 'assistant', content: errorResponse }
-        setMessages(prev => [...prev, errorMessage])
-        setLoading(false)
-      })
-    }
+    const aiResponse = typeof response.data === 'string'
+      ? response.data
+      : JSON.stringify(response.data);
+
+    typeText(aiResponse, () => {
+      const aiMessage = { role: 'assistant', content: aiResponse };
+      setMessages(prev => [...prev, aiMessage]);
+      setLoading(false);
+    });
+  } catch (error) {
+    const errorResponse = 'Error connecting to debate analysis service. Please try again.';
+    typeText(errorResponse, () => {
+      const errorMessage = { role: 'assistant', content: errorResponse };
+      setMessages(prev => [...prev, errorMessage]);
+      setLoading(false);
+    });
   }
+};
 
   const handleKeyDown = e => {
     if (e.key === 'Enter' && !e.shiftKey) {
