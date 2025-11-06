@@ -12,6 +12,8 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
+from transformers import pipeline
+import warnings
 
 
 def clean_transcript(raw_text):
@@ -57,6 +59,104 @@ def clean_transcript(raw_text):
     
     return text
 
+warnings.filterwarnings("ignore")
+
+# Initialize AI classifier once at module level
+print("Loading topic classification model...")
+topic_classifier = pipeline(
+    "zero-shot-classification", 
+    model="facebook/bart-large-mnli",
+    device=-1  # Use CPU, change to 0 for GPU
+)
+print("Topic classifier loaded!")
+
+def classify_topic_ai(text, threshold=0.3):
+
+    # Expanded topic list with more variety
+    candidate_labels = [
+        # Core Political Topics
+        "economy and jobs",
+        "healthcare and insurance",
+        "immigration and border security",
+        "foreign policy and international relations",
+        "climate change and environment",
+        "education and schools",
+        "crime and public safety",
+        "taxes and government spending",
+        
+        # Social Issues
+        "abortion and reproductive rights",
+        "gun rights and gun control",
+        "LGBTQ rights and equality",
+        "racial justice and civil rights",
+        "religious freedom",
+        "free speech and censorship",
+        
+        # Governance & Democracy
+        "election integrity and voting rights",
+        "government transparency and corruption",
+        "constitutional rights",
+        "federalism and states rights",
+        "judiciary and supreme court",
+        
+        # Economic Subcategories
+        "inflation and cost of living",
+        "trade and tariffs",
+        "minimum wage and labor rights",
+        "small business and entrepreneurship",
+        "housing and real estate",
+        "energy policy",
+        
+        # Security & Defense
+        "national security and terrorism",
+        "military and veterans affairs",
+        "cybersecurity",
+        "border wall and enforcement",
+        
+        # Social Programs
+        "social security and retirement",
+        "welfare and poverty",
+        "drug policy and opioid crisis",
+        "mental health",
+        
+        # Technology & Innovation
+        "technology and innovation",
+        "artificial intelligence regulation",
+        "privacy and data protection",
+        "social media regulation",
+        
+        # Infrastructure & Urban
+        "infrastructure and transportation",
+        "urban development",
+        "agriculture and farming",
+        
+        # Other
+        "pandemic response and public health",
+        "debate moderation and format",
+        "personal character and conduct",
+        "general political commentary"
+    ]
+    
+    try:
+        # Run classification
+        result = topic_classifier(
+            text[:512],  # Limit text length for efficiency
+            candidate_labels,
+            multi_label=True
+        )
+        
+        # Filter topics by threshold and return top 3
+        topics = [
+            label.replace(" and ", "_").replace(" ", "_")  # Format for consistency
+            for label, score in zip(result['labels'], result['scores']) 
+            if score > threshold
+        ]
+        
+        return topics[:3] if topics else ["general_political_commentary"]
+        
+    except Exception as e:
+        print(f"⚠️  Topic classification failed: {e}")
+        return ["general_political_commentary"]
 
 def extract_speaker_turns(cleaned_text, source):
     """
@@ -68,7 +168,7 @@ def extract_speaker_turns(cleaned_text, source):
         source: Name of the debate/source
         
     Returns:
-        List of dicts with line_number, speaker, timestamp, text, and source
+        List of dicts with speaker, timestamp, text, and source
     """
     turns = []
     lines = cleaned_text.split('\n')
@@ -76,7 +176,6 @@ def extract_speaker_turns(cleaned_text, source):
     current_speaker = None
     current_timestamp = None
     current_text = []
-    line_number = 0
     
     # Multiple patterns to handle different transcript formats
     patterns = [
@@ -106,13 +205,13 @@ def extract_speaker_turns(cleaned_text, source):
                 if current_speaker and current_text:
                     text = ' '.join(current_text).strip()
                     if text:
-                        line_number += 1
+                        topics = classify_topic_ai(text)
                         turns.append({
-                            'line_number': line_number,
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
                             'text': text,
-                            'source': source
+                            'source': source,
+                            'topics': topics 
                         })
                 
                 # Extract based on which pattern matched
@@ -143,13 +242,13 @@ def extract_speaker_turns(cleaned_text, source):
     if current_speaker and current_text:
         text = ' '.join(current_text).strip()
         if text:
-            line_number += 1
+            topics = classify_topic_ai(text)
             turns.append({
-                'line_number': line_number,
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
-                'source': source
+                'source': source,
+                'topics': topics
             })
     
     return turns
@@ -165,10 +264,14 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source']
+            fieldnames = ['speaker', 'timestamp', 'text', 'source', 'topics']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(data)
+            # Convert topics list to comma-separated string for CSV
+            for row in data:
+                row_copy = row.copy()
+                row_copy['topics'] = ','.join(row['topics'])
+                writer.writerow(row_copy)
 
 
 def save_as_json(data, output_path):

@@ -3,18 +3,31 @@
         "debate name": "2024 CNN PRESIDENTIAL DEBATE",
         "speaker": "Donald Trump",
         "timestamp": "14:18",
-        "text": "First of all, the Supreme Court just approved the abortion bill and I agree with their decision to have done that, and I will not block it."
+        "text": "First of all, the Supreme Court just approved the abortion bill and I agree with their decision to have done that, and I will not block it.",
+        "topics": [
+            "abortion_reproductive_rights",
+            "judiciary_supreme_court",
+            "constitutional_rights"
+        ]
     },
     {
         "debate name": "2024 CNN PRESIDENTIAL DEBATE",
         "speaker": "Dana Bash",
         "timestamp": "14:02",
-        "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?"
+        "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?",
+        "topics": [
+            "abortion_reproductive_rights"
+        ]
     },
     {
         "debate name": "2024 CNN PRESIDENTIAL DEBATE",
         "speaker": "Dana Bash",
         "timestamp": "13:37",
-        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states."
+        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states.",
+        "topics": [
+            "abortion_reproductive_rights",
+            "judiciary_supreme_court",
+            "general_political_commentary"
+        ]
     }
 ]

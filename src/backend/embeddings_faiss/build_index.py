@@ -58,7 +58,8 @@ def fetch_utterances():
             "speaker_name": speaker.get("name", "Unknown"),
             "speaker_role": speaker.get("role", "Unknown"),
             "debate_name": debate.get("name", "Unknown"),
-            "timestamp": u.get("timestamp", None)
+            "timestamp": u.get("timestamp", None),
+            "topics": u.get("topics")
         })
     return joined
 
@@ -91,7 +92,8 @@ def build_index():
                 "speaker": u["speaker_name"],
                 "role": u["speaker_role"],
                 "text": chunk,
-                "timestamp": u["timestamp"]
+                "timestamp": u["timestamp"],
+                "topics": u.get("topics")
             })
 
     print(f"Total chunks to embed: {len(all_chunks)}")

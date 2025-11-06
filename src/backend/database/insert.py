@@ -24,10 +24,14 @@ class DataInserter(DebateDatabase):
                     # Insert debate
                     debate_id = self.insert_debate(row["source"], debates_dict)
                     
-                    # Insert utterance
-                    self.insert_utterance(debate_id, speaker_id, row["text"], row["timestamp"])
+                    # Parse topics from CSV (comma-separated string)
+                    topics_str = row.get("topics", "general_political_commentary")
+                    topics = topics_str.split(',') if topics_str else ["general_political_commentary"]
 
-                    print(f"Added: {row['speaker']} - {row['timestamp']}")
+                    # Insert utterance
+                    self.insert_utterance(debate_id, speaker_id, row["text"], row["timestamp"], topics)
+
+                    print(f"Added: {row['speaker']} - {row['timestamp']} (Topics: {', '.join(topics[:2])})")
 
             print(f"Done: {len(speakers_dict)} speakers, {len(debates_dict)} debates")
 
@@ -93,7 +97,7 @@ class DataInserter(DebateDatabase):
         debates_dict[key] = debate_id
         return debate_id
     
-    def insert_utterance(self, debate_id, speaker_id, text, timestamp):
+    def insert_utterance(self, debate_id, speaker_id, text, timestamp, topics):
         # Check duplicate in the database
         existing_utterance = self.utterances.find_one({
             "debate_id": debate_id,
@@ -112,7 +116,8 @@ class DataInserter(DebateDatabase):
             "debate_id": debate_id,
             "speaker_id": speaker_id,
             "text": text,
-            "timestamp": timestamp
+            "timestamp": timestamp,
+            "topics": topics
         })
 
     def generate_unique_id(self):

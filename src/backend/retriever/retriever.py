@@ -43,7 +43,7 @@ class DebateRetriever:
             top_k: Number of results to return
 
         Returns:
-            List of dicts with speaker, timestamp, text, and debate_name
+            List of dicts with speaker, timestamp, text, debate_name, and topics
         """
         # Generate query embedding using OpenAI
         response = self.client.embeddings.create(
@@ -68,7 +68,8 @@ class DebateRetriever:
                     'debate name': meta['debate_name'],
                     'speaker': meta['speaker'],
                     'timestamp': meta['timestamp'],
-                    'text': meta['text']
+                    'text': meta['text'],
+                    'topics': meta.get('topics', [])
                 })
                 
                 # Stop when we have enough results

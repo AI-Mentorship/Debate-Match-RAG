@@ -163,10 +163,10 @@ def initiate_pipline():
 
     # QA
     build_chroma_db()
-    query_rag(query)
+    #query_rag(query)
 
     # Fact Checker
-    run_cli()
+    #run_cli()
     #log.info("**********ALL COMPONENTS EXECUTED**********")
 
 if __name__ == "__main__":
