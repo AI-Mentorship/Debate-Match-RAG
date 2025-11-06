@@ -5,9 +5,10 @@ from backend.fact_checker_prototype.fact_checker import claim_verdict
 from backend.qa_pipeline.QA_pipeline import build_chroma_db
 from backend.qa_pipeline.QA_pipeline import query_rag
 from backend.retriever.retriever import run_retriever
-from flask import Flask, jsonify # type: ignore
+from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from backend.embeddings_faiss.build_index import build_index
+import logging as log
 
 import json
 import argparse
@@ -119,7 +120,24 @@ def message():
         }
     )
 
-if __name__ == "__main__":
+@app.route('/api/retrieve-response', methods=['POST'])
+def retrieve_response():
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No JSON data provided'}), 400
+
+    user_query = data.get('user_query')
+    if user_query is None:
+        return jsonify({'error': 'Missing user query in request body'}), 400
+
+    # TO BE IMPLEMENTED
+    # response = run_retriever(user_query)
+
+    response = "Test Response returned by the API"
+    return jsonify(response), 200
+
+def initiate_pipline():
+    log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
     debate_name = get_debate_name()
     preprocess(debate_name)
@@ -129,7 +147,7 @@ if __name__ == "__main__":
 
     # Embedding + FAISS
     build_index()
-    
+
     # Get user query and number of results for retriever
     query = get_user_query()
 
@@ -143,11 +161,14 @@ if __name__ == "__main__":
     # Retriever - pass query, debate_name, and top_k
     run_retriever(query, debate_name, top_k)
 
-    # QA 
+    # QA
     build_chroma_db()
     query_rag(query)
 
     # Fact Checker
     run_cli()
+    log.info("**********ALL COMPONENTS EXECUTED**********")
 
-    #app.run(debug=False, port=3000)
+if __name__ == "__main__":
+    # initiate_pipline()
+    app.run(debug=False, port=3000)
