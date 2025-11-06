@@ -158,11 +158,11 @@ def initiate_pipline():
         top_k = 3
         print("⚠️  Invalid number, using default: 3")
 
-    # Retriever - pass query, debate_name, and top_k
-    run_retriever(query, debate_name, top_k)
+    # Retriever - pass query and top_k
+    run_retriever(query, top_k)
 
     # QA
-    build_chroma_db()
+    #build_chroma_db()
     #query_rag(query)
 
     # Fact Checker

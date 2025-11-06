@@ -33,17 +33,16 @@ class DebateRetriever:
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         print("OpenAI client loaded")
     
-    def retrieve(self, query, debate_name, top_k=3):
+    def retrieve(self, query, top_k=3):
         """
-        Retrieve top-k most relevant passages for a query from a specific debate.
+        Retrieve top-k most relevant passages for a query from all debates in database.
 
         Args:
             query: String query to search for
-            debate_name: Name of the debate to filter by
             top_k: Number of results to return
 
         Returns:
-            List of dicts with speaker, timestamp, text, debate_name, and topics
+            List of dicts with debate_name, speaker, timestamp, text, and topics
         """
         # Generate query embedding using OpenAI
         response = self.client.embeddings.create(
@@ -52,32 +51,20 @@ class DebateRetriever:
         )
         query_emb = np.array([response.data[0].embedding], dtype='float32')
 
-        # Search FAISS index - get more results to filter by debate
-        # We search for more (k * 10) to ensure we have enough after filtering
-        search_k = min(top_k * 10, self.index.ntotal)
-        distances, indices = self.index.search(query_emb, search_k)
+        # Search FAISS index - get top_k results from all debates
+        distances, indices = self.index.search(query_emb, top_k)
 
         # Filter results by debate_name and format
         results = []
         for idx in indices[0]:
             meta = self.metadata[idx]
-            
-            # Only include passages from the specified debate
-            if meta.get('debate_name') == debate_name:
-                results.append({
-                    'debate name': meta['debate_name'],
-                    'speaker': meta['speaker'],
-                    'timestamp': meta['timestamp'],
-                    'text': meta['text'],
-                    'topics': meta.get('topics', [])
-                })
-                
-                # Stop when we have enough results
-                if len(results) >= top_k:
-                    break
-        
-        if len(results) < top_k:
-            print(f"⚠️  Warning: Only found {len(results)} passages for debate '{debate_name}'")
+            results.append({
+                'debate_name': meta.get('debate_name', 'Unknown'),
+                'speaker': meta['speaker'],
+                'timestamp': meta['timestamp'],
+                'text': meta['text'],
+                'topics': meta.get('topics', [])
+            })
         
         return results
 
@@ -89,13 +76,12 @@ class DebateRetriever:
         print(f"\n✅ Results saved to '{filename}' ({len(results)} passages)\n")
 
 
-def run_retriever(query, debate_name, top_k):
+def run_retriever(query, top_k):
     """
-    Run retriever with query parameter and debate filter.
+    Run retriever with query parameter.
     
     Args:
         query: Query string to search for
-        debate_name: Name of the debate to retrieve passages from
         top_k: Number of results to return
     
     Returns:
@@ -108,9 +94,9 @@ def run_retriever(query, debate_name, top_k):
     # Initialize retriever
     retriever = DebateRetriever()
     
-    # Retrieve results filtered by debate_name
-    print(f"\n🔎 Searching for: '{query}'")
-    results = retriever.retrieve(query, debate_name, top_k=top_k)
+    # Retrieve results from ALL debates
+    print(f"\n🔎 Searching across all debates for: '{query}'")
+    results = retriever.retrieve(query, top_k=top_k)
         
     # Save results to passages.json
     retriever.save_results(results)
