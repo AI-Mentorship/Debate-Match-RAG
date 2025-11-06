@@ -67,7 +67,8 @@ function Team() {
       description: "B.S. in Computer Science with focus on AI/ML",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
       color: "from-pink-400 to-purple-500",
-      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20"
+      background: "bg-gradient-to-br from-pink-400/20 to-purple-500/20",
+      image: "src/assets/img/Sample_PFP.jpeg"
     },
     {
       id: 5,
@@ -152,9 +153,17 @@ function Team() {
             >
               {/* Profile Image */}
               <div className={`relative z-10 w-16 h-16 ${member.color} rounded-full flex items-center justify-center mx-auto mb-3 transition-all duration-500 group-hover:scale-110 group-hover:-translate-y-1 group-hover:shadow-lg`}>
-                <span className="text-white font-bold text-sm">
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </span>
+                {member.image ? (
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-bold text-sm">
+                    {member.name.split(' ').map(n => n[0]).join('')}
+                  </span>
+                )}
                 
                 {/* Pulsing Ring */}
                 <div className={`absolute inset-0 ${member.color} rounded-full animate-ping opacity-20 group-hover:animate-none`}></div>
