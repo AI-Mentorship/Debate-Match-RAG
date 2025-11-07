@@ -109,6 +109,20 @@ function Team() {
     }
   ]
 
+  // Animation variants
+  const itemVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 12
+      }
+    }
+  }
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">      
       {/* Shooting stars effect */}
@@ -129,19 +143,29 @@ function Team() {
         ))}
       </div>
 
-      {/* Header */}
+      {/* Title */}
       <motion.div 
-        className="pt-8 pb-16 px-8 text-center relative z-10"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1.2, type: 'spring', stiffness: 80 }}
+        className="pt-8 pb-8 px-8 text-center relative z-10"
+        variants={itemVariants}
       >
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-white mb-4">Our Contributors</h1>
-          <p className="text-dark-silver max-w-2xl mx-auto text-sm leading-relaxed">
+          <motion.h1 
+            className="text-4xl font-bold text-white mb-4"
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
+          >
+            Our Contributors
+          </motion.h1>
+          <motion.p 
+            className="text-dark-silver max-w-2xl mx-auto text-sm leading-relaxed"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+          >
             Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
-          </p>
+          </motion.p>
         </div>
       </motion.div>
 
@@ -164,14 +188,14 @@ function Team() {
                   hoveredCard === member.id 
                     ? 'scale-105 rotate-1 shadow-2xl' 
                     : 'scale-100 rotate-0 hover:scale-102'
-                } bg-gradient-to-br from-[#3987FC]/20 to-[#3987FC]/20`}
+                } bg-gradient-to-br from-[#FFCAE4]/20 to-[#FFCAE4]/20`}
                 onMouseEnter={() => setHoveredCard(member.id)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Profile Image */}
                 <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
                   {/* Gradient Border */}
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#3987FC] to-[#3987FC] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#FFCAE4] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
                   
                   {/* Inner Container with Clip Path */}
                   <div className="relative w-full h-full rounded-full bg-transparent">
@@ -188,7 +212,7 @@ function Team() {
                 {/* Name and Role */}
                 <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                   <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
-                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#3987FC] to-[#3987FC] font-semibold text-xs">
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFCAE4] to-[#FFCAE4] font-semibold text-xs">
                     {member.role}
                   </p>
                 </div>
@@ -234,7 +258,7 @@ function Team() {
                 </div>
                 
                 {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-xl from-[#3987FC] to-[#3987FC] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
               </motion.div>
             ))}
           </div>
