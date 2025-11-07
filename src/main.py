@@ -167,7 +167,7 @@ def initiate_pipline():
     print(response)
 
     # Fact Checker
-    #run_cli()
+    run_cli()
     #log.info("**********ALL COMPONENTS EXECUTED**********")
 
 if __name__ == "__main__":
