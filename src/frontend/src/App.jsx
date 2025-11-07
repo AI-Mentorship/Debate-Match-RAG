@@ -74,21 +74,21 @@ function App() {
     initial: {
       opacity: 0,
       scale: 0.98,
-      filter: "blur(10px)"
+      filter: "blur(20px)"
     },
     in: {
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
       transition: {
-        duration: 0.6,
+        duration: 1,
         ease: [0.25, 0.46, 0.45, 0.94]
       }
     },
     out: {
       opacity: 0,
       scale: 1.02,
-      filter: "blur(10px)",
+      filter: "blur(20px)",
       transition: {
         duration: 0.4,
         ease: [0.55, 0.085, 0.68, 0.53]
