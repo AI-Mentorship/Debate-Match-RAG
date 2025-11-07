@@ -1,6 +1,6 @@
 function Header({ currentPage, onPageChange }) {
   return (
-    <nav className="px-8 py-6 flex items-center justify-between">
+    <nav className="px-20 py-8 flex items-center justify-between">
       {/* Logo - Left Side */}
       <div className="flex items-center space-x-3 flex-1">
         <button
@@ -29,8 +29,11 @@ function Header({ currentPage, onPageChange }) {
                 {item}
 
                 {/* Underline effect */}
-                <span className={`absolute bottom-0 left-0 h-0.5 bg-white transition-all duration-300 ${currentPage === item.toLowerCase() ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
+                <span className={`absolute bottom-0 left-1/2 h-0.5 bg-white transition-all duration-300 transform -translate-x-1/2 ${
+                  currentPage === item.toLowerCase() 
+                    ? 'w-full' 
+                    : 'w-0 group-hover:w-full'
+                }`}></span>
               </button>
             )
           })}

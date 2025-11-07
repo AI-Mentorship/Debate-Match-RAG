@@ -130,7 +130,7 @@ function Team() {
       {/* Description */}
       <div className="pt-8 pb-16 px-8 text-center relative z-10">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-white mb-4">Our Contributors</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Our Contributors</h1>
           <p className="text-light-silver max-w-2xl mx-auto text-sm leading-relaxed">
             Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
@@ -138,7 +138,7 @@ function Team() {
         </div>
       </div>
 
-        {/* Grid */}
+      {/* Grid */}
       <div className="flex-1 flex items-start justify-center px-8 pb-8 relative z-10">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
