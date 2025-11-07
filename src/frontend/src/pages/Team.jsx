@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 
 function Team() {
   const [hoveredCard, setHoveredCard] = useState(null)
   const [stars, setStars] = useState([])
   
+  // Shooting star animation
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -100,7 +102,7 @@ function Team() {
       id: 8,
       name: "Satyank Nadimpalli",
       role: "Full Stack Developer",
-      description: "M.S. in Computer Science",
+      description: "M.S. in Computer Science studying AI & Intelligent Systems",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
       instagram: "",
       image: "src/assets/img/Satyank_Nadimpalli.jpg"
@@ -127,36 +129,49 @@ function Team() {
         ))}
       </div>
 
-      {/* Description */}
-      <div className="pt-8 pb-16 px-8 text-center relative z-10">
+      {/* Header */}
+      <motion.div 
+        className="pt-8 pb-16 px-8 text-center relative z-10"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1.2, type: 'spring', stiffness: 80 }}
+      >
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold text-white mb-4">Our Contributors</h1>
-          <p className="text-light-silver max-w-2xl mx-auto text-sm leading-relaxed">
+          <p className="text-dark-silver max-w-2xl mx-auto text-sm leading-relaxed">
             Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Grid */}
-      <div className="flex-1 flex items-start justify-center px-8 pb-8 relative z-10">
+      <motion.div 
+        className="flex-1 flex items-start justify-center px-8 pb-8 relative z-10"
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
+      >
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {members.map((member) => (
-              <div
+              <motion.div
                 key={member.id}
-                className={`relative rounded-xl p-4 border border-white/20 transition-all duration-500 transform group ${
+                initial={{ opacity: 0, y: 0 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
+                className={`relative rounded-xl p-4 border border-white/20 transition-all transform group ${
                   hoveredCard === member.id 
                     ? 'scale-105 rotate-1 shadow-2xl' 
                     : 'scale-100 rotate-0 hover:scale-102'
-                } bg-gradient-to-br from-[#16F7C9]/20 to-[#16F7C9]/20`}
+                } bg-gradient-to-br from-[#3987FC]/20 to-[#3987FC]/20`}
                 onMouseEnter={() => setHoveredCard(member.id)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Profile Image */}
                 <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
                   {/* Gradient Border */}
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#16F7C9] to-[#16F7C9] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#3987FC] to-[#3987FC] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
                   
                   {/* Inner Container with Clip Path */}
                   <div className="relative w-full h-full rounded-full bg-transparent">
@@ -173,7 +188,7 @@ function Team() {
                 {/* Name and Role */}
                 <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                   <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
-                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#16F7C9] to-[#16F7C9] font-semibold text-xs">
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#3987FC] to-[#3987FC] font-semibold text-xs">
                     {member.role}
                   </p>
                 </div>
@@ -219,12 +234,12 @@ function Team() {
                 </div>
                 
                 {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-xl from-[#16F7C9] to-[#16F7C9] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
-              </div>
+                <div className="absolute inset-0 rounded-xl from-[#3987FC] to-[#3987FC] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Shooting star animation */}
       <style jsx global>{`
