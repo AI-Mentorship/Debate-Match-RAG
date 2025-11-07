@@ -134,20 +134,20 @@ function App() {
         />
 
         {/* Animated Page Content */}
-        <div className="flex-1 relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPage}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0"
-            >
-              {renderPage()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+          <div className="flex-1 relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentPage}
+                variants={pageVariants}
+                initial="initial"
+                animate="in"
+                exit="out"
+                className="absolute inset-0"
+              >
+                {renderPage()}
+              </motion.div>
+            </AnimatePresence>
+          </div>
       </div>
 
       {/* Custom glow and neon effects */}
