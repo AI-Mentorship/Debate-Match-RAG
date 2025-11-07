@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Mission from './pages/Mission'
@@ -68,8 +69,35 @@ function App() {
     }
   }
 
+  // Page transition variants
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      scale: 0.98,
+      filter: "blur(10px)"
+    },
+    in: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    out: {
+      opacity: 0,
+      scale: 1.02,
+      filter: "blur(10px)",
+      transition: {
+        duration: 0.4,
+        ease: [0.55, 0.085, 0.68, 0.53]
+      }
+    }
+  }
+
   return (
-    <div className="min-h-screen font-noto-sans overflow-hidden">
+    <div className="min-h-screen font-noto-sans">
       {/* Mouse Follower */}
       <div 
         className="fixed pointer-events-none z-50"
@@ -80,10 +108,8 @@ function App() {
           transition: 'none'
         }}
       >
-        {/* Outer Circle */}
+        {/* Outer Circle and Dot */}
         <div className="w-14 h-14 border-1 border-white/30 rounded-full"></div>
-        
-        {/* Dot */}
         <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
       </div>
 
@@ -106,14 +132,26 @@ function App() {
           onPageChange={handlePageChange}
           onGetStarted={handleGetStarted}
         />
-        {renderPage()}
+
+        {/* Animated Page Content */}
+        <div className="flex-1 relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="absolute inset-0"
+            >
+              {renderPage()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Custom glow and neon effects */}
       <style jsx global>{`
-        body {
-          overflow: hidden;
-        }
         ::-webkit-scrollbar {
           display: none;
         }

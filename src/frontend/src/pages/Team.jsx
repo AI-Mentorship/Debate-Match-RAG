@@ -85,7 +85,7 @@ function Team() {
       description: "B.S. in Computer Science with focus on AI/ML",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
       instagram: "https://www.instagram.com/itsmekhangdoan/",
-      image: "src/assets/img/Sample_PFP.jpeg"
+      image: "src/assets/img/Khang_Doan.png"
     },
     {
       id: 7,

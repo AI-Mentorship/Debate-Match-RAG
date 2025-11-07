@@ -52,7 +52,7 @@ function Home({ onGetStarted }) {
       </div>
 
       {/* Name */}
-      <div className="mb-10 relative z-10">
+      <div className="mt-30 mb-10 relative z-10">
         <h1 className="text-6xl md:text-6xl font-bold text-white mb-10 leading-tight">
           D&nbsp;&nbsp;E&nbsp;&nbsp;B&nbsp;&nbsp;A&nbsp;&nbsp;T&nbsp;&nbsp;E&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M&nbsp;&nbsp;A&nbsp;&nbsp;T&nbsp;&nbsp;C&nbsp;&nbsp;H
         </h1>
