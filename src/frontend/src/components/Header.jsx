@@ -5,7 +5,7 @@ function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
       <div className="flex items-center space-x-3 flex-1">
         <button
           onClick={() => onPageChange('home')}
-          className="text-xl font-bold hover:opacity-80 transition-opacity"
+          className="text-xl font-bold hover:opacity-80 transition-opacity cursor-pointer"
         >
           <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
           <span className="text-white">.RAG</span>
@@ -23,7 +23,7 @@ function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
                 className={`${isActive
                   ? 'text-white'
                   : 'text-dark-silver'
-                  } hover:text-white transition-colors duration-200 font-medium text-base relative group px-1 py-2`}
+                  } hover:text-white transition-colors duration-200 font-medium text-base relative group px-1 py-2 cursor-pointer`}
                 onClick={() => onPageChange(item.toLowerCase())}
               >
                 {item}

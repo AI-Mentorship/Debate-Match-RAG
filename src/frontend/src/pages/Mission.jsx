@@ -199,7 +199,7 @@ function Mission({ onGetStarted }) {
         >
           <button
             onClick={onGetStarted}
-            className="mb-10 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white"
+            className="mb-10 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
           >
             <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
@@ -217,11 +217,17 @@ function Mission({ onGetStarted }) {
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+          {/* Title */}
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Why We Build&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
             <span className="text-white">.RAG</span>
           </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+            We're building a platform that transforms complex political discourse into accessible, 
+            factual information to empower voters and strengthen democratic engagement.
+          </p>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
@@ -231,7 +237,7 @@ function Mission({ onGetStarted }) {
                 { number: '2', title: 'Transparency', description: 'Making political discourse more accessible and understandable' },
                 { number: '3', title: 'Voter Empowerment', description: 'Helping citizens make informed decisions' }
               ].map((item, index) => (
-                <div key={index} className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
                   <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-4">
                     {item.number}
                   </div>
@@ -250,9 +256,15 @@ function Mission({ onGetStarted }) {
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+          {/* Title */}
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Our Vision
           </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+          Creating a future where political discourse is transparent, accessible, 
+          and grounded in factual information for all citizens.
+        </p>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
@@ -272,9 +284,14 @@ function Mission({ onGetStarted }) {
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+          {/* Title */}
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Our Core Values
           </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+            The principles that guide our mission and shape every aspect of our platform's development.
+          </p>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
@@ -285,7 +302,7 @@ function Mission({ onGetStarted }) {
                 { number: '3', title: 'Accessibility', description: 'Making complex information understandable' },
                 { number: '4', title: 'Innovation', description: 'Leveraging AI for public good' }
               ].map((item, index) => (
-                <div key={index} className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
                   <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
                     {item.number}
                   </div>
