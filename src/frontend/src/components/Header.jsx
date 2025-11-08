@@ -7,7 +7,7 @@ function Header({ currentPage, onPageChange }) {
           onClick={() => onPageChange('home')}
           className="text-xl font-bold hover:opacity-80 transition-opacity"
         >
-          <span className="text-electric-purple">DebateMatch</span>
+          <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">DebateMatch</span>
           <span className="text-white">.RAG</span>
         </button>
       </div>

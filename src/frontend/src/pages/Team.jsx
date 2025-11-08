@@ -186,16 +186,16 @@ function Team() {
                 transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
                 className={`relative rounded-xl p-4 border border-white/20 transition-all transform group ${
                   hoveredCard === member.id 
-                    ? 'scale-105 rotate-1 shadow-2xl' 
+                    ? 'scale-105 rotate-1 shadow-xl' 
                     : 'scale-100 rotate-0 hover:scale-102'
-                } bg-gradient-to-br from-[#FFCAE4]/20 to-[#FFCAE4]/20`}
+                } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20`}
                 onMouseEnter={() => setHoveredCard(member.id)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 {/* Profile Image */}
                 <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
                   {/* Gradient Border */}
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#FFCAE4] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#F786C7] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
                   
                   {/* Inner Container with Clip Path */}
                   <div className="relative w-full h-full rounded-full bg-transparent">
@@ -212,7 +212,7 @@ function Team() {
                 {/* Name and Role */}
                 <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                   <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
-                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#FFCAE4] to-[#FFCAE4] font-semibold text-xs">
+                  <p className="text-transparent bg-clip-text bg-gradient-to-r from-[#F786C7] to-[#FFCAE4] font-semibold text-xs">
                     {member.role}
                   </p>
                 </div>
