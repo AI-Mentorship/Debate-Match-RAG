@@ -1,10 +1,15 @@
 function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
+  const handlePageChange = (page) => {
+    window.scrollTo(0, 0);
+    onPageChange(page);
+  };
+  
   return (
     <nav className="px-20 py-8 flex items-center justify-between">
       {/* Logo - Left Side */}
       <div className="flex items-center space-x-3 flex-1">
         <button
-          onClick={() => onPageChange('home')}
+          onClick={() => handlePageChange('home')}
           className="text-xl font-bold hover:opacity-80 transition-opacity cursor-pointer"
         >
           <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
@@ -24,7 +29,7 @@ function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
                   ? 'text-white'
                   : 'text-dark-silver'
                   } hover:text-white transition-colors duration-200 font-medium text-base relative group px-1 py-2 cursor-pointer`}
-                onClick={() => onPageChange(item.toLowerCase())}
+                onClick={() => handlePageChange(item.toLowerCase())}
               >
                 {item}
 

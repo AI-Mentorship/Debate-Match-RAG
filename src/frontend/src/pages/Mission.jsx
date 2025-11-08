@@ -6,6 +6,7 @@ function Mission({ onGetStarted }) {
   const [currentSection, setCurrentSection] = useState(0)
   const isScrolling = useRef(false)
 
+  // Scroll
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
@@ -24,7 +25,9 @@ function Mission({ onGetStarted }) {
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      } else {
+      }
+      
+      else {
         isScrolling.current = false
       }
     };
@@ -49,7 +52,9 @@ function Mission({ onGetStarted }) {
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      } else {
+      }
+      
+      else {
         isScrolling.current = false
       }
     };
@@ -67,13 +72,16 @@ function Mission({ onGetStarted }) {
       if (section) {
         smoothScrollTo(section, 1200);
       }
-    } else {
+    }
+    
+    else {
       // If at last section, scroll back to top smoothly
       setCurrentSection(0);
       smoothScrollToTop(1200);
     }
   }
 
+  // Shooting star animation
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -85,16 +93,20 @@ function Mission({ onGetStarted }) {
       }
       setStars(prev => [...prev, newStar])
 
+      // Animation completes
       setTimeout(() => {
         setStars(prev => prev.filter(star => star.id !== newStar.id))
       }, (newStar.duration + newStar.delay) * 1000)
     }
 
+    // Create stars
     for (let i = 0; i < 8; i++) {
       setTimeout(createStar, i * 300)
     }
 
+    // Continue creating stars
     const interval = setInterval(createStar, 100)
+
     return () => clearInterval(interval)
   }, [])
 
@@ -192,6 +204,7 @@ function Mission({ onGetStarted }) {
           </p>
         </motion.div>
 
+        {/* Button */}
         <motion.p 
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -262,9 +275,9 @@ function Mission({ onGetStarted }) {
           </h2>
           {/* Description */}
           <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
-          Creating a future where political discourse is transparent, accessible, 
-          and grounded in factual information for all citizens.
-        </p>
+            Creating a future where political discourse is transparent, accessible, 
+            and grounded in factual information for all citizens.
+          </p>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
