@@ -127,14 +127,16 @@ function App() {
       
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        <Header 
-          currentPage={currentPage} 
-          onPageChange={handlePageChange}
-          onGetStarted={handleGetStarted}
-        />
+        <div className="fixed top-0 left-0 right-0 z-20">
+          <Header 
+            currentPage={currentPage} 
+            onPageChange={handlePageChange}
+            onGetStarted={handleGetStarted}
+          />
+        </div>
 
         {/* Animated Page Content */}
-          <div className="flex-1 relative">
+          <div className="flex-1 relative pt-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentPage}

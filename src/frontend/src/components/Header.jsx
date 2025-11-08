@@ -1,4 +1,4 @@
-function Header({ currentPage, onPageChange }) {
+function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
   return (
     <nav className="px-20 py-8 flex items-center justify-between">
       {/* Logo - Left Side */}
@@ -7,7 +7,7 @@ function Header({ currentPage, onPageChange }) {
           onClick={() => onPageChange('home')}
           className="text-xl font-bold hover:opacity-80 transition-opacity"
         >
-          <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">DebateMatch</span>
+          <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
           <span className="text-white">.RAG</span>
         </button>
       </div>

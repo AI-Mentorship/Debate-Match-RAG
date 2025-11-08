@@ -47,7 +47,7 @@ function Home({ onGetStarted }) {
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
+    <div className="min-h-screen flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
       {/* Shooting stars effect */}
       <div className="absolute inset-0 pointer-events-none">
         {stars.map(star => (
