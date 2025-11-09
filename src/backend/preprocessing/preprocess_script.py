@@ -12,7 +12,11 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-
+from transformers import pipeline
+import warnings
+import torch
+import hashlib
+import pickle
 
 def clean_transcript(raw_text):
     """
@@ -57,6 +61,116 @@ def clean_transcript(raw_text):
     
     return text
 
+warnings.filterwarnings("ignore")
+
+# Initialize AI classifier once at module level
+device = 0 if torch.cuda.is_available() or torch.backends.mps.is_available() else -1
+topic_classifier = pipeline(
+    "zero-shot-classification", 
+    model="facebook/bart-large-mnli", # model="typeform/distilbert-base-uncased-mnli", faster but less accurate, 0.3s per utterance
+    device=device
+)
+
+# Cache directory
+CACHE_DIR = Path(".topic_cache")
+CACHE_DIR.mkdir(exist_ok=True)
+
+def get_text_hash(text):
+    # Generate a hash for text to use as cache key.
+    return hashlib.md5(text.encode('utf-8')).hexdigest()
+
+def load_cached_topics(text):
+    # Load topics from cache if available.
+    text_hash = get_text_hash(text)
+    cache_file = CACHE_DIR / f"{text_hash}.pkl"
+    
+    if cache_file.exists():
+        try:
+            with open(cache_file, 'rb') as f:
+                return pickle.load(f)
+        except:
+            return None
+    return None
+
+def save_cached_topics(text, topics):
+    # Save topics to cache.
+    text_hash = get_text_hash(text)
+    cache_file = CACHE_DIR / f"{text_hash}.pkl"
+    
+    try:
+        with open(cache_file, 'wb') as f:
+            pickle.dump(topics, f)
+    except:
+        pass  # Silently fail if caching doesn't work
+
+def classify_topics_batch(texts, threshold=0.3):
+    """
+    Classify multiple texts with caching support.
+    
+    Args:
+        texts: List of texts to classify
+        threshold: Minimum confidence score
+        
+    Returns:
+        List of topic lists
+    """
+    # Reduced to most important topics only
+    candidate_labels = [
+        "economy and jobs",
+        "healthcare",
+        "immigration",
+        "foreign policy",
+        "climate change",
+        "education",
+        "crime and justice",
+        "taxes",
+        "abortion",
+        "gun rights",
+        "civil rights",
+        "election integrity",
+        "social security",
+        "military and defense",
+        "general politics"
+    ]
+    
+    all_topics = []
+    cache_hits = 0
+    cache_misses = 0
+    
+    try:
+        for i, text in enumerate(texts):
+            # Try to load from cache first
+            cached_topics = load_cached_topics(text)
+            
+            if cached_topics is not None:
+                all_topics.append(cached_topics)
+                cache_hits += 1
+            else:
+                # Classify if not in cache
+                result = topic_classifier(
+                    text[:512],
+                    candidate_labels,
+                    multi_label=True
+                )
+                
+                topics = [
+                    label.replace(" and ", "_").replace(" ", "_")
+                    for label, score in zip(result['labels'], result['scores']) 
+                    if score > threshold
+                ]
+                
+                final_topics = topics[:3] if topics else ["general_political_commentary"]
+                all_topics.append(final_topics)
+                
+                # Save to cache
+                save_cached_topics(text, final_topics)
+                cache_misses += 1                
+    except Exception as e:
+        print(f"⚠️  Batch classification failed: {e}")
+        all_topics = [["general_political_commentary"] for _ in text]
+    
+    return all_topics
+
 
 def extract_speaker_turns(cleaned_text, source):
     """
@@ -68,7 +182,7 @@ def extract_speaker_turns(cleaned_text, source):
         source: Name of the debate/source
         
     Returns:
-        List of dicts with line_number, speaker, timestamp, text, and source
+        List of dicts with speaker, timestamp, text, and source
     """
     turns = []
     lines = cleaned_text.split('\n')
@@ -76,7 +190,6 @@ def extract_speaker_turns(cleaned_text, source):
     current_speaker = None
     current_timestamp = None
     current_text = []
-    line_number = 0
     
     # Multiple patterns to handle different transcript formats
     patterns = [
@@ -106,9 +219,7 @@ def extract_speaker_turns(cleaned_text, source):
                 if current_speaker and current_text:
                     text = ' '.join(current_text).strip()
                     if text:
-                        line_number += 1
                         turns.append({
-                            'line_number': line_number,
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
                             'text': text,
@@ -143,9 +254,7 @@ def extract_speaker_turns(cleaned_text, source):
     if current_speaker and current_text:
         text = ' '.join(current_text).strip()
         if text:
-            line_number += 1
             turns.append({
-                'line_number': line_number,
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
@@ -165,10 +274,14 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['line_number', 'speaker', 'timestamp', 'text', 'source']
+            fieldnames = ['speaker', 'timestamp', 'text', 'source', 'topics']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerows(data)
+            # Convert topics list to comma-separated string for CSV
+            for row in data:
+                row_copy = row.copy()
+                row_copy['topics'] = ','.join(row['topics'])
+                writer.writerow(row_copy)
 
 
 def save_as_json(data, output_path):
@@ -234,6 +347,17 @@ def preprocess(debate_name):
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
     print(f"   Source: {source}")
+    
+    # Classify topics in batch (with caching)
+    print("🏷️  Classifying topics...")
+    texts = [turn['text'] for turn in speaker_turns]
+    all_topics = classify_topics_batch(texts)
+    
+    # Add topics to turns
+    for turn, topics in zip(speaker_turns, all_topics):
+        turn['topics'] = topics
+    
+    print(f"✅ Topic classification complete!")
     
     # Generate output filenames
     base_name = input_file.stem  # filename without extension

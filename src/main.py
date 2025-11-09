@@ -74,38 +74,61 @@ def get_user_query():
         
         return query
 
-# Fact Checker Prototype
-def run_cli(top_k=3, use_news=True):
+# Fact Checker
+def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
+    """
+    Run fact checker in loop mode.
+    
+    Args:
+        initial_claim: first claim to check from QA response
+        top_k: Number of sources to check
+        use_news: Whether to use NewsAPI
+    """
     print("\n" + "="*80)
-    print("Fact Checking")
+    print("FACT CHECKER")
     print("="*80)
-
-
-    claim = input("\nEnter the claim to fact-check based on the response (or 'quit' to exit): ").strip()
+    
+    # If initial claim provided, fact-check it first
+    if initial_claim:
+        print(f"\n🔍 Fact-checking QA response: '{initial_claim}...'")
+        try:
+            result = claim_verdict(initial_claim, top_k, use_news)
+            print_fact_check_result(result)
+        except Exception as e:
+            print(f"❌ Error: {e}")
+    
+    # Loop for additional claims
+    while True:
+        claim = input("\nEnter claim to fact-check (or 'quit' to exit): ").strip()
         
-    if claim.lower() in ['quit', 'exit', 'q']:
-        print("👋 Goodbye!")        
-    if not claim:
-        print("⚠️  Please enter a valid claim.")
+        if claim.lower() in ['quit', 'exit', 'q']:
+            print("👋 Exiting fact checker!")
+            break
+        if not claim:
+            print("⚠️  Please enter a valid claim.")
+            continue
         
-    # Run fact check with provided args
-    print(f"🔍 Fact-checking: '{claim}'")
-    try:
-        result = claim_verdict(claim, top_k, use_news)
-        
-        print(f"\nClaim: {result['claim']}")
-        print(f"Verdict: {result['verdict']} (confidence {result['confidence']:.2f})")
-        print("\nPer-source evidence:")
-        for entry in result["per_source"]:
-            print(f"- [{entry['source']}] {entry.get('title')} -> {entry['label']} ({entry['score']:.2f})")
-            if entry.get("url"):
-                print("  URL:", entry["url"])
-            snippet_preview = (entry.get("snippet") or "")[:200]
-            if snippet_preview:
-                print("  Snippet:", snippet_preview.replace("\n", " "))
-    except Exception as e:
-        print(f"❌ Error: {e}")
+        # Run fact check
+        print(f"\n🔍 Fact-checking: '{claim}'...")
+        try:
+            result = claim_verdict(claim, top_k, use_news)
+            print_fact_check_result(result)
+        except Exception as e:
+            print(f"❌ Error: {e}")
 
+def print_fact_check_result(result):
+    print(f"Claim: {result['claim']}")
+    print(f"Verdict: {result['verdict']} (confidence {result['confidence']:.2f})")
+    print("\nPer-source evidence:")
+    for entry in result["per_source"]:
+        print(f"- [{entry['source']}] {entry.get('title')} -> {entry['label']} ({entry['score']:.2f})")
+        if entry.get("url"):
+            print(f"  URL: {entry['url']}")
+        snippet_preview = (entry.get("snippet") or "")[:200]
+        if snippet_preview:
+            print(f"  Snippet: {snippet_preview.replace('\n', ' ')}")
+
+'''
 # Front end
 @app.route("/api/message", methods=["GET"])
 def message():
@@ -135,9 +158,10 @@ def retrieve_response():
 
     response = "Test Response returned by the API"
     return jsonify(response), 200
+'''
 
-def initiate_pipline():
-    log.info("**********INITIATING ALL COMPONENTS**********")
+def initiate_pipeline():
+    #log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
     debate_name = get_debate_name()
     preprocess(debate_name)
@@ -158,17 +182,17 @@ def initiate_pipline():
         top_k = 3
         print("⚠️  Invalid number, using default: 3")
 
-    # Retriever - pass query, debate_name, and top_k
-    run_retriever(query, debate_name, top_k)
+    # Retriever - pass query and top_k
+    run_retriever(query, top_k)
 
     # QA
     build_chroma_db()
-    query_rag(query)
+    response = query_rag(query)
 
     # Fact Checker
-    run_cli()
-    log.info("**********ALL COMPONENTS EXECUTED**********")
+    run_fact_checker_loop(initial_claim=response, top_k=3, use_news=True)
+    #log.info("**********ALL COMPONENTS EXECUTED**********")
 
 if __name__ == "__main__":
-    # initiate_pipline()
-    app.run(debug=False, port=3000)
+    initiate_pipeline()
+    #app.run(debug=False, port=3000)

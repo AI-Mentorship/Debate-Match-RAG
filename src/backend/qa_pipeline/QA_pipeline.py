@@ -29,8 +29,10 @@ def build_chroma_db():
         Document(
             page_content=p["text"],
             metadata={
-                "speaker": p.get("speaker"), 
-                "timestamp": p.get("timestamp")
+                "debate_name": p.get("debate_name", "Unknown"),
+                "speaker": p.get("speaker", "Unknown"),
+                "timestamp": p.get("timestamp"),
+                "topics": ','.join(p.get("topics", [])) if isinstance(p.get("topics"), list) else p.get("topics", "")
             }
         )
         for p in passages
@@ -60,7 +62,12 @@ from langchain_chroma import Chroma
 
 ## Template for the prompt:
 PROMPT_TEMPLATE = """
-Answer the question based only on the given context & provide corresponding speaker and timestamp:
+Answer the question based only on the given context.
+
+When you reference any information from the context, you must cite it using this exact format:
+(Debate: [debate name], Timestamp: [timestamp])
+
+For example: "Person Y stated X (Debate: "cite debate here", Timestamp: "cite timestamp here")"
 
 {context}
 
@@ -80,7 +87,7 @@ def query_rag(query_text):
 
     # Build context text
     context_text = "\n\n---\n\n".join([
-        f"{doc.page_content} (Speaker: {doc.metadata.get('speaker')}, Timestamp: {doc.metadata.get('timestamp')})"
+        f"{doc.page_content} (Debate: {doc.metadata.get('debate_name')}, Timestamp: {doc.metadata.get('timestamp')})"
         for doc, _ in results
     ])
 
@@ -95,5 +102,4 @@ def query_rag(query_text):
     # Generate the response from the model
     response = model.invoke(prompt_str)
 
-    # Print the model's response
-    print("\nRESPONSE:", response)
+    return response
