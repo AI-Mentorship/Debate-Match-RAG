@@ -191,36 +191,25 @@ function Mission({ onGetStarted }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
         >
+          {/* Title */}
           <h1 className="text-5xl md:text-5xl text-white mb-5 leading-tight">
             From complexity to clarity.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
             From question to insight.
           </h2>
-
-          <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
-            To assist voters, we offer thoughtful, AI-powered analysis of debate transcripts,
-            helping the public discern factual statements from political rhetoric.
-          </p>
         </motion.div>
 
-        {/* Button */}
+        {/* Description */}
         <motion.p 
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
-          <button
-            onClick={onGetStarted}
-            className="mb-10 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
-          >
-            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-            <div className="absolute inset-0 rounded-full border-2 border-white/0 group-hover:border-white/70 transition-all duration-1000"></div>
-            <span className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-bold">
-              Explore
-            </span>
-          </button>
+          <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
+            To assist voters, we offer thoughtful, AI-powered analysis of debate transcripts,
+            helping the public discern factual statements from political rhetoric.
+          </p>
         </motion.p>
       </section>
 

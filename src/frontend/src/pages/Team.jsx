@@ -406,7 +406,7 @@ function Team({ onGetStarted }) {
                       href={member.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12 bg-gradient-to-br from-[#F9CE34] to-[#EE2A7B] to-[#6228D7] border border-white/20 hover:border-white/40`}
+                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12 bg-gradient-to-bl from-[#9435b4] via-[#d12d71] via-[#d12d71] to-[#f4c465] border border-white/20 hover:border-white/40`}
                     >
                       <svg 
                         className="w-4 h-4 text-white" 
