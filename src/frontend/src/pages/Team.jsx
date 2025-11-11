@@ -11,7 +11,7 @@ function Team({ onGetStarted }) {
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
-    const to = element.offsetTop - 30;
+    const to = element.offsetTop;
     const change = to - start;
     const startTime = performance.now();
 
@@ -244,19 +244,19 @@ function Team({ onGetStarted }) {
 
       {/* Scroll Indicator */}
       <motion.div
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+        className="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
         onClick={scrollToNextSection}
       >
         <div className="flex flex-col items-center justify-center">
-          <span className="text-dark-silver text-sm mb-2">
-            {currentSection < 1 ? 'Scroll down' : 'Back to top'}
+          <span className="text-dark-silver text-sm mb-2 font-medium">
+            {currentSection < 3 ? 'Scroll down ↓' : 'Scroll up ↑'}
           </span>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+          <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
-              className="w-1 h-3 bg-gray-400 rounded-full mt-2"
+              className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
               animate={{
                 y: [0, 12, 0]
               }}
@@ -281,141 +281,307 @@ function Team({ onGetStarted }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
         >
+          {/* Title */}
           <h1 className="text-5xl md:text-5xl text-white mb-5 leading-tight">
             From concept to creation.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
             From idea to implementation.
           </h2>
-
-          <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
-            Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
-            engineering, and design to create the future of debate analysis.
-          </p>
         </motion.div>
 
-        {/* Button */}
+        {/* Description */}
         <motion.p 
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
-          <button
-            onClick={onGetStarted}
-            className="mb-10 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
-          >
-            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-            <div className="absolute inset-0 rounded-full border-2 border-white/0 group-hover:border-white/70 transition-all duration-1000"></div>
-            <span className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-bold">
-              Explore
-            </span>
-          </button>
+          <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
+            Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
+            engineering, and design to create the future of debate analysis.
+          </p>
         </motion.p>
       </section>
 
-      {/* Grid */}
+      {/* Leadership Section */}
       <section
-        id="team-grid"
+        id="leadership"
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Our Contributors
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Project&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Leadership</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
-            Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
-            engineering, and design to create the future of debate analysis.
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+            Guiding our vision with strategic direction and technical expertise, our project leads 
+            ensure we deliver innovative solutions that transform political discourse through AI-powered analysis.
           </p>
         </div>
         
         <div className="flex-1 flex items-start justify-center px-8 pb-8">
-          <div className="max-w-7xl mx-auto w-full">
+          <div className="max-w-6xl mx-auto w-full">
             <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-10"
               initial={{ y: 100, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
             >
-              {members.map((member) => (
+              {members.filter(member => member.role.includes("Project Lead")).map((member) => (
                 <motion.div
                   key={member.id}
                   initial={{ opacity: 0, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
-                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 shadow-xl transition-all transform group ${
+                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
                     hoveredCard === member.id 
                       ? 'scale-105 rotate-1 shadow-xl' 
                       : 'scale-100 rotate-0 hover:scale-102'
-                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20`}
+                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
-                  {/* Profile Image */}
-                  <div className="relative z-10 w-16 h-16 mx-auto mb-4 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
-                    {/* Gradient Border */}
-                    <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
-                    
-                    {/* Inner Container with Clip Path */}
-                    <div className="relative w-full h-full rounded-full bg-transparent">
-                      <div className="w-full h-full rounded-full">
-                        <img 
-                          src={member.image} 
-                          alt={member.name}
-                          className="w-full h-full rounded-full object-cover relative z-10"
-                        />
+                  {/* Main Content */}
+                  <div className="flex-1 p-8">
+                    {/* Profile Image */}
+                    <div className="relative z-10 w-45 h-45 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
+                      {/* Gradient Border */}
+                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                      
+                      {/* Square Image Container */}
+                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
+                        <div className="w-full h-full rounded-xl">
+                          <img 
+                            src={member.image} 
+                            alt={member.name}
+                            className="w-full h-full rounded-xl object-cover relative z-10"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Name and Role */}
-                  <div className="text-center mb-3 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                    <h3 className="text-base font-bold text-white mb-1">{member.name}</h3>
-                    <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-xs">
-                      {member.role}
+                    {/* Name and Role */}
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                      <h3 className="text-lg font-bold text-white mb-2">
+                        {member.name}
+                      </h3>
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                        {member.role}
+                      </p>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                      {member.description}
                     </p>
                   </div>
 
-                  {/* Description */}
-                  <p className="text-light-silver text-xs leading-relaxed mb-3 text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
-                    {member.description}
-                  </p>
+                  {/* View Profile Button */}
+                  <div className="mt-auto">
+                    <button 
+                      onClick={() => setHoveredCard(member.id)}
+                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl"
+                    >
+                      View Profile
+                    </button>
+                  </div>
+                  
+                  {/* Hover Glow Effect */}
+                  <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-                  {/* Social Media */}
-                  <div className="text-center relative z-10 flex justify-center space-x-2">
-                    {/* LinkedIn */}
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:rotate-12 bg-[#0A66C2] border border-white/20 hover:border-white/40`}
+      {/* Women in Tech Section */}
+      <section
+        id="women-in-tech"
+        className="min-h-screen w-full flex flex-col relative z-10"
+      >
+        <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Women in&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Tech</span>
+          </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+            Driving innovation and excellence in technology, our women engineers and designers bring 
+            diverse perspectives to create inclusive and impactful solutions for political transparency.
+          </p>
+        </div>
+        
+        <div className="flex-1 flex items-start justify-center px-8 pb-8">
+          <div className="max-w-6xl mx-auto w-full">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-3 gap-10"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
+            >
+              {members.filter(member => 
+                member.name === "Raisa Reza" || 
+                member.name === "Yakina Azza" ||
+                member.name === "Sadwitha Thopucharla"
+              ).map((member) => (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
+                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
+                    hoveredCard === member.id 
+                      ? 'scale-105 rotate-1 shadow-xl' 
+                      : 'scale-100 rotate-0 hover:scale-102'
+                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
+                  onMouseEnter={() => setHoveredCard(member.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  {/* Main Content */}
+                  <div className="flex-1 p-8">
+                    {/* Profile Image */}
+                    <div className="relative z-10 w-45 h-45 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
+                      {/* Gradient Border */}
+                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                      
+                      {/* Square Image Container */}
+                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
+                        <div className="w-full h-full rounded-xl">
+                          <img 
+                            src={member.image} 
+                            alt={member.name}
+                            className="w-full h-full rounded-xl object-cover relative z-10"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Name and Role */}
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                      <h3 className="text-lg font-bold text-white mb-2">
+                        {member.name}
+                      </h3>
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                        {member.role}
+                      </p>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                      {member.description}
+                    </p>
+                  </div>
+
+                  {/* View Profile Button */}
+                  <div className="mt-auto">
+                    <button 
+                      onClick={() => setHoveredCard(member.id)}
+                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl"
                     >
-                      <svg 
-                        className="w-4 h-4 text-white" 
-                        fill="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                      </svg>
-                    </a>
-                    
-                    {/* Instagram */}
-                    <a
-                      href={member.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12 bg-gradient-to-br from-[#F9CE34] to-[#EE2A7B] to-[#6228D7] border border-white/20 hover:border-white/40`}
+                      View Profile
+                    </button>
+                  </div>
+                  
+                  {/* Hover Glow Effect */}
+                  <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Development Team Section */}
+      <section
+        id="development-team"
+        className="min-h-screen w-full flex flex-col relative z-10"
+      >
+        <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Development&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
+          </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+            Building the core technology behind DebateMatch.RAG, our development team combines 
+            cutting-edge AI research with robust engineering to deliver reliable, scalable solutions.
+          </p>
+        </div>
+        
+        <div className="flex-1 flex items-start justify-center px-8 pb-8">
+          <div className="max-w-6xl mx-auto w-full">
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-3 gap-10"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
+            >
+              {members.filter(member => 
+                member.name === "Khang Doan" || 
+                member.name === "Pavan Arani" || 
+                member.name === "Satyank Nadimpalli"
+              ).map((member) => (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
+                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
+                    hoveredCard === member.id 
+                      ? 'scale-105 rotate-1 shadow-xl' 
+                      : 'scale-100 rotate-0 hover:scale-102'
+                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
+                  onMouseEnter={() => setHoveredCard(member.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  {/* Main Content */}
+                  <div className="flex-1 p-8">
+                    {/* Profile Image */}
+                    <div className="relative z-10 w-45 h-45 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
+                      {/* Gradient Border */}
+                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] animate-gradient-rotate opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
+                      
+                      {/* Square Image Container */}
+                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
+                        <div className="w-full h-full rounded-xl">
+                          <img 
+                            src={member.image} 
+                            alt={member.name}
+                            className="w-full h-full rounded-xl object-cover relative z-10"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Name and Role */}
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                      <h3 className="text-lg font-bold text-white mb-2">
+                        {member.name}
+                      </h3>
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                        {member.role}
+                      </p>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                      {member.description}
+                    </p>
+                  </div>
+
+                  {/* View Profile Button */}
+                  <div className="mt-auto">
+                    <button 
+                      onClick={() => setHoveredCard(member.id)}
+                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl"
                     >
-                      <svg 
-                        className="w-4 h-4 text-white" 
-                        fill="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                      </svg>
-                    </a>
+                      View Profile
+                    </button>
                   </div>
                   
                   {/* Hover Glow Effect */}

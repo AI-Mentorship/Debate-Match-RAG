@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import Home from './pages/Home'
+import Analyzer from './pages/Analyzer'
 import Mission from './pages/Mission'
 import Team from './pages/Team'
-import ChatInterface from './pages/ChatInterface'
 
 function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -46,8 +46,8 @@ function App() {
   }, [mousePosition])
 
   const handleGetStarted = () => {
-    console.log('Navigating to chat interface')
-    setCurrentPage('chat')
+    console.log('Navigating to analyzer interface')
+    setCurrentPage('analyzer')
   }
 
   const handlePageChange = (page) => {
@@ -58,12 +58,12 @@ function App() {
     switch(currentPage) {
       case 'home':
         return <Home onGetStarted={handleGetStarted} />
+      case 'analyzer':
+        return <Analyzer />
       case 'mission':
         return <Mission />
       case 'team':
         return <Team />
-      case 'chat':
-        return <ChatInterface onBackToHome={() => setCurrentPage('home')} />
       default:
         return <Home onGetStarted={handleGetStarted} />
     }
