@@ -20,7 +20,7 @@ function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
       {/* Navigation Links - Right Side */}
       <div className="flex-1 flex justify-end">
         <div className="hidden md:flex items-center space-x-10">
-          {['Home', 'Mission', 'Team'].map((item) => {
+          {['Home', 'Analyzer', 'Mission', 'Team'].map((item) => {
             const isActive = currentPage === item.toLowerCase()
             return (
               <button

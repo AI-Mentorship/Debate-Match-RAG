@@ -3,7 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Paperclip } from "lucide-react";
 
-function ChatInterface({ onBackToHome }) {
+function Analyzer({ onBackToHome }) {
   const [stars, setStars] = useState([]);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -276,4 +276,4 @@ function ChatInterface({ onBackToHome }) {
   );
 }
 
-export default ChatInterface;
+export default Analyzer;

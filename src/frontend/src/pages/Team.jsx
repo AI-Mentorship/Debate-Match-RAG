@@ -11,7 +11,7 @@ function Team({ onGetStarted }) {
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
-    const to = element.offsetTop + 20;
+    const to = element.offsetTop;
     const change = to - start;
     const startTime = performance.now();
 
