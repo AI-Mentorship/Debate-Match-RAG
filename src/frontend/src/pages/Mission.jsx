@@ -10,7 +10,7 @@ function Mission({ onGetStarted }) {
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
-    const to = element.offsetTop - 30;
+    const to = element.offsetTop;
     const change = to - start;
     const startTime = performance.now();
 
@@ -162,7 +162,7 @@ function Mission({ onGetStarted }) {
       >
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2">
-            {currentSection < 3 ? 'Scroll down' : 'Back to top'}
+            {currentSection < 4 ? 'Scroll down' : 'Back to top'}
           </span>
           <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
             <motion.div
@@ -218,33 +218,144 @@ function Mission({ onGetStarted }) {
         id="why-we-build"
         className="min-h-screen w-full flex flex-col relative z-10"
       >
+        
         <div className="w-full pt-30">
-          {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Why We Build&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
             <span className="text-white">.RAG</span>
           </h2>
-          {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
-            We're building a platform that transforms complex political discourse into accessible, 
-            factual information to empower voters and strengthen democratic engagement.
-          </p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-50 items-center">
+              {/* Left Side */}
+              <motion.div 
+                className="relative"
+                initial={{ x: -50, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                {/* Data Visualization */}
+                <div className="relative h-96">
+                  {/* Central Core */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-electric-purple to-blue-500 rounded-full opacity-20 animate-pulse-slow"></div>
+                  
+                  {/* Orbiting Elements */}
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {/* Outer Ring - Data Points */}
+                    <div className="relative w-64 h-64">
+                      {[...Array(8)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="absolute w-3 h-3 bg-white rounded-full opacity-60"
+                          style={{
+                            top: `${50 + 40 * Math.sin((i * Math.PI) / 4)}%`,
+                            left: `${50 + 40 * Math.cos((i * Math.PI) / 4)}%`,
+                            animation: `float ${3 + i * 0.5}s ease-in-out infinite alternate`
+                          }}
+                        ></div>
+                      ))}
+                    </div>
+                                        
+                    {/* Inner Ring - Processing */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 border border-white/50 rounded-full opacity-60 animate-spin-slow"></div>
+                  </div>
+                  
+                  {/* Floating Text Elements */}
+                  <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-electric-purple font-mono opacity-70">RAG</div>
+                  </div>
+                  <div className="absolute top-3/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-blue-400 font-mono opacity-70">AI</div>
+                  </div>
+                  <div className="absolute top-1/4 left-3/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-white font-mono opacity-70">DATA</div>
+                  </div>
+                  <div className="absolute top-3/4 left-3/4 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-gray-400 font-mono opacity-70">TRUTH</div>
+                  </div>
+                </div>
+                
+                {/* Description Text */}
+                <div className="text-center mt-8">
+                  <h3 className="text-xl font-semibold text-white mb-2">Advanced Political Intelligence</h3>
+                  <p className="text-dark-silver text-sm leading-relaxed">
+                    Our system processes political discourse through multiple layers of analysis, 
+                    connecting debate transcripts with verified factual data to deliver accurate insights.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Right Side */}
+              <motion.div 
+                className="space-y-8 text-left"
+                initial={{ x: 50, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">The Information Crisis in Politics</h3>
+                  <p className="text-dark-silver leading-relaxed">
+                    In today's political landscape, voters face an overwhelming flood of information, 
+                    misinformation, and complex rhetoric. Traditional debate formats often leave citizens 
+                    confused about what candidates actually stand for and which claims hold factual merit.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">Our Solution</h3>
+                  <p className="text-dark-silver leading-relaxed">
+                    DebateMatch.RAG addresses this challenge by leveraging cutting-edge AI technology 
+                    to analyze debate transcripts, verify factual accuracy, and present clear, accessible 
+                    insights. We transform hours of political discourse into actionable information that 
+                    empowers democratic participation.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-white mb-4">The Impact</h3>
+                  <p className="text-dark-silver leading-relaxed">
+                    By making political analysis accessible to everyone, we're working toward a more 
+                    informed electorate, greater political accountability, and ultimately, a stronger 
+                    democracy where decisions are based on facts rather than rhetoric.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section
+        id="how-it-works"
+        className="min-h-screen w-full flex flex-col relative z-10"
+      >
+        {/* Title */}
+        <div className="w-full pt-30">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            How&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
+          </h2>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
-                { number: '1', title: 'Factual Accuracy', description: 'Grounding responses in actual debate transcripts' },
-                { number: '2', title: 'Transparency', description: 'Making political discourse more accessible and understandable' },
-                { number: '3', title: 'Voter Empowerment', description: 'Helping citizens make informed decisions' }
+                { number: '1', title: 'Question Input', description: 'Users submit political questions about candidate positions or debate topics' },
+                { number: '2', title: 'Transcript Retrieval', description: 'AI searches through comprehensive debate transcripts to find relevant statements' },
+                { number: '3', title: 'Fact Verification', description: 'Retrieved statements are cross-referenced with trusted fact-checking databases' },
+                { number: '4', title: 'Synthesized Response', description: 'System generates clear, cited answers with context and accuracy ratings' }
               ].map((item, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
-                  <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-4">
+                  <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
                     {item.number}
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
-                  <p className="text-dark-silver">{item.description}</p>
+                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-dark-silver text-sm">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -260,7 +371,8 @@ function Mission({ onGetStarted }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Our Vision
+            Our&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
           </h2>
           {/* Description */}
           <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
@@ -288,7 +400,8 @@ function Mission({ onGetStarted }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Our Core Values
+            Our&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Core Values</span>
           </h2>
           {/* Description */}
           <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
@@ -297,12 +410,14 @@ function Mission({ onGetStarted }) {
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { number: '1', title: 'Neutrality', description: 'Presenting information without political bias' },
-                { number: '2', title: 'Accuracy', description: 'Ensuring responses are factually grounded' },
-                { number: '3', title: 'Accessibility', description: 'Making complex information understandable' },
-                { number: '4', title: 'Innovation', description: 'Leveraging AI for public good' }
+                { number: '1', title: 'Factual Accuracy', description: 'Grounding responses in actual debate transcripts and verified sources' },
+                { number: '2', title: 'Transparency', description: 'Making political discourse more accessible and understandable for all' },
+                { number: '3', title: 'Voter Empowerment', description: 'Helping citizens make informed decisions based on verified information' },
+                { number: '4', title: 'Combatting Misinformation', description: 'Providing verified context against misleading claims and rhetoric' },
+                { number: '5', title: 'Democratizing Information', description: 'Making political analysis accessible to all voters regardless of background' },
+                { number: '6', title: 'Accountability', description: 'Tracking candidate statements against factual records and past positions' }
               ].map((item, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
                   <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
@@ -310,6 +425,49 @@ function Mission({ onGetStarted }) {
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
                   <p className="text-dark-silver text-sm">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases & Benefits Section */}
+      <section
+        id="use-cases"
+        className="min-h-screen w-full flex flex-col relative z-10"
+      >
+        <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Use Cases &amp;&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
+          </h2>
+          {/* Description */}
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+            Empowering diverse stakeholders with actionable political intelligence and verified information.
+          </p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="max-w-6xl mx-auto text-center w-full">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { 
+                  title: 'For Voters', 
+                  description: 'Make informed decisions based on verified candidate statements and track records across multiple debates and elections.' 
+                },
+                { 
+                  title: 'For Journalists', 
+                  description: 'Quickly verify political claims and access comprehensive analysis of candidate positions with proper source attribution.' 
+                },
+                { 
+                  title: 'For Educators', 
+                  description: 'Provide students with primary source analysis tools for civics education and critical thinking development.' 
+                }
+              ].map((item, index) => (
+                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
+                  <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
+                  <p className="text-dark-silver">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -331,8 +489,44 @@ function Mission({ onGetStarted }) {
             opacity: 0;
           }
         }
+        
+        @keyframes float {
+          0% {
+            transform: translateY(0px);
+          }
+          100% {
+            transform: translateY(-10px);
+          }
+        }
+        
+        @keyframes spin-slow {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.2;
+          }
+          50% {
+            opacity: 0.3;
+          }
+        }
+        
         .animate-shooting-star {
           animation: shooting-star linear forwards;
+        }
+        
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 4s ease-in-out infinite;
         }
       `}</style>
     </div>

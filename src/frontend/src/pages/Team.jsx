@@ -11,7 +11,7 @@ function Team({ onGetStarted }) {
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
-    const to = element.offsetTop - 30;
+    const to = element.offsetTop + 20;
     const change = to - start;
     const startTime = performance.now();
 
@@ -289,29 +289,10 @@ function Team({ onGetStarted }) {
           </h2>
 
           <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
-            Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
+            Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
           </p>
         </motion.div>
-
-        {/* Button */}
-        <motion.p 
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
-        >
-          <button
-            onClick={onGetStarted}
-            className="mb-10 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
-          >
-            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-            <div className="absolute inset-0 rounded-full border-2 border-white/0 group-hover:border-white/70 transition-all duration-1000"></div>
-            <span className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-bold">
-              Explore
-            </span>
-          </button>
-        </motion.p>
       </section>
 
       {/* Grid */}
@@ -322,11 +303,12 @@ function Team({ onGetStarted }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Our Contributors
+            Our&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Contributors</span>
           </h2>
           {/* Description */}
           <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
-            Meet the passionate team behind DebateMatch RAG. We combine expertise in AI research, 
+            Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
           </p>
         </div>
@@ -406,7 +388,7 @@ function Team({ onGetStarted }) {
                       href={member.instagram}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12 bg-gradient-to-bl from-[#9435b4] via-[#d12d71] via-[#d12d71] to-[#f4c465] border border-white/20 hover:border-white/40`}
+                      className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-all duration-500 transform group-hover:scale-110 group-hover:-rotate-12 bg-gradient-to-br from-[#F9CE34] to-[#EE2A7B] to-[#6228D7] border border-white/20 hover:border-white/40`}
                     >
                       <svg 
                         className="w-4 h-4 text-white" 
