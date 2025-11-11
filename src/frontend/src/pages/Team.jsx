@@ -251,12 +251,14 @@ function Team({ onGetStarted }) {
         onClick={scrollToNextSection}
       >
         <div className="flex flex-col items-center justify-center">
-          <span className="text-dark-silver text-sm mb-2">
-            {currentSection < 1 ? 'Scroll down' : 'Back to top'}
+          <span className="text-dark-silver text-sm mb-2 font-medium">
+            {currentSection === 0}
+            {currentSection === 1}
+            {currentSection < 1 ? 'Scroll down ↓' : 'Scroll up ↑'}
           </span>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+          <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
-              className="w-1 h-3 bg-gray-400 rounded-full mt-2"
+              className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
               animate={{
                 y: [0, 12, 0]
               }}
@@ -300,20 +302,15 @@ function Team({ onGetStarted }) {
         id="team-grid"
         className="min-h-screen w-full flex flex-col relative z-10"
       >
+        {/* Title */}
         <div className="w-full pt-30">
-          {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Our&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Contributors</span>
           </h2>
-          {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
-            Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
-            engineering, and design to create the future of debate analysis.
-          </p>
         </div>
         
-        <div className="flex-1 flex items-start justify-center px-8 pb-8">
+        <div className="flex-1 flex items-start justify-center px-8 pt-16 pb-8">
           <div className="max-w-7xl mx-auto w-full">
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"

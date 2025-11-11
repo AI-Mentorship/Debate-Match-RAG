@@ -161,12 +161,18 @@ function Mission({ onGetStarted }) {
         onClick={scrollToNextSection}
       >
         <div className="flex flex-col items-center justify-center">
-          <span className="text-dark-silver text-sm mb-2">
-            {currentSection < 4 ? 'Scroll down' : 'Back to top'}
+          <span className="text-dark-silver text-sm mb-2 font-medium">
+            {currentSection === 0}
+            {currentSection === 1}
+            {currentSection === 2}
+            {currentSection === 3}
+            {currentSection === 4}
+            {currentSection === 5}
+            {currentSection < 5 ? 'Scroll down ↓' : 'Scroll up ↑'}
           </span>
-          <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center">
+          <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
-              className="w-1 h-3 bg-gray-400 rounded-full mt-2"
+              className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
               animate={{
                 y: [0, 12, 0]
               }}
@@ -432,15 +438,15 @@ function Mission({ onGetStarted }) {
         </div>
       </section>
 
-      {/* Use Cases & Benefits Section */}
+      {/* Who Benefits Section */}
       <section
-        id="use-cases"
+        id="who-benefits"
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Use Cases &amp;&nbsp;
+            Who&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
           </h2>
           {/* Description */}
@@ -453,19 +459,19 @@ function Mission({ onGetStarted }) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { 
-                  title: 'For Voters', 
+                  title: 'Voters & Citizens', 
                   description: 'Make informed decisions based on verified candidate statements and track records across multiple debates and elections.' 
                 },
                 { 
-                  title: 'For Journalists', 
+                  title: 'Journalists & Researchers', 
                   description: 'Quickly verify political claims and access comprehensive analysis of candidate positions with proper source attribution.' 
                 },
                 { 
-                  title: 'For Educators', 
+                  title: 'Educators & Students', 
                   description: 'Provide students with primary source analysis tools for civics education and critical thinking development.' 
                 }
               ].map((item, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
+                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl hover:border-electric-purple/30 transition-all duration-300">
                   <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
                   <p className="text-dark-silver">{item.description}</p>
                 </div>
