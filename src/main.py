@@ -8,13 +8,16 @@ from backend.retriever.retriever import run_retriever
 from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from backend.embeddings_faiss.build_index import build_index
-import logging as log
-
-import json
-import argparse
+from pathlib import Path
+import time
 
 # Flask
 app = Flask(__name__)
+
+BASE_DIR = Path(__file__).resolve().parent
+UPLOAD_FOLDER = BASE_DIR / "user_file_uploads"
+UPLOAD_FOLDER.mkdir(exist_ok=True)
+
 
 # Flask with CORS for React
 cors = CORS(app, origins="*")
@@ -65,11 +68,11 @@ def get_user_query():
         query = input("\nEnter your query (or 'quit' to exit): ").strip()
         
         if query.lower() in ['quit', 'exit', 'q']:
-            print("👋 Goodbye!")
+            print("Goodbye!")
             exit()
         
         if not query:
-            print("⚠️  Please enter a valid query.")
+            print("Please enter a valid query.")
             continue
         
         return query
@@ -90,31 +93,31 @@ def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
     
     # If initial claim provided, fact-check it first
     if initial_claim:
-        print(f"\n🔍 Fact-checking QA response: '{initial_claim}...'")
+        print(f"\nFact-checking QA response: '{initial_claim}...'")
         try:
             result = claim_verdict(initial_claim, top_k, use_news)
             print_fact_check_result(result)
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
     
     # Loop for additional claims
     while True:
         claim = input("\nEnter claim to fact-check (or 'quit' to exit): ").strip()
         
         if claim.lower() in ['quit', 'exit', 'q']:
-            print("👋 Exiting fact checker!")
+            print("Exiting fact checker!")
             break
         if not claim:
-            print("⚠️  Please enter a valid claim.")
+            print("Please enter a valid claim.")
             continue
         
         # Run fact check
-        print(f"\n🔍 Fact-checking: '{claim}'...")
+        print(f"\nFact-checking: '{claim}'...")
         try:
             result = claim_verdict(claim, top_k, use_news)
             print_fact_check_result(result)
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
 
 def print_fact_check_result(result):
     print(f"Claim: {result['claim']}")
@@ -142,23 +145,50 @@ def message():
             ]
         }
     )
-
+'''
 @app.route('/api/retrieve-response', methods=['POST'])
 def retrieve_response():
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No JSON data provided'}), 400
+    try:
+        user_query = request.form.get('user_query', '').strip()
+        print(f"User query: {user_query}")
+        uploaded_file = request.files.get('file')
+        print(f"Any file uploaded: {uploaded_file}")
 
-    user_query = data.get('user_query')
-    if user_query is None:
-        return jsonify({'error': 'Missing user query in request body'}), 400
+        response_message = ""
 
-    # TO BE IMPLEMENTED
-    # response = run_retriever(user_query)
+        if uploaded_file:
+            filename = uploaded_file.filename
 
-    response = "Test Response returned by the API"
-    return jsonify(response), 200
-'''
+            # Restrict file types
+            if not filename.lower().endswith(".txt"):
+                return jsonify({"error": "Only .txt files are allowed"}), 400
+
+            # Create unique name to prevent overwriting
+            safe_name = f"{int(time.time())}_{filename}"
+
+            # Pathlib handles all OS differences internally
+            file_path = UPLOAD_FOLDER / safe_name
+            print(f"Uploading file '{filename}' at path '{file_path}'")
+            uploaded_file.save(file_path)
+
+            # Process file
+            with file_path.open('r', encoding='utf-8') as f:
+                contents = f.read()
+
+            response_message += f"Received file '{filename}' ({len(contents)} characters)."
+
+        if user_query:
+            response_message += f" You asked: '{user_query}'"
+
+        if not uploaded_file and not user_query:
+            return jsonify({"error": "No file or query provided"}), 400
+
+        final_reply = f"Processed successfully! {response_message}"
+        return jsonify(final_reply)
+
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"error": str(e)}), 500
 
 def initiate_pipeline():
     #log.info("**********INITIATING ALL COMPONENTS**********")
@@ -176,11 +206,11 @@ def initiate_pipeline():
     query = get_user_query()
 
     try:
-        top_k_input = input("📊 How many results? (default 3): ").strip()
+        top_k_input = input("How many results? (default 3): ").strip()
         top_k = int(top_k_input) if top_k_input else 3
     except ValueError:
         top_k = 3
-        print("⚠️  Invalid number, using default: 3")
+        print("Invalid number, using default: 3")
 
     # Retriever - pass query and top_k
     run_retriever(query, top_k)
@@ -195,4 +225,4 @@ def initiate_pipeline():
 
 if __name__ == "__main__":
     initiate_pipeline()
-    #app.run(debug=False, port=3000)
+    app.run(debug=False, port=3000)
