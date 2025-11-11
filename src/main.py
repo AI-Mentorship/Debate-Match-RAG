@@ -269,7 +269,7 @@ def query():
     print(f"GPT-5 Nano usage metrics: {response.usage}")
     ai_reply = response.output_text
     if not ai_reply:
-        ai_reply = "⚠️ GPT-5 returned empty response."
+        ai_reply = "GPT-5 returned empty response."
 
     return jsonify({"response": ai_reply})
 

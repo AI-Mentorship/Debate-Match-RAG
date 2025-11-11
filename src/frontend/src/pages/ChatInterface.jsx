@@ -36,7 +36,7 @@ function ChatInterface({ onBackToHome }) {
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // 🌌 Animated stars
+  // Animated stars
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -57,7 +57,7 @@ function ChatInterface({ onBackToHome }) {
     return () => clearInterval(interval);
   }, []);
 
-  // ✍️ Typing animation
+  // Typing animation
   const typeText = async (text, onComplete) => {
     setIsTyping(true);
     setTypingMessage("");
@@ -76,7 +76,7 @@ function ChatInterface({ onBackToHome }) {
     onComplete();
   };
 
-  // 🚀 Send message
+  // Send message
   const sendMessage = async () => {
     if (!input.trim() && !file) return;
 
@@ -115,7 +115,7 @@ function ChatInterface({ onBackToHome }) {
       });
     } catch (err) {
       console.error(err);
-      const errorMsg = "⚠️ Error connecting to backend. Ensure it's running.";
+      const errorMsg = "Error connecting to backend. Ensure it's running.";
       typeText(errorMsg, () => {
         setMessages((prev) => [
           ...prev,
