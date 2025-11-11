@@ -162,12 +162,6 @@ function Mission({ onGetStarted }) {
       >
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection === 0}
-            {currentSection === 1}
-            {currentSection === 2}
-            {currentSection === 3}
-            {currentSection === 4}
-            {currentSection === 5}
             {currentSection < 5 ? 'Scroll down ↓' : 'Scroll up ↑'}
           </span>
           <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
@@ -520,27 +514,6 @@ function Mission({ onGetStarted }) {
           100% {
             transform: rotate(360deg);
           }
-        }
-        
-        @keyframes pulse-slow {
-          0%, 100% {
-            opacity: 0.2;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-        
-        .animate-shooting-star {
-          animation: shooting-star linear forwards;
-        }
-        
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse-slow 4s ease-in-out infinite;
         }
       `}</style>
     </div>
