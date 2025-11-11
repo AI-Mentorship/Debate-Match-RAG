@@ -135,16 +135,16 @@ function ChatInterface({ onBackToHome }) {
 
   // Render
   return (
-    <div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="min-h-screen flex-1 flex flex-col text-center overflow-hidden">
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-8 space-y-6">
+      <div className="mt-40 flex-1 overflow-y-auto px-6 py-8 space-y-6">
         {messages.length === 0 && !loading ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center max-w-2xl">
               <h2 className="text-4xl font-bold text-white mb-4">
                 Start a Debate Analysis
               </h2>
-              <p className="text-lg text-light-silver mb-8">
+              <p className="text-lg text-dark-silver mb-8">
                 Ask me anything about political debates, argument analysis, or
                 find matching debate topics.
               </p>
