@@ -283,18 +283,26 @@ function Team({ onGetStarted }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
         >
+          {/* Title */}
           <h1 className="text-5xl md:text-5xl text-white mb-5 leading-tight">
             From concept to creation.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
             From idea to implementation.
           </h2>
+        </motion.div>
 
+        {/* Description */}
+        <motion.p 
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+        >
           <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
             Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
           </p>
-        </motion.div>
+        </motion.p>
       </section>
 
       {/* Grid */}
@@ -304,7 +312,7 @@ function Team({ onGetStarted }) {
       >
         {/* Title */}
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Our&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Contributors</span>
           </h2>

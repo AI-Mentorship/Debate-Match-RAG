@@ -202,7 +202,7 @@ function Mission({ onGetStarted }) {
             From complexity to clarity.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
-            From question to insight.
+            From question to transparency.
           </h2>
         </motion.div>
 
@@ -226,7 +226,7 @@ function Mission({ onGetStarted }) {
       >
         
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Why We Build&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
             <span className="text-white">.RAG</span>
@@ -245,42 +245,50 @@ function Mission({ onGetStarted }) {
               >
                 {/* Data Visualization */}
                 <div className="relative h-96">
-                  {/* Central Core */}
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-to-br from-electric-purple to-blue-500 rounded-full opacity-20 animate-pulse-slow"></div>
-                  
                   {/* Orbiting Elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-electric-purple/30 rounded-full"></div>
+                    
                     {/* Outer Ring - Data Points */}
-                    <div className="relative w-64 h-64">
+                    <div className="relative w-60 h-60">
                       {[...Array(8)].map((_, i) => (
                         <div
                           key={i}
                           className="absolute w-3 h-3 bg-white rounded-full opacity-60"
                           style={{
-                            top: `${50 + 40 * Math.sin((i * Math.PI) / 4)}%`,
-                            left: `${50 + 40 * Math.cos((i * Math.PI) / 4)}%`,
-                            animation: `float ${3 + i * 0.5}s ease-in-out infinite alternate`
+                            top: `${47 + 40 * Math.sin((i * Math.PI) / 4)}%`,
+                            left: `${47 + 40 * Math.cos((i * Math.PI) / 4)}%`,
                           }}
                         ></div>
                       ))}
-                    </div>
-                                        
-                    {/* Inner Ring - Processing */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 border border-white/50 rounded-full opacity-60 animate-spin-slow"></div>
+                    </div>                                    
                   </div>
                   
-                  {/* Floating Text Elements */}
-                  <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+                  {/* Floating Text Elements - Increased spacing */}
+                  <div className="absolute top-1/5 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
                     <div className="text-xs text-electric-purple font-mono opacity-70">RAG</div>
                   </div>
-                  <div className="absolute top-3/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-blue-400 font-mono opacity-70">AI</div>
+                  <div className="absolute top-1/5 left-4/5 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-blue-400 font-mono opacity-70">ANALYSIS</div>
                   </div>
-                  <div className="absolute top-1/4 left-3/4 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-white font-mono opacity-70">DATA</div>
+                  <div className="absolute top-4/5 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-green-400 font-mono opacity-70">FACTS</div>
                   </div>
-                  <div className="absolute top-3/4 left-3/4 transform -translate-x-1/2 -translate-y-1/2">
+                  <div className="absolute top-4/5 left-4/5 transform -translate-x-1/2 -translate-y-1/2">
                     <div className="text-xs text-gray-400 font-mono opacity-70">TRUTH</div>
+                  </div>
+                  <div className="absolute top-1/2 left-1/10 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-yellow-400 font-mono opacity-70">CONTEXT</div>
+                  </div>
+                  <div className="absolute top-1/2 left-9/10 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-purple-400 font-mono opacity-70">INSIGHT</div>
+                  </div>
+                  <div className="absolute top-1/10 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-red-400 font-mono opacity-70">VERIFY</div>
+                  </div>
+                  <div className="absolute top-9/10 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="text-xs text-cyan-400 font-mono opacity-70">CLARITY</div>
                   </div>
                 </div>
                 
@@ -342,7 +350,7 @@ function Mission({ onGetStarted }) {
       >
         {/* Title */}
         <div className="w-full pt-30">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             How&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
           </h2>
@@ -376,7 +384,7 @@ function Mission({ onGetStarted }) {
       >
         <div className="w-full pt-30">
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Our&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
           </h2>
@@ -405,7 +413,7 @@ function Mission({ onGetStarted }) {
       >
         <div className="w-full pt-30">
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Our&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Core Values</span>
           </h2>
@@ -445,7 +453,7 @@ function Mission({ onGetStarted }) {
       >
         <div className="w-full pt-30">
           {/* Title */}
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Who&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
           </h2>
