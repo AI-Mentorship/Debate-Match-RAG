@@ -1,7 +1,7 @@
 from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
 from backend.preprocessing.preprocess_script import preprocess
-from backend.fact_checker_prototype.fact_checker import claim_verdict
+from backend.fact_checker_prototype.AI_FactChecker import EnhancedFactChecker
 from backend.qa_pipeline.QA_pipeline import build_chroma_db
 from backend.qa_pipeline.QA_pipeline import query_rag
 from backend.retriever.retriever import run_retriever
@@ -91,12 +91,20 @@ def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
     print("FACT CHECKER")
     print("="*80)
     
+    # Initialize EnhancedFactChecker
+    fact_checker = EnhancedFactChecker(
+        use_wikipedia=True,
+        use_news_api=use_news,
+        use_llm_verification=True,  # Enable LLM for maximum accuracy
+        use_semantic_similarity=True  # Enable semantic analysis
+    )
+    
     # If initial claim provided, fact-check it first
     if initial_claim:
         print(f"\nFact-checking QA response: '{initial_claim}...'")
         try:
-            result = claim_verdict(initial_claim, top_k, use_news)
-            print_fact_check_result(result)
+            result = fact_checker.check_claim(initial_claim, top_k=top_k)
+            print_enhanced_fact_check_result(result)
         except Exception as e:
             print(f"Error: {e}")
     
@@ -114,22 +122,61 @@ def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
         # Run fact check
         print(f"\nFact-checking: '{claim}'...")
         try:
-            result = claim_verdict(claim, top_k, use_news)
-            print_fact_check_result(result)
+            result = fact_checker.check_claim(claim, top_k=top_k)
+            print_enhanced_fact_check_result(result)
         except Exception as e:
             print(f"Error: {e}")
 
-def print_fact_check_result(result):
-    print(f"Claim: {result['claim']}")
-    print(f"Verdict: {result['verdict']} (confidence {result['confidence']:.2f})")
-    print("\nPer-source evidence:")
-    for entry in result["per_source"]:
-        print(f"- [{entry['source']}] {entry.get('title')} -> {entry['label']} ({entry['score']:.2f})")
-        if entry.get("url"):
-            print(f"  URL: {entry['url']}")
-        snippet_preview = (entry.get("snippet") or "")[:200]
-        if snippet_preview:
-            print(f"  Snippet: {snippet_preview.replace('\n', ' ')}")
+def print_enhanced_fact_check_result(result):
+
+    # Print results from EnhancedFactChecker (FactCheckResult dataclass)
+    print("\n" + "="*80)
+    print("FACT CHECK RESULTS")
+    print("="*80)
+    
+    # Main verdict
+    print(f"\nClaim: {result.claim}")
+    print(f"Verdict: {result.verdict} {result.badge}")
+    print(f"Confidence: {result.confidence:.1f}%")
+    
+    # Explanation
+    if result.explanation:
+        print(f"\nExplanation: {result.explanation}")
+    
+    # Evidence for/against
+    if result.evidence_for:
+        print("\n✓ Supporting Evidence:")
+        for evidence in result.evidence_for[:3]:
+            print(f"  - {evidence[:100]}...")
+    
+    if result.evidence_against:
+        print("\n✗ Contradicting Evidence:")
+        for evidence in result.evidence_against[:3]:
+            print(f"  - {evidence[:100]}...")
+    
+    # Per-source breakdown
+    if result.per_source:
+        print("\nPer-Source Evidence:")
+        for entry in result.per_source[:5]:  # Show top 5
+            print(f"\n  [{entry['source']}] {entry.get('title', 'N/A')}")
+            print(f"    Judgment: {entry['label']} (score: {entry['score']:.2f})")
+            print(f"    Credibility: {entry.get('credibility', 0)*100:.0f}%")
+            if entry.get("url"):
+                print(f"    URL: {entry['url']}")
+            snippet_preview = (entry.get("snippet") or "")[:150]
+            if snippet_preview:
+                print(f"    Snippet: {snippet_preview.replace(chr(10), ' ')}...")
+    
+    # Sources
+    if result.sources:
+        print(f"\n📚 Total Sources Used: {len(result.sources)}")
+        print("\nTop Sources:")
+        for i, source in enumerate(result.sources[:3], 1):
+            print(f"  {i}. {source['title']} ({source['source']})")
+            print(f"     Credibility: {source.get('credibility', 0)*100:.0f}%")
+            print(f"     URL: {source['url']}")
+    
+    print("\n" + "="*80)
 
 '''
 # Front end
