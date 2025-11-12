@@ -64,6 +64,8 @@ function Team({ onGetStarted }) {
     requestAnimationFrame(animateScroll);
   };
 
+  // Pavan told me to add this hsit
+
   const scrollToNextSection = () => {
     const sections = document.querySelectorAll('section[id]');
     const nextSection = currentSection + 1;
