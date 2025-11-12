@@ -157,7 +157,7 @@ function Team({ onGetStarted }) {
       role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Adya_Dhanasekar.png"
     },
     {
@@ -166,7 +166,7 @@ function Team({ onGetStarted }) {
       role: "QA Pipeline Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Sadwitha_Thopucharla.jpg"
     },
     {
@@ -175,7 +175,7 @@ function Team({ onGetStarted }) {
       role: "UX/UI Designer",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Raisa_Reza.jpeg"
     },
     {
@@ -184,7 +184,7 @@ function Team({ onGetStarted }) {
       role: "Transcript Preprocessing",
       description: "B.S. in Computer Science. She is an ML/AI Researcher",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Yakina_Azza.png"
     },
     {
@@ -193,7 +193,7 @@ function Team({ onGetStarted }) {
       role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Shivam_Singh.png"
     },
     {
@@ -220,7 +220,7 @@ function Team({ onGetStarted }) {
       role: "Full Stack Developer",
       description: "M.S. in Computer Science studying AI & Intelligent Systems",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
-      instagram: "#",
+      instagram: "",
       image: "src/assets/img/Satyank_Nadimpalli.jpg"
     }
   ]
@@ -259,47 +259,61 @@ function Team({ onGetStarted }) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", damping: 25 }}
-            className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
+            className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col md:flex-row h-full">
-              {/* Left Side - Content */}
-              <div className="flex-1 p-8 md:p-10 flex flex-col">
+              {/* Left Side - Profile Image */}
+              <div className="md:w-2/5 flex items-center justify-center bg-gradient-to-br from-[#1a1029] to-[#0B0219] p-8 md:p-12 relative">
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedMember(null)}
-                  className="self-end text-white/70 hover:text-white transition-colors duration-200 mb-6 cursor-pointer"
+                  className="absolute top-4 left-4 text-white/70 hover:text-white transition-colors duration-200 cursor-pointer z-10"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
+                
+                <div className="relative w-80 h-80">                  
+                  {/* Profile Image */}
+                  <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl">
+                    <img 
+                      src={selectedMember.image} 
+                      alt={selectedMember.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                  </div>
+                </div>
+              </div>
 
+              {/* Right Side - Content */}
+              <div className="md:w-3/5 p-8 md:p-12 flex flex-col bg-gradient-to-br from-[#1a1029] to-[#0B0219]">
                 {/* Content */}
-                <div className="flex-1 flex flex-col justify-center">
-                  <div className="text-left">
-                    <h2 className="text-3xl font-bold text-white mb-2">
-                      {selectedMember.name}
-                    </h2>
-                    <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-lg mb-6">
-                      {selectedMember.role}
-                    </p>
-                    
-                    <p className="text-light-silver text-base leading-relaxed mb-8">
-                      {selectedMember.description}
-                    </p>
+                <div className="flex-1 flex flex-col text-left">
+                  <div className="flex justify-between items-start">
+                    {/* Name and Role */}
+                    <div className="flex-1">
+                      <h2 className="text-4xl font-bold text-white mb-2 text-left">
+                        {selectedMember.name}
+                      </h2>
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-xl mb-4 text-left">
+                        {selectedMember.role}
+                      </p>
+                    </div>
 
                     {/* Social Media */}
-                    <div className="flex space-x-4">
+                    <div className="flex space-x-2">
                       {/* LinkedIn */}
                       <a
                         href={selectedMember.linkedin}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0A66C2] border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
                       >
                         <svg 
-                          className="w-5 h-5 text-white" 
+                          className="w-4 h-4 text-white" 
                           fill="currentColor" 
                           viewBox="0 0 24 24"
                         >
@@ -313,10 +327,10 @@ function Team({ onGetStarted }) {
                           href={selectedMember.instagram}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#F9CE34] to-[#EE2A7B] to-[#6228D7] border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
+                          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
                         >
                           <svg 
-                            className="w-5 h-5 text-white" 
+                            className="w-4 h-4 text-white" 
                             fill="currentColor" 
                             viewBox="0 0 24 24"
                           >
@@ -326,20 +340,25 @@ function Team({ onGetStarted }) {
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Right Side - Profile Image */}
-              <div className="md:w-2/5 p-8 md:p-10 flex items-center justify-center bg-gradient-to-br from-electric-purple/10 to-pink-400/10">
-                <div className="relative w-64 h-64">                  
-                  {/* Profile Image */}
-                  <div className="relative w-full h-full rounded-xl overflow-hidden border-2 border-white/20">
-                    <img 
-                      src={selectedMember.image} 
-                      alt={selectedMember.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  {/* Description */}
+                  <div className="mb-8">
+                    <p className="text-dark-silver text-base leading-relaxed text-left">
+                      {selectedMember.description}
+                    </p>
+                  </div>
+
+                  {/* About Me Section */}
+                  <div className="border-t border-white/20 pt-8">
+                    <h3 className="text-2xl font-bold text-white mb-4 text-left">About Me</h3>
+                    <p className="text-dark-silver text-base leading-relaxed text-left">
+                      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt
+                      distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus
+                      pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam
+                      beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                      Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate,
+                      unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!
+                    </p>
                   </div>
                 </div>
               </div>
@@ -463,7 +482,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                    <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
@@ -473,7 +492,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                    <div className="text-dark-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
                       {member.description}
                     </div>
                   </div>
@@ -554,7 +573,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                    <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
@@ -564,7 +583,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                    <div className="text-dark-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
                       {member.description}
                     </div>
                   </div>
@@ -645,7 +664,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                    <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
@@ -655,7 +674,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                    <div className="text-dark-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
                       {member.description}
                     </div>
                   </div>
