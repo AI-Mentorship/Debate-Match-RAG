@@ -274,7 +274,7 @@ def message():
             ]
         }
     )
-
+'''
 @app.route('/api/retrieve-response', methods=['POST'])
 def retrieve_response():
     try:
@@ -318,11 +318,11 @@ def retrieve_response():
     except Exception as e:
         print("Error:", e)
         return jsonify({"error": str(e)}), 500
-'''
+
 def initiate_pipeline():
     #log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
-    '''
+
     debate_name = get_debate_name()
     preprocess(debate_name)
 
@@ -331,7 +331,7 @@ def initiate_pipeline():
 
     # Embedding + FAISS
     build_index()
-'''
+
     # Get user query and number of results for retriever
     query = get_user_query()
 
@@ -354,5 +354,5 @@ def initiate_pipeline():
     #log.info("**********ALL COMPONENTS EXECUTED**********")
 
 if __name__ == "__main__":
-    initiate_pipeline()
-    #app.run(debug=False, port=3000)
+    #initiate_pipeline()
+    app.run(debug=False, port=3000)
