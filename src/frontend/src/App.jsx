@@ -10,6 +10,7 @@ function App() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [trailingPosition, setTrailingPosition] = useState({ x: 0, y: 0 })
   const [currentPage, setCurrentPage] = useState('home')
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const trailingRef = useRef({ x: 0, y: 0 })
 
   // Mouse follower effect
@@ -63,7 +64,7 @@ function App() {
       case 'mission':
         return <Mission />
       case 'team':
-        return <Team />
+        return <Team onModalStateChange={setIsModalOpen} />
       default:
         return <Home onGetStarted={handleGetStarted} />
     }
@@ -132,6 +133,7 @@ function App() {
             currentPage={currentPage} 
             onPageChange={handlePageChange}
             onGetStarted={handleGetStarted}
+            isModalOpen={isModalOpen}
           />
         </div>
 

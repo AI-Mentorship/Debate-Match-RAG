@@ -1,11 +1,14 @@
-function Header({ currentPage, onPageChange, onGetStarted, className = '' }) {
+function Header({ currentPage, onPageChange, onGetStarted, isModalOpen, className = '' }) {
   const handlePageChange = (page) => {
+    if (isModalOpen) return;
     window.scrollTo(0, 0);
     onPageChange(page);
   };
   
   return (
-    <nav className="bg-[#010102] px-20 py-8 flex items-center justify-between">
+    <nav className={`bg-[#010102] px-20 py-8 flex items-center justify-between ${
+      isModalOpen ? 'pointer-events-none' : ''
+    }`}>
       {/* Logo - Left Side */}
       <div className="flex items-center space-x-3 flex-1">
         <button
