@@ -37,7 +37,7 @@ function Analyzer({ onBackToHome }) {
   const fileInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
-  // Animated stars
+  // Shooting star animation
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -45,18 +45,26 @@ function Analyzer({ onBackToHome }) {
         left: Math.random() * 100,
         delay: Math.random() * 5,
         duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2,
-      };
-      setStars((prev) => [...prev, newStar]);
-      setTimeout(
-        () => setStars((prev) => prev.filter((s) => s.id !== newStar.id)),
-        (newStar.duration + newStar.delay) * 1000
-      );
-    };
-    for (let i = 0; i < 20; i++) setTimeout(createStar, i * 300);
-    const interval = setInterval(createStar, 800);
-    return () => clearInterval(interval);
-  }, []);
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
 
   // Typing animation
   const typeText = async (text, onComplete) => {

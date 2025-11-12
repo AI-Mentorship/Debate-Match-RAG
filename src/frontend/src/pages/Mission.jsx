@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 function Mission({ onGetStarted }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
+  const [visibleSections, setVisibleSections] = useState({})
   const isScrolling = useRef(false)
 
   // Scroll
@@ -69,7 +70,13 @@ function Mission({ onGetStarted }) {
     if (nextSection < sections.length) {
       setCurrentSection(nextSection);
       const section = sections[nextSection];
+      
       if (section) {
+        setTimeout(() => {
+          const sectionId = section.id;
+          setVisibleSections(prev => ({ ...prev, [sectionId]: true }));
+        }, 600);
+        
         smoothScrollTo(section, 1200);
       }
     }
@@ -105,7 +112,7 @@ function Mission({ onGetStarted }) {
     }
 
     // Continue creating stars
-    const interval = setInterval(createStar, 100)
+    const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
   }, [])
@@ -125,8 +132,17 @@ function Mission({ onGetStarted }) {
         if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
           setCurrentSection(index);
         }
+
+        // Check if section is in viewport for fade-in effect
+        const sectionMiddle = sectionTop + section.offsetHeight / 9;
+        if (window.scrollY + window.innerHeight > sectionMiddle) {
+          setVisibleSections(prev => ({ ...prev, [section.id]: true }));
+        }
       });
     };
+
+    // Initial check on mount
+    handleScroll();
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -221,7 +237,9 @@ function Mission({ onGetStarted }) {
       {/* Why We Build DebateMatch.RAG Section */}
       <section
         id="why-we-build"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['why-we-build'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         
         <div className="w-full pt-30">
@@ -246,7 +264,6 @@ function Mission({ onGetStarted }) {
                 <div className="relative h-96">
                   {/* Orbiting Elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-electric-purple/30 rounded-full"></div>
                     
                     {/* Outer Ring - Data Points */}
@@ -264,7 +281,7 @@ function Mission({ onGetStarted }) {
                     </div>                                    
                   </div>
                   
-                  {/* Floating Text Elements - Increased spacing */}
+                  {/* Floating Text Elements */}
                   <div className="absolute top-1/5 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
                     <div className="text-xs text-electric-purple font-mono opacity-70">RAG</div>
                   </div>
@@ -345,7 +362,9 @@ function Mission({ onGetStarted }) {
       {/* How It Works Section */}
       <section
         id="how-it-works"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['how-it-works'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         {/* Title */}
         <div className="w-full pt-30">
@@ -379,7 +398,9 @@ function Mission({ onGetStarted }) {
       {/* Our Vision Section */}
       <section
         id="our-vision"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['our-vision'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}
@@ -408,7 +429,9 @@ function Mission({ onGetStarted }) {
       {/* Core Values Section */}
       <section
         id="core-values"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['core-values'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}
@@ -448,7 +471,9 @@ function Mission({ onGetStarted }) {
       {/* Who Benefits Section */}
       <section
         id="who-benefits"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['who-benefits'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}

@@ -6,6 +6,7 @@ function Team({ onGetStarted }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [selectedMember, setSelectedMember] = useState(null)
+  const [visibleSections, setVisibleSections] = useState({})
   const isScrolling = useRef(false)
   
   // Scroll
@@ -64,8 +65,6 @@ function Team({ onGetStarted }) {
     requestAnimationFrame(animateScroll);
   };
 
-  // Pavan told me to add this hsit
-
   const scrollToNextSection = () => {
     const sections = document.querySelectorAll('section[id]');
     const nextSection = currentSection + 1;
@@ -73,7 +72,13 @@ function Team({ onGetStarted }) {
     if (nextSection < sections.length) {
       setCurrentSection(nextSection);
       const section = sections[nextSection];
+      
       if (section) {
+        setTimeout(() => {
+          const sectionId = section.id;
+          setVisibleSections(prev => ({ ...prev, [sectionId]: true }));
+        }, 600);
+        
         smoothScrollTo(section, 1200);
       }
     }
@@ -83,7 +88,7 @@ function Team({ onGetStarted }) {
       setCurrentSection(0);
       smoothScrollToTop(1200);
     }
-  }
+  };
 
   // Shooting star animation
   useEffect(() => {
@@ -109,7 +114,7 @@ function Team({ onGetStarted }) {
     }
 
     // Continue creating stars
-    const interval = setInterval(createStar, 100)
+    const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
   }, [])
@@ -129,8 +134,17 @@ function Team({ onGetStarted }) {
         if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
           setCurrentSection(index);
         }
+
+        // Check if section is in viewport for fade-in effect
+        const sectionMiddle = sectionTop + section.offsetHeight / 9;
+        if (window.scrollY + window.innerHeight > sectionMiddle) {
+          setVisibleSections(prev => ({ ...prev, [section.id]: true }));
+        }
       });
     };
+
+    // Initial check on mount
+    handleScroll();
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -175,8 +189,8 @@ function Team({ onGetStarted }) {
     },
     {
       id: 5,
-      name: "Shivam Singh - Mentor",
-      role: "Project Lead",
+      name: "Shivam Singh",
+      role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
       instagram: "#",
@@ -345,7 +359,7 @@ function Team({ onGetStarted }) {
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2 font-medium">
             {currentSection == 0 ? 'Project Leadership' : ''}
-            {currentSection == 1 ? 'Women in Tech' : ''}
+            {currentSection == 1 ? 'Technical Excellence' : ''}
             {currentSection == 2 ? 'Development Team' : ''}
             {currentSection < 3 ? ' ↓' : 'Scroll up ↑'}
           </span>
@@ -401,7 +415,9 @@ function Team({ onGetStarted }) {
       {/* Leadership Section */}
       <section
         id="leadership"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['leadership'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}
@@ -417,19 +433,11 @@ function Team({ onGetStarted }) {
         </div>
         
         <div className="flex-1 flex items-start justify-center px-8 pb-8">
-          <div className="max-w-6xl mx-auto w-full">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-2 gap-10"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
-            >
+          <div className="max-w-3xl mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               {members.filter(member => member.role.includes("Project Lead")).map((member) => (
                 <motion.div
                   key={member.id}
-                  initial={{ opacity: 0, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
                   className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
@@ -441,8 +449,8 @@ function Team({ onGetStarted }) {
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -455,19 +463,19 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                      <div className="text-center mb-4 relative z-10 transition-all duration-500">
-                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
-                          {member.name}
-                        </h3>
-                        <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
-                          {member.role}
-                        </p>
-                      </div>
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
+                        {member.name}
+                      </h3>
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                        {member.role}
+                      </p>
+                    </div>
 
-                      {/* Description */}
-                      <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
-                        {member.description}
-                      </div>
+                    {/* Description */}
+                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                      {member.description}
+                    </div>
                   </div>
 
                   {/* View Profile Button */}
@@ -486,7 +494,7 @@ function Team({ onGetStarted }) {
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -494,7 +502,9 @@ function Team({ onGetStarted }) {
       {/* Technical Excellence Section */}
       <section
         id="technical-excellence"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['technical-excellence'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}
@@ -511,12 +521,7 @@ function Team({ onGetStarted }) {
         
         <div className="flex-1 flex items-start justify-center px-8 pb-8">
           <div className="max-w-6xl mx-auto w-full">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-3 gap-10"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {members.filter(member => 
                 member.name === "Raisa Reza" || 
                 member.name === "Yakina Azza" ||
@@ -524,9 +529,6 @@ function Team({ onGetStarted }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  initial={{ opacity: 0, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
                   className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
@@ -538,8 +540,8 @@ function Team({ onGetStarted }) {
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -552,7 +554,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transition-all duration-500">
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
@@ -562,7 +564,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
+                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
                       {member.description}
                     </div>
                   </div>
@@ -583,7 +585,7 @@ function Team({ onGetStarted }) {
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -591,7 +593,9 @@ function Team({ onGetStarted }) {
       {/* Development Team Section */}
       <section
         id="development-team"
-        className="min-h-screen w-full flex flex-col relative z-10"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['development-team'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
       >
         <div className="w-full pt-30">
           {/* Title */}
@@ -608,12 +612,7 @@ function Team({ onGetStarted }) {
         
         <div className="flex-1 flex items-start justify-center px-8 pb-8">
           <div className="max-w-6xl mx-auto w-full">
-            <motion.div 
-              className="grid grid-cols-1 md:grid-cols-3 gap-10"
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.2, type: 'spring', delay: 0.2 }}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
               {members.filter(member => 
                 member.name === "Khang Doan" || 
                 member.name === "Pavan Arani" || 
@@ -621,9 +620,6 @@ function Team({ onGetStarted }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  initial={{ opacity: 0, y: 0 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
                   className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
@@ -635,8 +631,8 @@ function Team({ onGetStarted }) {
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -649,7 +645,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transition-all duration-500">
+                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
                       <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
@@ -659,7 +655,7 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
+                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
                       {member.description}
                     </div>
                   </div>
@@ -680,7 +676,7 @@ function Team({ onGetStarted }) {
                   <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

@@ -31,7 +31,7 @@ function Home({ onGetStarted }) {
     }
 
     // Continue creating stars
-    const interval = setInterval(createStar, 100)
+    const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
   }, [])
