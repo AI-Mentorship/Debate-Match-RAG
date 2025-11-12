@@ -140,7 +140,7 @@ function Team({ onGetStarted }) {
     {
       id: 1,
       name: "Adya Dhanasekar",
-      role: "Project Lead",
+      role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
       instagram: "#",
@@ -148,24 +148,6 @@ function Team({ onGetStarted }) {
     },
     {
       id: 2,
-      name: "Raisa Reza",
-      role: "UX/UI Designer",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      instagram: "#",
-      image: ""
-    },
-    {
-      id: 3,
-      name: "Yakina Azza",
-      role: "Back-End Developer",
-      description: "B.S. in Computer Science. She is an ML/AI Researcher",
-      linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      instagram: "#",
-      image: ""
-    },
-    {
-      id: 4,
       name: "Sadwitha Thopucharla",
       role: "QA Pipeline Lead",
       description: "B.S. in Computer Science",
@@ -174,19 +156,37 @@ function Team({ onGetStarted }) {
       image: "src/assets/img/Sadwitha_Thopucharla.jpg"
     },
     {
+      id: 3,
+      name: "Raisa Reza",
+      role: "UX/UI Designer",
+      description: "B.S. in Computer Science",
+      linkedin: "https://www.linkedin.com/in/raisa-reza/",
+      instagram: "#",
+      image: "src/assets/img/Raisa_Reza.jpeg"
+    },
+    {
+      id: 4,
+      name: "Yakina Azza",
+      role: "Transcript Preprocessing",
+      description: "B.S. in Computer Science. She is an ML/AI Researcher",
+      linkedin: "https://www.linkedin.com/in/yakina-azza/",
+      instagram: "#",
+      image: "src/assets/img/Yakina_Azza.png"
+    },
+    {
       id: 5,
-      name: "Shivam Singh",
+      name: "Shivam Singh - Mentor",
       role: "Project Lead",
       description: "B.S. in Computer Science",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
       instagram: "#",
-      image: ""
+      image: "src/assets/img/Shivam_Singh.png"
     },
     {
       id: 6,
       name: "Khang Doan",
       role: "Full Stack Developer",
-      description: "B.S. in Computer Science with focus on AI/ML",
+      description: "B.S. in Computer Science with focus on AI and Machine Learning",
       linkedin: "https://www.linkedin.com/in/khangdoan514/",
       instagram: "https://www.instagram.com/itsmekhangdoan/",
       image: "src/assets/img/Khang_Doan.png"
@@ -198,7 +198,7 @@ function Team({ onGetStarted }) {
       description: "B.S. in Computer Science with focus on Cybersecurity and AI/ML",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
       instagram: "#",
-      image: "src/assets/img/Pavan_Arani.jpg"
+      image: "src/assets/img/Pavan_Arani.jpeg"
     },
     {
       id: 8,
@@ -254,7 +254,7 @@ function Team({ onGetStarted }) {
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedMember(null)}
-                  className="self-end text-white/70 hover:text-white transition-colors duration-200 mb-6"
+                  className="self-end text-white/70 hover:text-white transition-colors duration-200 mb-6 cursor-pointer"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -317,10 +317,7 @@ function Team({ onGetStarted }) {
 
               {/* Right Side - Profile Image */}
               <div className="md:w-2/5 p-8 md:p-10 flex items-center justify-center bg-gradient-to-br from-electric-purple/10 to-pink-400/10">
-                <div className="relative w-64 h-64">
-                  {/* Gradient Border */}
-                  <div className="absolute -inset-2 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-60 animate-pulse"></div>
-                  
+                <div className="relative w-64 h-64">                  
                   {/* Profile Image */}
                   <div className="relative w-full h-full rounded-xl overflow-hidden border-2 border-white/20">
                     <img 
@@ -413,7 +410,7 @@ function Team({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Leadership</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
             Guiding our vision with strategic direction and technical expertise, our project leads 
             ensure we deliver innovative solutions that transform political discourse through AI-powered analysis.
           </div>
@@ -433,61 +430,60 @@ function Team({ onGetStarted }) {
                   initial={{ opacity: 0, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
-                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
+                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'scale-105 rotate-1 shadow-xl' 
-                      : 'scale-100 rotate-0 hover:scale-102'
-                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
+                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      : 'border-white/10 shadow-lg hover:border-white/30'
+                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
-                      {/* Gradient Border */}
-                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
-                      
-                      {/* Square Image Container */}
-                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
-                        <div className="w-full h-full rounded-xl">
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                      <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
+                        <div className="w-full h-full rounded-2xl">
                           <img 
                             src={member.image} 
                             alt={member.name}
-                            className="w-full h-full rounded-xl object-cover relative z-10"
+                            className="w-full h-full rounded-2xl object-cover relative z-10 group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-lg font-bold text-white mb-2">
-                        {member.name}
-                      </h3>
-                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
-                        {member.role}
-                      </p>
-                    </div>
+                      <div className="text-center mb-4 relative z-10 transition-all duration-500">
+                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
+                          {member.name}
+                        </h3>
+                        <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                          {member.role}
+                        </p>
+                      </div>
 
-                    {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
-                      {member.description}
-                    </div>
+                      {/* Description */}
+                      <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
+                        {member.description}
+                      </div>
                   </div>
 
                   {/* View Profile Button */}
-                  <div className="mt-auto">
+                  <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl cursor-pointer"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
                     >
-                      View Profile
+                      <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                        View Profile →
+                      </span>
                     </button>
                   </div>
-                  
+
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </motion.div>
@@ -495,21 +491,21 @@ function Team({ onGetStarted }) {
         </div>
       </section>
 
-      {/* Women in Tech Section */}
+      {/* Technical Excellence Section */}
       <section
-        id="women-in-tech"
+        id="technical-excellence"
         className="min-h-screen w-full flex flex-col relative z-10"
       >
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Women in&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Tech</span>
+            Technical&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Excellence</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
-            Driving innovation and excellence in technology, our women engineers and designers bring 
-            diverse perspectives to create inclusive and impactful solutions for political transparency.
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+            Driving quality and innovation across design, backend infrastructure, and testing pipelines.
+            Our technical specialists ensure every aspect of DebateMatch.RAG meets the highest standards of excellence.
           </div>
         </div>
         
@@ -531,36 +527,33 @@ function Team({ onGetStarted }) {
                   initial={{ opacity: 0, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
-                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
+                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'scale-105 rotate-1 shadow-xl' 
-                      : 'scale-100 rotate-0 hover:scale-102'
-                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
+                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      : 'border-white/10 shadow-lg hover:border-white/30'
+                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
-                      {/* Gradient Border */}
-                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
-                      
-                      {/* Square Image Container */}
-                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
-                        <div className="w-full h-full rounded-xl">
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                      <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
+                        <div className="w-full h-full rounded-2xl">
                           <img 
                             src={member.image} 
                             alt={member.name}
-                            className="w-full h-full rounded-xl object-cover relative z-10"
+                            className="w-full h-full rounded-2xl object-cover relative z-10 group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-lg font-bold text-white mb-2">
+                    <div className="text-center mb-4 relative z-10 transition-all duration-500">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
                       <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
@@ -569,23 +562,25 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
                       {member.description}
                     </div>
                   </div>
 
                   {/* View Profile Button */}
-                  <div className="mt-auto">
+                  <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl cursor-pointer"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
                     >
-                      View Profile
+                      <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                        View Profile →
+                      </span>
                     </button>
                   </div>
-                  
+
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </motion.div>
@@ -605,7 +600,7 @@ function Team({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
             Building the core technology behind DebateMatch.RAG, our development team combines 
             cutting-edge AI research with robust engineering to deliver reliable, scalable solutions.
           </div>
@@ -629,36 +624,33 @@ function Team({ onGetStarted }) {
                   initial={{ opacity: 0, y: 0 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0, delay: 0.4 + (member.id * 0.1) }}
-                  className={`relative bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 shadow-xl transition-all transform group ${
+                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'scale-105 rotate-1 shadow-xl' 
-                      : 'scale-100 rotate-0 hover:scale-102'
-                  } bg-gradient-to-br from-[#2B2139]/20 to-[#0B0219]/20 min-h-96 flex flex-col`}
+                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      : 'border-white/10 shadow-lg hover:border-white/30'
+                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
                   {/* Main Content */}
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
-                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-700 group-hover:scale-105 group-hover:-translate-y-1">
-                      {/* Gradient Border */}
-                      <div className="absolute -inset-1 rounded-xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-65 transition-opacity duration-500"></div>
-                      
-                      {/* Square Image Container */}
-                      <div className="relative w-full h-full rounded-xl bg-transparent overflow-hidden">
-                        <div className="w-full h-full rounded-xl">
+                    <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-110">
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-70 transition-all duration-500 blur-sm"></div>
+                      <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
+                        <div className="w-full h-full rounded-2xl">
                           <img 
                             src={member.image} 
                             alt={member.name}
-                            className="w-full h-full rounded-xl object-cover relative z-10"
+                            className="w-full h-full rounded-2xl object-cover relative z-10 group-hover:scale-105 transition-transform duration-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Name and Role */}
-                    <div className="text-center mb-4 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-lg font-bold text-white mb-2">
+                    <div className="text-center mb-4 relative z-10 transition-all duration-500">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
                         {member.name}
                       </h3>
                       <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
@@ -667,23 +659,25 @@ function Team({ onGetStarted }) {
                     </div>
 
                     {/* Description */}
-                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                    <div className="text-light-silver text-sm leading-relaxed text-center relative z-10 transition-all duration-500">
                       {member.description}
                     </div>
                   </div>
 
                   {/* View Profile Button */}
-                  <div className="mt-auto">
+                  <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full py-4 bg-transparent text-white text-sm font-medium border-t border-white/30 hover:border-white/60 hover:bg-white/5 transition-all duration-300 rounded-b-xl cursor-pointer"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
                     >
-                      View Profile
+                      <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                        View Profile →
+                      </span>
                     </button>
                   </div>
-                  
+
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-xl from-[#FFCAE4] to-[#FFCAE4] opacity-0 group-hover:opacity-5 blur-md transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </motion.div>
