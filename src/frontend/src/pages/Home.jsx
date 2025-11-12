@@ -4,6 +4,10 @@ import { motion } from 'framer-motion'
 function Home({ onGetStarted }) {
   const [stars, setStars] = useState([])
 
+  const handleGetStarted = () => {
+    onGetStarted();
+  }
+
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -27,7 +31,7 @@ function Home({ onGetStarted }) {
     }
 
     // Continue creating stars
-    const interval = setInterval(createStar, 100)
+    const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
   }, [])
@@ -92,7 +96,7 @@ function Home({ onGetStarted }) {
         >
           {/* Button */}
           <button
-            onClick={onGetStarted}
+            onClick={handleGetStarted}
             className="mb-40 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
           >
             {/* Silver neon glow effect */}

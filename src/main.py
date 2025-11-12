@@ -5,6 +5,7 @@ from backend.fact_checker_prototype.AI_FactChecker import EnhancedFactChecker
 from backend.qa_pipeline.QA_pipeline import build_chroma_db
 from backend.qa_pipeline.QA_pipeline import query_rag
 from backend.retriever.retriever import run_retriever
+from backend.core_llm.gpt5_nano import LLMClient
 from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from backend.embeddings_faiss.build_index import build_index
@@ -12,6 +13,10 @@ from pathlib import Path
 import time
 import re
 
+import logging
+from openai import OpenAI
+import os
+from functools import wraps
 # Flask
 app = Flask(__name__)
 
@@ -22,6 +27,9 @@ UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 # Flask with CORS for React
 cors = CORS(app, origins="*")
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 # Get debate name once - used throughout pipeline
 def get_debate_name():
@@ -353,6 +361,49 @@ def initiate_pipeline():
     run_fact_checker_loop(initial_claim=response, top_k=3, use_news=True)
     #log.info("**********ALL COMPONENTS EXECUTED**********")
 
+
+
+@app.route("/query", methods=["POST"])
+def query():
+    data = request.get_json()
+    user_query = data.get("query", "")
+    system_prompt = data.get("system_prompt", "")
+    conversation_history = data.get("conversation_history", [])[-5:]  # last 5 messages
+
+    # Build messages for GPT-5
+    messages = [{"role": "system", "content": system_prompt}]
+    for m in conversation_history:
+        messages.append({"role": m["role"], "content": m["content"]})
+    messages.append({"role": "user", "content": user_query})
+
+    # Call GPT-5 Nano
+    response = client.responses.create(
+        model="gpt-5-nano",
+        input=messages,
+        text={
+            "format": {
+                "type": "text"
+            },
+            "verbosity": "medium"
+        },
+        reasoning={
+            "effort": "medium"
+        },
+        tools=[],
+        store=True,
+        include=[
+            "reasoning.encrypted_content",
+            "web_search_call.action.sources"
+        ]
+    )
+
+    print(f"GPT-5 Nano usage metrics: {response.usage}")
+    ai_reply = response.output_text
+    if not ai_reply:
+        ai_reply = "GPT-5 returned empty response."
+
+    return jsonify({"response": ai_reply})
+
 if __name__ == "__main__":
-    #initiate_pipeline()
+    # initiate_pipeline()
     app.run(debug=False, port=3000)
