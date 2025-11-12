@@ -162,7 +162,12 @@ function Mission({ onGetStarted }) {
       >
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection < 5 ? 'Scroll down ↓' : 'Scroll up ↑'}
+            {currentSection == 0 ? 'Why We Build DebateMatch.RAG' : ''}
+            {currentSection == 1 ? 'How It Works' : ''}
+            {currentSection == 2 ? 'Our Vision' : ''}
+            {currentSection == 3 ? 'Our Core Values' : ''}
+            {currentSection == 4 ? 'Who Benefits' : ''}
+            {currentSection < 5 ? ' ↓' : 'Scroll up ↑'}
           </span>
           <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
@@ -496,6 +501,9 @@ function Mission({ onGetStarted }) {
             transform: translateY(100vh) translateX(100px) rotate(45deg);
             opacity: 0;
           }
+        }
+        .animate-shooting-star {
+          animation: shooting-star linear forwards;
         }
         
         @keyframes float {
