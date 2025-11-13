@@ -37,7 +37,7 @@ function Analyzer({ onBackToHome }) {
   const fileInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
-  // Shooting star animation
+  // Animated stars
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -45,26 +45,18 @@ function Analyzer({ onBackToHome }) {
         left: Math.random() * 100,
         delay: Math.random() * 5,
         duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      // Animation completes
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    // Create stars
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
+        size: 1 + Math.random() * 2,
+      };
+      setStars((prev) => [...prev, newStar]);
+      setTimeout(
+        () => setStars((prev) => prev.filter((s) => s.id !== newStar.id)),
+        (newStar.duration + newStar.delay) * 1000
+      );
+    };
+    for (let i = 0; i < 20; i++) setTimeout(createStar, i * 300);
+    const interval = setInterval(createStar, 800);
+    return () => clearInterval(interval);
+  }, []);
 
   // Typing animation
   const typeText = async (text, onComplete) => {
@@ -87,24 +79,23 @@ function Analyzer({ onBackToHome }) {
     setInput("");
     setLoading(true);
 
-    
+    try {
+      const contextText = file ? await file.text() : "";
 
-       try {
-      const formData = new FormData();
-      formData.append("user_query", input || "");
-      if (file) formData.append("file", file);
+      const payload = {
+        query: input || "",
+        context: contextText,
+        system_prompt: systemPrompt + ". Keep the responses short and concise.",
+        conversation_history: messages.slice(-8),
+        max_completion_tokens: 5000,
+      };
 
-      const response = await axios.post(
-        "http://localhost:3000/api/retrieve-response",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-
+      const res = await axios.post("http://localhost:3000/query", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       const aiResponse =
-        response.data?.response || response.data?.answer || response.data?.error ||"Unexpected response.";
+        res.data?.response || res.data?.error || "Unexpected response.";
 
       typeText(aiResponse, () => {
         setMessages((prev) => [
