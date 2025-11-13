@@ -87,23 +87,24 @@ function Analyzer({ onBackToHome }) {
     setInput("");
     setLoading(true);
 
-    try {
-      const contextText = file ? await file.text() : "";
+    
 
-      const payload = {
-        query: input || "",
-        context: contextText,
-        system_prompt: systemPrompt + ". Keep the responses short and concise.",
-        conversation_history: messages.slice(-8),
-        max_completion_tokens: 5000,
-      };
+       try {
+      const formData = new FormData();
+      formData.append("user_query", input || "");
+      if (file) formData.append("file", file);
 
-      const res = await axios.post("http://localhost:3000/query", payload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/retrieve-response",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
 
       const aiResponse =
-        res.data?.response || res.data?.error || "Unexpected response.";
+        response.data?.response || response.data?.answer || response.data?.error ||"Unexpected response.";
 
       typeText(aiResponse, () => {
         setMessages((prev) => [
