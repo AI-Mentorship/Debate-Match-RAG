@@ -214,10 +214,10 @@ function Missions({ onGetStarted }) {
         >
           {/* Title */}
           <h1 className="text-5xl md:text-5xl text-white mb-5 leading-tight">
-            From complexity to clarity.
+            Where complexities find clarity.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
-            From question to transparency.
+            Where questions yield transparency.
           </h2>
         </motion.div>
 
@@ -243,11 +243,16 @@ function Missions({ onGetStarted }) {
       >
         
         <div className="w-full pt-30">
+          {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Why We Build&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
             <span className="text-white">.RAG</span>
           </h2>
+          {/* Description */}
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+            Change this
+          </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto w-full">
@@ -327,7 +332,7 @@ function Missions({ onGetStarted }) {
                 viewport={{ once: true }}
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">The Information Crisis in Politics</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">The Information Crisis in Politics</h3>
                   <p className="text-dark-silver leading-relaxed">
                     In today's political landscape, voters face an overwhelming flood of information, 
                     misinformation, and complex rhetoric. Traditional debate formats often leave citizens 
@@ -336,7 +341,7 @@ function Missions({ onGetStarted }) {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">Our Solution</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">Our Solution</h3>
                   <p className="text-dark-silver leading-relaxed">
                     DebateMatch.RAG addresses this challenge by leveraging cutting-edge AI technology 
                     to analyze debate transcripts, verify factual accuracy, and present clear, accessible 
@@ -346,7 +351,7 @@ function Missions({ onGetStarted }) {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-4">The Impact</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">The Impact</h3>
                   <p className="text-dark-silver leading-relaxed">
                     By making political analysis accessible to everyone, we're working toward a more 
                     informed electorate, greater political accountability, and ultimately, a stronger 
@@ -366,12 +371,16 @@ function Missions({ onGetStarted }) {
           visibleSections['how-it-works'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Title */}
         <div className="w-full pt-30">
+          {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             How&nbsp;
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
           </h2>
+          {/* Description */}
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+            Change this
+          </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
@@ -409,11 +418,12 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
             Creating a future where political discourse is transparent, accessible, 
             and grounded in factual information for all citizens.
-          </p>
+          </div>
         </div>
+
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="max-w-4xl mx-auto">
@@ -440,11 +450,11 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Core Values</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
             The principles that guide our mission and shape every aspect of our platform's development.
           </p>
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
@@ -482,11 +492,11 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-8">
+          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
             Empowering diverse stakeholders with actionable political intelligence and verified information.
           </p>
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[

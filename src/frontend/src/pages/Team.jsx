@@ -390,14 +390,12 @@ function Team({ onGetStarted, onModalStateChange }) {
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Scroll Indicator */}
       <motion.div
-        className={`fixed bottom-2 left-1/2 transform -translate-x-1/2 z-50 transition-opacity duration-300 ${
-          selectedMember ? 'pointer-events-none opacity-50' : 'cursor-pointer opacity-100'
-        }`}
+        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
-        animate={{ opacity: selectedMember ? 0.5 : 1 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
         onClick={scrollToNextSection}
       >
@@ -437,10 +435,10 @@ function Team({ onGetStarted, onModalStateChange }) {
         >
           {/* Title */}
           <h1 className="text-5xl md:text-5xl text-white mb-5 leading-tight">
-            From concept to creation.
+            From concepts to creation.
           </h1>
           <h2 className="text-6xl md:text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-10 leading-tight">
-            From idea to implementation.
+            From ideas to implementation.
           </h2>
         </motion.div>
 

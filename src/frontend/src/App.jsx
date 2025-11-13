@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Analyzer from './pages/Analyzer'
-import Mission from './pages/Mission'
+import Transcripts from './pages/Transcripts'
+import Missions from './pages/Missions'
 import Team from './pages/Team'
 
 function App() {
@@ -61,8 +62,10 @@ function App() {
         return <Home onGetStarted={handleGetStarted} />
       case 'analyzer':
         return <Analyzer />
-      case 'mission':
-        return <Mission />
+      case 'transcripts':
+        return <Transcripts onGetStarted={handleGetStarted} onModalStateChange={setIsModalOpen} />
+      case 'missions':
+        return <Missions />
       case 'team':
         return <Team onModalStateChange={setIsModalOpen} />
       default:
