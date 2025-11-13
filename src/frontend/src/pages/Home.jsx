@@ -8,6 +8,7 @@ function Home({ onGetStarted }) {
     onGetStarted();
   }
 
+  // Shooting star animation
   useEffect(() => {
     const createStar = () => {
       const newStar = {

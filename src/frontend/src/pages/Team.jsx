@@ -184,7 +184,7 @@ function Team({ onGetStarted, onModalStateChange }) {
     {
       id: 3,
       name: "Sadwitha Thopucharla",
-      role: "Q&A Pipeline",
+      role: "Q & A Pipeline",
       description: "B.S. in Computer Science",
       paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/sadwitha1161/",
@@ -274,7 +274,7 @@ function Team({ onGetStarted, onModalStateChange }) {
           >
             {/* Backdrop */}
             <motion.div 
-              className="absolute inset-0 bg-black/60"
+              className="absolute inset-0 bg-black/80"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
