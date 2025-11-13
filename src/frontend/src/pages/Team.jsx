@@ -80,7 +80,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         setTimeout(() => {
           const sectionId = section.id;
           setVisibleSections(prev => ({ ...prev, [sectionId]: true }));
-        }, 600);
+        }, 700);
         
         smoothScrollTo(section, 1200);
       }
@@ -166,52 +166,57 @@ function Team({ onGetStarted, onModalStateChange }) {
       name: "Adya Dhanasekar",
       role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/adyadhanasekar/",
-      instagram: "",
+      instagram: "https://www.instagram.com/adya.d08/",
       image: "src/assets/img/Adya_Dhanasekar.png"
     },
     {
       id: 2,
-      name: "Sadwitha Thopucharla",
-      role: "QA Pipeline Lead",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/sadwitha1161/",
-      instagram: "",
-      image: "src/assets/img/Sadwitha_Thopucharla.jpg"
-    },
-    {
-      id: 3,
-      name: "Raisa Reza",
-      role: "UX/UI Designer",
-      description: "B.S. in Computer Science",
-      linkedin: "https://www.linkedin.com/in/raisa-reza/",
-      instagram: "",
-      image: "src/assets/img/Raisa_Reza.jpeg"
-    },
-    {
-      id: 4,
       name: "Yakina Azza",
       role: "Transcript Preprocessing",
       description: "B.S. in Computer Science. She is an ML/AI Researcher",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
-      instagram: "",
+      instagram: "https://www.instagram.com/yakkk114/",
       image: "src/assets/img/Yakina_Azza.png"
+    },
+    {
+      id: 3,
+      name: "Sadwitha Thopucharla",
+      role: "Q&A Pipeline",
+      description: "B.S. in Computer Science",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
+      linkedin: "https://www.linkedin.com/in/sadwitha1161/",
+      instagram: "https://www.instagram.com/sadwitha_11/",
+      image: "src/assets/img/Sadwitha_Thopucharla.jpg"
+    },
+    {
+      id: 4,
+      name: "Raisa Reza",
+      role: "Data Retrieval",
+      description: "B.S. in Computer Science",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
+      linkedin: "https://www.linkedin.com/in/raisa-reza/",
+      instagram: "",
+      image: "src/assets/img/Raisa_Reza.jpeg"
     },
     {
       id: 5,
       name: "Shivam Singh",
       role: "Project Lead - Mentor",
       description: "B.S. in Computer Science",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/shivam-singh-9935ab305/",
-      instagram: "",
+      instagram: "https://www.instagram.com/singh.shivam7/",
       image: "src/assets/img/Shivam_Singh.png"
     },
     {
       id: 6,
       name: "Khang Doan",
       role: "Full Stack Developer",
-      description: "B.S. in Computer Science with focus on AI and Machine Learning",
-      linkedin: "https://www.linkedin.com/in/khangdoan514/",
+      description: "B.S. in Computer Science with focus on AI & Machine Learning",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       instagram: "https://www.instagram.com/itsmekhangdoan/",
       image: "src/assets/img/Khang_Doan.png"
     },
@@ -220,8 +225,9 @@ function Team({ onGetStarted, onModalStateChange }) {
       name: "Pavan Arani",
       role: "Full Stack Developer",
       description: "B.S. in Computer Science with focus on Cybersecurity and AI/ML",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
-      instagram: "#",
+      instagram: "https://www.instagram.com/botiq00/",
       image: "src/assets/img/Pavan_Arani.jpeg"
     },
     {
@@ -229,8 +235,9 @@ function Team({ onGetStarted, onModalStateChange }) {
       name: "Satyank Nadimpalli",
       role: "Full Stack Developer",
       description: "M.S. in Computer Science studying AI & Intelligent Systems",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
-      instagram: "",
+      instagram: "https://www.instagram.com/satyank.varma/",
       image: "src/assets/img/Satyank_Nadimpalli.jpg"
     }
   ]
@@ -373,12 +380,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                     <div className="border-t border-white/20 pt-8">
                       <h3 className="text-2xl font-bold text-white mb-4 text-left">About Me</h3>
                       <p className="text-dark-silver text-base leading-relaxed text-left">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt
-                        distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus
-                        pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam
-                        beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                        Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate,
-                        unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!
+                        {selectedMember.paragraph}
                       </p>
                     </div>
                   </div>
