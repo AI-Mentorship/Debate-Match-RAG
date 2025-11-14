@@ -5,8 +5,8 @@ function Team({ onGetStarted, onModalStateChange }) {
   const [hoveredCard, setHoveredCard] = useState(null)
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
-  const [selectedMember, setSelectedMember] = useState(null)
   const [visibleSections, setVisibleSections] = useState({})
+  const [selectedMember, setSelectedMember] = useState(null)
   const isScrolling = useRef(false)
   
   // Scroll

@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 function Transcripts({ onGetStarted, onModalStateChange }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
-  const [selectedTranscript, setSelectedTranscript] = useState(null)
   const [visibleSections, setVisibleSections] = useState({})
+  const [searchQuery, setSearchQuery] = useState('')
   const isScrolling = useRef(false)
 
   // Scroll
@@ -37,7 +37,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
     requestAnimationFrame(animateScroll);
   };
 
-  const smoothScrollToTop = (duration = 1000) => {
+  const smoothScrollToTop = (duration = 1200) => {
     isScrolling.current = true
     const start = window.pageYOffset;
     const change = -start;
@@ -179,9 +179,8 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
       >
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection == 0 ? 'Transcript Search' : ''}
-            {currentSection == 1 ? 'Browse Collection' : ''}
-            {currentSection < 2 ? ' ↓' : 'Scroll up ↑'}
+            {currentSection == 0 ? 'Browse Collection' : ''}
+            {currentSection < 1 ? ' ↓' : 'Scroll up ↑'}
           </span>
           <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
@@ -240,8 +239,8 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Browse&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Collection</span>
+            Collection&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Browser</span>
           </h2>
           {/* Description */}
           <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
@@ -251,7 +250,67 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </div>
         
         <div className="flex-1 w-full">
-          
+          <div className="min-h-screen text-white w-full">
+            <div className="container mx-auto px-8">
+              {/* Search Bar */}
+              <motion.div
+                initial={{ y: -100, opacity: 0 }}
+                animate={visibleSections['browse'] ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="max-w-4xl mb-12 justify-center mx-auto"
+              >
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search transcripts by title, participant, tags, or content..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-6 py-4 bg-white/5 backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
+                  />
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Main Content */}
+              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Transcript List */}
+                <motion.div
+                  initial={{ x: -100, opacity: 0 }}
+                  animate={visibleSections['browse'] ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  className="lg:col-span-1"
+                >
+                  <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 text-left">
+                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts (1)</h2>
+                  </div>
+                </motion.div>
+
+                {/* Transcript Viewer */}
+                <motion.div
+                  initial={{ x: 100, opacity: 0 }}
+                  animate={visibleSections['browse'] ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                  className="lg:col-span-2"
+                >
+                  <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 h-full text-left">
+                    <div className="h-full flex items-center justify-center text-dark-silver">
+                      <div className="text-center">
+                        <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <p className="text-lg">Select a transcript to view its content</p>
+                        <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
