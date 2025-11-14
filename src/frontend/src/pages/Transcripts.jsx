@@ -13,45 +13,77 @@ function Transcripts({ onGetStarted }) {
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const isScrolling = useRef(false)
+  const transcriptRefs = useRef({})
 
   /* ==================== Data from JSON ==================== */
   useEffect(() => {
     if (debateTranscripts && debateTranscripts.length > 0) {
-      // Unique speakers
-      const uniqueSpeakers = [...new Set(debateTranscripts.map(item => item.speaker))]
-      
-      // Unique topics
-      const allTopics = debateTranscripts.flatMap(item => item.topics || [])
-      const uniqueTopics = [...new Set(allTopics)]
+      // Group transcripts by source
+      const transcriptsBySource = debateTranscripts.reduce((acc, item) => {
+        if (!acc[item.source]) {
+          acc[item.source] = [];
+        }
+        acc[item.source].push(item);
+        return acc;
+      }, {});
 
-      // Transcript object
-      const transcript = {
-        id: 1,
-        title: "2024 CNN Presidential Debate",
-        date: "2024-06-27",
-        participants: uniqueSpeakers,
-        duration: "90 minutes",
-        sections: debateTranscripts.map((item, index) => ({
-          id: `s${index + 1}`,
-          title: `${item.speaker} - ${item.timestamp}`,
-          startTime: item.timestamp,
-          content: item.text,
-          speaker: item.speaker,
-          topics: item.topics || []
-        })),
-        tags: uniqueTopics.slice(0, 10)
-      }
+      // Create transcript objects for each source
+      const transcriptObjects = Object.entries(transcriptsBySource).map(([source, items], index) => {
+        // Unique speakers for this transcript
+        const uniqueSpeakers = [...new Set(items.map(item => item.speaker))];
+        
+        // Unique topics for this transcript
+        const allTopics = items.flatMap(item => item.topics || []);
+        const uniqueTopics = [...new Set(allTopics)];
 
-      setTranscripts([transcript])
-      setFilteredTranscripts([transcript])
-      setIsLoading(false)
+        // Get date from the first item (all items in same source should have same date)
+        const date = items[0].date || `${new Date().getFullYear()}-01-01`;
+        
+        // Calculate duration based on timestamps
+        const durations = items.map(item => {
+          const timeParts = item.timestamp.split(':');
+          if (timeParts.length === 2) {
+            const [minutes, seconds] = timeParts.map(Number);
+            return minutes * 60 + seconds;
+          }
+          
+          else if (timeParts.length === 3) {
+            const [hours, minutes, seconds] = timeParts.map(Number);
+            return hours * 3600 + minutes * 60 + seconds;
+          }
+          return 0;
+        });
+        const maxDuration = Math.max(...durations);
+        const durationMinutes = Math.ceil(maxDuration / 60);
+
+        return {
+          id: index + 1,
+          title: source,
+          date: date,
+          participants: uniqueSpeakers,
+          duration: `${durationMinutes} minutes`,
+          sections: items.map((item, sectionIndex) => ({
+            id: `s${sectionIndex + 1}`,
+            title: `${item.speaker} - ${item.timestamp}`,
+            startTime: item.timestamp,
+            content: item.text,
+            speaker: item.speaker,
+            topics: item.topics || []
+          })),
+          tags: uniqueTopics.slice(0, 10)
+        };
+      });
+
+      setTranscripts(transcriptObjects);
+      setFilteredTranscripts(transcriptObjects);
+      setIsLoading(false);
     }
     
     else {
-      console.error('No transcript data found')
-      setIsLoading(false)
+      console.error('No transcript data found');
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   // Filter by speaker
   const filteredSections = selectedTranscript ? 
@@ -359,7 +391,7 @@ function Transcripts({ onGetStarted }) {
                           >
                             <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
                             <div className="text-sm text-dark-silver space-y-1 text-left">
-                              <p className="text-left">{new Date(transcript.date).toLocaleDateString()} • {transcript.duration}</p>
+                              <p className="text-left">{transcript.date} • {transcript.duration}</p>
                               <div className="flex flex-wrap gap-1 mt-2 text-left">
                                 {transcript.tags.slice(0, 3).map(tag => (
                                   <span key={tag} className="px-2 py-1 bg-white/10 rounded-full text-xs">
@@ -387,16 +419,8 @@ function Transcripts({ onGetStarted }) {
                   transition={{ delay: 0.4, duration: 0.5 }}
                   className="lg:col-span-2"
                 >
-                  <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 h-full text-left">
-                    <div className="h-full flex items-center justify-center text-dark-silver">
-                      <div className="text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-lg">Select a transcript to view its content</p>
-                        <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
-                      </div>
-                    </div>
+                  <div>
+
                   </div>
                 </motion.div>
               </div>
