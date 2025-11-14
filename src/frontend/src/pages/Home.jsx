@@ -4,11 +4,7 @@ import { motion } from 'framer-motion'
 function Home({ onGetStarted }) {
   const [stars, setStars] = useState([])
 
-  const handleGetStarted = () => {
-    onGetStarted();
-  }
-
-  // Shooting star animation
+  /* ==================== Shooting star animation ==================== */
   useEffect(() => {
     const createStar = () => {
       const newStar = {
@@ -37,7 +33,7 @@ function Home({ onGetStarted }) {
     return () => clearInterval(interval)
   }, [])
 
-  // Animation variants
+  /* ==================== Animation variants ==================== */
   const itemVariants = {
     hidden: { y: 50, opacity: 0 },
     visible: {
@@ -53,7 +49,7 @@ function Home({ onGetStarted }) {
 
   return (
     <div className="min-h-screen flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
-      {/* Shooting stars effect */}
+      {/* ==================== Shooting star animation ==================== */}
       <div className="absolute inset-0 pointer-events-none">
         {stars.map(star => (
           <div
@@ -97,7 +93,7 @@ function Home({ onGetStarted }) {
         >
           {/* Button */}
           <button
-            onClick={handleGetStarted}
+            onClick={onGetStarted}
             className="mb-40 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
           >
             {/* Silver neon glow effect */}
@@ -116,7 +112,7 @@ function Home({ onGetStarted }) {
           </button>
         </motion.p>
 
-      {/* Shooting star animation */}
+      {/* ==================== Shooting star animation ==================== */}
       <style jsx global>{`
         @keyframes shooting-star {
           0% {

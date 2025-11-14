@@ -1,14 +1,66 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import debateTranscripts from "./debate_raw_transcript_clean.json"
 
-function Transcripts({ onGetStarted, onModalStateChange }) {
+function Transcripts({ onGetStarted }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
+  const [transcripts, setTranscripts] = useState([])
+  const [selectedTranscript, setSelectedTranscript] = useState(null)
+  const [filteredTranscripts, setFilteredTranscripts] = useState([])
+  const [selectedSpeaker, setSelectedSpeaker] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const isScrolling = useRef(false)
 
-  // Scroll
+  /* ==================== Data from JSON ==================== */
+  useEffect(() => {
+    if (debateTranscripts && debateTranscripts.length > 0) {
+      // Unique speakers
+      const uniqueSpeakers = [...new Set(debateTranscripts.map(item => item.speaker))]
+      
+      // Unique topics
+      const allTopics = debateTranscripts.flatMap(item => item.topics || [])
+      const uniqueTopics = [...new Set(allTopics)]
+
+      // Transcript object
+      const transcript = {
+        id: 1,
+        title: "2024 CNN Presidential Debate",
+        date: "2024-06-27",
+        participants: uniqueSpeakers,
+        duration: "90 minutes",
+        sections: debateTranscripts.map((item, index) => ({
+          id: `s${index + 1}`,
+          title: `${item.speaker} - ${item.timestamp}`,
+          startTime: item.timestamp,
+          content: item.text,
+          speaker: item.speaker,
+          topics: item.topics || []
+        })),
+        tags: uniqueTopics.slice(0, 10)
+      }
+
+      setTranscripts([transcript])
+      setFilteredTranscripts([transcript])
+      setIsLoading(false)
+    }
+    
+    else {
+      console.error('No transcript data found')
+      setIsLoading(false)
+    }
+  }, [])
+
+  // Filter by speaker
+  const filteredSections = selectedTranscript ? 
+    selectedSpeaker ? 
+      selectedTranscript.sections.filter(section => section.speaker === selectedSpeaker)
+      : selectedTranscript.sections
+    : [];
+
+  /* ==================== Scroll ==================== */
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
@@ -89,35 +141,6 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
     }
   };
 
-  // Shooting star animation
-  useEffect(() => {
-    const createStar = () => {
-      const newStar = {
-        id: Math.random(),
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      // Animation completes
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    // Create stars
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
-
   // Update current section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -149,9 +172,38 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* ==================== Shooting star animation ==================== */
+  useEffect(() => {
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
-      {/* Shooting stars effect */}
+      {/* ==================== Shooting star animation ==================== */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map(star => (
           <div
@@ -169,7 +221,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         ))}
       </div>
       
-      {/* Scroll Indicator */}
+      {/* ==================== Scroll Indicator ==================== */}
       <motion.div
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
@@ -198,7 +250,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* ==================== Hero Section ==================== */}
       <section 
         id="hero"
         className="min-h-screen w-full flex flex-col items-center justify-center px-8 text-center relative z-10"
@@ -229,7 +281,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </motion.div>
       </section>
 
-      {/* Browse Collection Section */}
+      {/* ==================== Browse Collection Section ==================== */}
       <section
         id="browse"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -285,7 +337,46 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
                   className="lg:col-span-1"
                 >
                   <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 text-left">
-                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts (1)</h2>
+                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts ({filteredTranscripts.length})</h2>
+
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      <AnimatePresence>
+                        {filteredTranscripts.map((transcript, index) => (
+                          <motion.div
+                            key={transcript.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 text-left ${
+                              selectedTranscript?.id === transcript.id 
+                                ? 'bg-electric-purple/20 border-electric-purple shadow-lg' 
+                                : 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'
+                            }`}
+                            onClick={() => {
+                              setSelectedTranscript(transcript)
+                              setSelectedSpeaker(null)
+                            }}
+                          >
+                            <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
+                            <div className="text-sm text-dark-silver space-y-1 text-left">
+                              <p className="text-left">{new Date(transcript.date).toLocaleDateString()} • {transcript.duration}</p>
+                              <div className="flex flex-wrap gap-1 mt-2 text-left">
+                                {transcript.tags.slice(0, 3).map(tag => (
+                                  <span key={tag} className="px-2 py-1 bg-white/10 rounded-full text-xs">
+                                    {tag.replace(/_/g, ' ')}
+                                  </span>
+                                ))}
+                                {transcript.tags.length > 3 && (
+                                  <span className="px-2 py-1 bg-white/5 rounded-full text-xs">
+                                    +{transcript.tags.length - 3}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -314,7 +405,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </div>
       </section>
 
-      {/* Shooting star animation */}
+      {/* ==================== Shooting star animation ==================== */}
       <style>
         {`
           @keyframes shooting-star {

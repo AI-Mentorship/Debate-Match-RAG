@@ -9,7 +9,7 @@ function Team({ onGetStarted, onModalStateChange }) {
   const [selectedMember, setSelectedMember] = useState(null)
   const isScrolling = useRef(false)
   
-  // Scroll
+  /* ==================== Scroll ==================== */
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
@@ -93,42 +93,6 @@ function Team({ onGetStarted, onModalStateChange }) {
     }
   };
 
-  // Modal is open
-  useEffect(() => {
-    if (onModalStateChange) {
-      onModalStateChange(selectedMember !== null);
-    }
-  }, [selectedMember, onModalStateChange]);
-
-  // Shooting star animation
-  useEffect(() => {
-    const createStar = () => {
-      const newStar = {
-        id: Math.random(),
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      // Animation completes
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    // Create stars
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
-
   // Update current section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -159,6 +123,42 @@ function Team({ onGetStarted, onModalStateChange }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  /* ==================== Modal state change ==================== */
+  useEffect(() => {
+    if (onModalStateChange) {
+      onModalStateChange(selectedMember !== null);
+    }
+  }, [selectedMember, onModalStateChange]);
+
+  /* ==================== Shooting star animation ==================== */
+  useEffect(() => {
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const members = [
     {
@@ -244,7 +244,7 @@ function Team({ onGetStarted, onModalStateChange }) {
 
   return (
     <div className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
-      {/* Shooting stars effect */}
+      {/* ==================== Shooting star animation ==================== */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map(star => (
           <div
@@ -262,7 +262,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         ))}
       </div>
 
-      {/* Profile Modal */}
+      {/* ==================== Profile Modal ==================== */}
       <AnimatePresence>
         {selectedMember && (
           <motion.div
@@ -391,7 +391,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         )}
       </AnimatePresence>
 
-      {/* Scroll Indicator */}
+      {/* ==================== Scroll Indicator ==================== */}
       <motion.div
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
@@ -422,7 +422,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* ==================== Hero Section ==================== */}
       <section 
         id="hero"
         className="min-h-screen w-full flex flex-col items-center justify-center px-8 text-center relative z-10"
@@ -455,7 +455,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         </motion.div>
       </section>
 
-      {/* Leadership Section */}
+      {/* ==================== Leadership Section ==================== */}
       <section
         id="leadership"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -542,7 +542,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         </div>
       </section>
 
-      {/* Technical Excellence Section */}
+      {/* ==================== Technical Excellence Section ==================== */}
       <section
         id="technical-excellence"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -633,7 +633,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         </div>
       </section>
 
-      {/* Development Team Section */}
+      {/* ==================== Development Team Section ==================== */}
       <section
         id="development-team"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -724,7 +724,7 @@ function Team({ onGetStarted, onModalStateChange }) {
         </div>
       </section>
 
-      {/* Shooting star animation */}
+      {/* ==================== Shooting star animation ==================== */}
       <style>
         {`
           @keyframes shooting-star {

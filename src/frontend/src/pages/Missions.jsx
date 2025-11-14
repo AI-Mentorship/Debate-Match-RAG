@@ -7,7 +7,7 @@ function Missions({ onGetStarted }) {
   const [visibleSections, setVisibleSections] = useState({})
   const isScrolling = useRef(false)
 
-  // Scroll
+  /* ==================== Scroll ==================== */
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
@@ -88,35 +88,6 @@ function Missions({ onGetStarted }) {
     }
   }
 
-  // Shooting star animation
-  useEffect(() => {
-    const createStar = () => {
-      const newStar = {
-        id: Math.random(),
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      // Animation completes
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    // Create stars
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
-
   // Update current section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -148,9 +119,38 @@ function Missions({ onGetStarted }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* ==================== Shooting star animation ==================== */
+  useEffect(() => {
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
-      {/* Shooting stars effect */}
+      {/* ==================== Shooting stars animation ==================== */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map(star => (
           <div
@@ -168,7 +168,7 @@ function Missions({ onGetStarted }) {
         ))}
       </div>
 
-      {/* Scroll Indicator */}
+      {/* ==================== Scroll Indicator ==================== */}
       <motion.div
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
@@ -201,7 +201,7 @@ function Missions({ onGetStarted }) {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* ==================== Hero Section ==================== */}
       <section 
         id="hero"
         className="min-h-screen w-full flex flex-col items-center justify-center px-8 text-center relative z-10"
@@ -234,7 +234,7 @@ function Missions({ onGetStarted }) {
         </motion.p>
       </section>
 
-      {/* Why We Build DebateMatch.RAG Section */}
+      {/* ==================== Why We Build DebateMatch.RAG Section ==================== */}
       <section
         id="why-we-build"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -364,7 +364,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* ==================== How It Works Section ==================== */}
       <section
         id="how-it-works"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -404,7 +404,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
-      {/* Our Vision Section */}
+      {/* ==================== Our Vision Section ==================== */}
       <section
         id="our-vision"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -436,7 +436,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
-      {/* Core Values Section */}
+      {/* ==================== Core Values Section ==================== */}
       <section
         id="core-values"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -478,7 +478,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
-      {/* Who Benefits Section */}
+      {/* ==================== Who Benefits Section ==================== */}
       <section
         id="who-benefits"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -523,6 +523,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
+      {/* ==================== Styles ==================== */}
       <style jsx global>{`
         @keyframes shooting-star {
           0% {
