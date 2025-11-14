@@ -292,7 +292,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             >
               <div className="flex flex-col md:flex-row h-full">
                 {/* Left Side - Profile Image */}
-                <div className="md:w-2/5 flex items-center justify-center bg-gradient-to-br from-[#1a1029] to-[#0B0219] p-8 md:p-12 relative">
+                <div className="md:w-2/5 flex items-center justify-center p-8 md:p-12 relative">
                   {/* Close Button */}
                   <button
                     onClick={() => setSelectedMember(null)}
@@ -317,7 +317,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                 </div>
 
                 {/* Right Side - Content */}
-                <div className="md:w-3/5 p-8 md:p-12 flex flex-col bg-gradient-to-br from-[#1a1029] to-[#0B0219]">
+                <div className="md:w-3/5 p-8 md:p-12 flex flex-col">
                   {/* Content */}
                   <div className="flex-1 flex flex-col text-left">
                     <div className="flex justify-between items-start">
@@ -481,7 +481,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               {members.filter(member => member.role.includes("Project Lead")).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg hover:border-white/30'
@@ -572,7 +572,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg hover:border-white/30'
@@ -663,7 +663,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-white/5 backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
                       ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg hover:border-white/30'
