@@ -11,7 +11,6 @@ function Transcripts({ onGetStarted }) {
   const [filteredTranscripts, setFilteredTranscripts] = useState([])
   const [selectedSpeaker, setSelectedSpeaker] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedSection, setSelectedSection] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const isScrolling = useRef(false)
   const transcriptRefs = useRef({})
@@ -490,10 +489,48 @@ function Transcripts({ onGetStarted }) {
                             ))}
                           </div>
                         </div>
+                        
+                        {/* Transcript Content */}
+                        <div className="flex-1 overflow-y-auto max-h-[500px]">
+                          <div className="space-y-6">
+                            {filteredSections.map(section => (
+                              <div
+                                key={section.id}
+                                ref={el => transcriptRefs.current[section.id] = el}
+                                className="p-4 rounded-xl border transition-all duration-300 text-left bg-white/5 border-white/10"
+                              >
+                                <div className="flex justify-between items-start mb-3 text-left">
+                                  <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
+                                  <span className="text-dark-silver text-sm bg-white/10 px-2 py-1 rounded">
+                                    {section.startTime}
+                                  </span>
+                                </div>
+                                <p className="text-dark-silver leading-relaxed text-left">
+                                  {searchQuery ? highlightText(section.content, searchQuery) : section.content}
+                                </p>
+                                {section.topics && section.topics.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-3 text-left">
+                                    {section.topics.map(topic => (
+                                      <span key={topic} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                        {topic.replace(/_/g, ' ')}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <div className="h-full flex items-center justify-center text-dark-silver">
-                        
+                        <div className="text-center">
+                          <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <p className="text-lg">Select a transcript to view its content</p>
+                          <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
+                        </div>
                       </div>
                     )}
                   </div>
