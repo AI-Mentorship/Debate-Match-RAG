@@ -172,7 +172,7 @@ def classify_topics_batch(texts, threshold=0.3):
     return all_topics
 
 
-def extract_speaker_turns(cleaned_text, source):
+def extract_speaker_turns(cleaned_text, source, date):
     """
     Split cleaned text into speaker turns with timestamps.
     Handles multiple formats automatically.
@@ -223,7 +223,8 @@ def extract_speaker_turns(cleaned_text, source):
                             'speaker': current_speaker,
                             'timestamp': current_timestamp if current_timestamp else 'N/A',
                             'text': text,
-                            'source': source
+                            'source': source,
+                            'date': date 
                         })
                 
                 # Extract based on which pattern matched
@@ -258,7 +259,8 @@ def extract_speaker_turns(cleaned_text, source):
                 'speaker': current_speaker,
                 'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
-                'source': source
+                'source': source,
+                'date': date 
             })
     
     return turns
@@ -274,7 +276,7 @@ def save_as_csv(data, output_path):
     """
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         if data:
-            fieldnames = ['speaker', 'timestamp', 'text', 'source', 'topics']
+            fieldnames = ['speaker', 'timestamp', 'text', 'source', 'date', 'topics']
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
             # Convert topics list to comma-separated string for CSV
@@ -296,7 +298,7 @@ def save_as_json(data, output_path):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def preprocess(debate_name):
+def preprocess(debate_name, debate_date):
     # Main preprocessing function.
 
     # Check for input file argument
@@ -322,6 +324,28 @@ def preprocess(debate_name):
             source = "Unknown Debate"
             print(f"No source provided, using: {source}")
 
+    # Use debate_date from parameter or prompt user
+    if debate_date:
+        date = debate_date
+        print(f"Using debate date: {date}")
+    else:
+        while True:
+            date_input = input("Enter Debate date (YYYY-MM-DD, e.g., '2024-06-27'): ").strip()
+            
+            # If empty, use today's date
+            if not date_input:
+                date = datetime.now().strftime("%Y-%m-%d")
+                print(f"No date provided, using today: {date}")
+                break
+            
+            # Validate date format
+            try:
+                datetime.strptime(date_input, "%Y-%m-%d")
+                date = date_input
+                break
+            except ValueError:
+                print("Invalid format! Please use YYYY-MM-DD (e.g., 2024-06-27)")
+
     print(f"Reading: {input_file}")
     
     # Read raw transcript
@@ -332,7 +356,7 @@ def preprocess(debate_name):
     cleaned_text = clean_transcript(raw_text)
     
     print("✂️  Extracting speaker turns...")
-    speaker_turns = extract_speaker_turns(cleaned_text, source)
+    speaker_turns = extract_speaker_turns(cleaned_text, source, date)
     
     if not speaker_turns:
         print("\nWarning: No speaker turns found!")

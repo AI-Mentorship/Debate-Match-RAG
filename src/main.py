@@ -10,6 +10,7 @@ from flask import Flask, jsonify, request # type: ignore
 from flask_cors import CORS # type: ignore
 from backend.embeddings_faiss.build_index import build_index
 from pathlib import Path
+from datetime import datetime
 import time
 import re
 
@@ -24,21 +25,39 @@ BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_FOLDER = BASE_DIR / "user_file_uploads"
 UPLOAD_FOLDER.mkdir(exist_ok=True)
 
-
 # Flask with CORS for React
 cors = CORS(app, origins="*")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-# Get debate name once - used throughout pipeline
-def get_debate_name():
+# Get debate name and date - used throughout pipeline
+def get_debate_metadata():
+    # Get debate name and date from user.
     source = input("\nEnter Debate name/source: ").strip()
     if not source:
         source = "Unknown Debate"
         print(f"No source provided, using: {source}")
     
-    return source
+    # Get date
+    while True:
+        date_input = input("Enter Debate date (YYYY-MM-DD, e.g., '2024-06-27'): ").strip()
+        
+        # If empty, use today's date
+        if not date_input:
+            date = datetime.now().strftime("%Y-%m-%d")
+            print(f"No date provided, using today: {date}")
+            break
+        
+        # Validate date format
+        try:
+            datetime.strptime(date_input, "%Y-%m-%d")
+            date = date_input
+            break
+        except ValueError:
+            print("Invalid format! Please use YYYY-MM-DD (e.g., 2024-06-27)")
+    
+    return source, date
 
 # Database
 def setup_database():
@@ -196,17 +215,17 @@ def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
             result = fact_checker.check_claim(core_claim, top_k=top_k)
             print_enhanced_fact_check_result(result)
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
     
     # Loop for additional claims
     while True:
         claim = input("\nEnter claim to fact-check (or 'quit' to exit): ").strip()
         
         if claim.lower() in ['quit', 'exit', 'q']:
-            print("👋 Exiting fact checker!")
+            print("Exiting fact checker!")
             break
         if not claim:
-            print("⚠️  Please enter a valid claim.")
+            print("Please enter a valid claim.")
             continue
         
         # Run fact check
@@ -215,7 +234,7 @@ def run_fact_checker_loop(initial_claim=None, top_k=3, use_news=True):
             result = fact_checker.check_claim(claim, top_k=top_k)
             print_enhanced_fact_check_result(result)
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
 
 def print_enhanced_fact_check_result(result):
 
@@ -330,9 +349,8 @@ def retrieve_response():
 def initiate_pipeline():
     #log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
-
-    debate_name = get_debate_name()
-    preprocess(debate_name)
+    debate_name, debate_date = get_debate_metadata()
+    preprocess(debate_name, debate_date)
 
     # Database setup
     setup_database()

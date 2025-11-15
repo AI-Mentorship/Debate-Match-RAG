@@ -21,8 +21,8 @@ class DataInserter(DebateDatabase):
                     # Insert speaker
                     speaker_id = self.insert_speaker(row["speaker"], speakers_dict)
                     
-                    # Insert debate
-                    debate_id = self.insert_debate(row["source"], debates_dict)
+                    # Insert debate with date
+                    debate_id = self.insert_debate(row["source"], row["date"], debates_dict)
                     
                     # Parse topics from CSV (comma-separated string)
                     topics_str = row.get("topics", "general_political_commentary")
@@ -71,16 +71,24 @@ class DataInserter(DebateDatabase):
         speakers_dict[speaker] = speaker_id
         return speaker_id
     
-    def insert_debate(self, source, debates_dict):
-        key = source
+    def insert_debate(self, source, date, debates_dict):
+        key = (source, date)  # Use tuple of source and date as key
 
         # Check duplicate
         if key in debates_dict:
             return debates_dict[key]
         
+        # Parse date string to datetime object with error handling
+        try:
+            date_obj = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            print(f"⚠️  Warning: Invalid date format '{date}', using current date")
+            date_obj = datetime.now()
+        
         # Check duplicate in the database
         existing_debate = self.debates.find_one({
-            "name": source
+            "name": source,
+            "date": date_obj
         })
 
         if existing_debate:
@@ -91,7 +99,8 @@ class DataInserter(DebateDatabase):
         debate_id = self.generate_unique_id()
         self.debates.insert_one({
             "debate_id": debate_id,
-            "name": source
+            "name": source,
+            "date": date_obj
         })
 
         debates_dict[key] = debate_id

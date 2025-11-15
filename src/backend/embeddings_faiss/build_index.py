@@ -58,6 +58,7 @@ def fetch_utterances():
             "speaker_name": speaker.get("name", "Unknown"),
             "speaker_role": speaker.get("role", "Unknown"),
             "debate_name": debate.get("name", "Unknown"),
+            "debate_date": debate.get("date"), 
             "timestamp": u.get("timestamp", None),
             "topics": u.get("topics")
         })
@@ -89,6 +90,7 @@ def build_index():
             metadata.append({
                 "debate_id": u["debate_id"],
                 "debate_name": u["debate_name"],
+                "debate_date": u["debate_date"].strftime("%Y-%m-%d") if u.get("debate_date") else None,
                 "speaker": u["speaker_name"],
                 "role": u["speaker_role"],
                 "text": chunk,

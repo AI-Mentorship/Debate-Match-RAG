@@ -1,6 +1,7 @@
 [
     {
         "debate_name": "ABC News Presidential Debate: Race for the White House",
+        "debate_date": null,
         "speaker": "Kamala Harris",
         "timestamp": "20:26",
         "text": "But understand, if Donald Trump were to be re-elected, he will sign a national abortion ban. Understand in his Project 2025 there would be a national abortion ban.",
@@ -8,6 +9,19 @@
     },
     {
         "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+        "debate_date": "2024-06-27",
+        "speaker": "Dana Bash",
+        "timestamp": "13:37",
+        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states.",
+        "topics": [
+            "abortion",
+            "crime_justice",
+            "election_integrity"
+        ]
+    },
+    {
+        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+        "debate_date": "2024-06-27",
         "speaker": "Dana Bash",
         "timestamp": "14:02",
         "text": "However, the federal government still plays a role in whether or not women have access to abortion pills. As president, would you block abortion medication?",
@@ -19,6 +33,7 @@
     },
     {
         "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+        "debate_date": "2024-06-27",
         "speaker": "Donald Trump",
         "timestamp": "14:18",
         "text": "First of all, the Supreme Court just approved the abortion bill and I agree with their decision to have done that, and I will not block it.",
@@ -26,6 +41,16 @@
             "abortion",
             "civil_rights",
             "crime_justice"
+        ]
+    },
+    {
+        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+        "debate_date": "2024-06-27",
+        "speaker": "Donald Trump",
+        "timestamp": "01:00:50",
+        "text": "Well, let me just go back to what he said about the police, how close the police are to him. Almost every police group in the nation from every state is supporting Donald J. Trump.",
+        "topics": [
+            "general_political_commentary"
         ]
     }
 ]

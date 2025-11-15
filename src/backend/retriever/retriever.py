@@ -42,7 +42,7 @@ class DebateRetriever:
             top_k: Number of results to return
 
         Returns:
-            List of dicts with debate_name, speaker, timestamp, text, and topics
+            List of dicts with debate_name, debate_date, speaker, timestamp, text, and topics
         """
         # Generate query embedding using OpenAI
         response = self.client.embeddings.create(
@@ -60,6 +60,7 @@ class DebateRetriever:
             meta = self.metadata[idx]
             results.append({
                 'debate_name': meta.get('debate_name', 'Unknown'),
+                'debate_date': meta.get('debate_date'),
                 'speaker': meta['speaker'],
                 'timestamp': meta['timestamp'],
                 'text': meta['text'],
