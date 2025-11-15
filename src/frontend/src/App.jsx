@@ -63,7 +63,7 @@ function App() {
       case 'analyzer':
         return <Analyzer />
       case 'transcripts':
-        return <Transcripts onGetStarted={handleGetStarted} onModalStateChange={setIsModalOpen} />
+        return <Transcripts onGetStarted={handleGetStarted} />
       case 'missions':
         return <Missions />
       case 'team':

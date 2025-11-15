@@ -1,14 +1,142 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import debateTranscripts from "./transcript_database.json"
 
-function Transcripts({ onGetStarted, onModalStateChange }) {
+function Transcripts({ onGetStarted }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
+  const [transcripts, setTranscripts] = useState([])
+  const [selectedTranscript, setSelectedTranscript] = useState(null)
+  const [filteredTranscripts, setFilteredTranscripts] = useState([])
+  const [selectedSpeaker, setSelectedSpeaker] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
   const isScrolling = useRef(false)
+  const transcriptRefs = useRef({})
 
-  // Scroll
+  /* ==================== Data from JSON ==================== */
+  useEffect(() => {
+    if (debateTranscripts && debateTranscripts.length > 0) {
+      // Group transcripts by source
+      const transcriptsBySource = debateTranscripts.reduce((acc, item) => {
+        if (!acc[item.source]) {
+          acc[item.source] = [];
+        }
+        acc[item.source].push(item);
+        return acc;
+      }, {});
+
+      // Create transcript objects for each source
+      const transcriptObjects = Object.entries(transcriptsBySource).map(([source, items], index) => {
+        // Unique speakers for this transcript
+        const uniqueSpeakers = [...new Set(items.map(item => item.speaker))];
+        
+        // Unique topics for this transcript
+        const allTopics = items.flatMap(item => item.topics || []);
+        const uniqueTopics = [...new Set(allTopics)];
+
+        // Get date from the first item (all items in same source should have same date)
+        const date = items[0].date || `${new Date().getFullYear()}-01-01`;
+        
+        // Calculate duration based on timestamps
+        const durations = items.map(item => {
+          const timeParts = item.timestamp.split(':');
+          if (timeParts.length === 2) {
+            const [minutes, seconds] = timeParts.map(Number);
+            return minutes * 60 + seconds;
+          }
+          
+          else if (timeParts.length === 3) {
+            const [hours, minutes, seconds] = timeParts.map(Number);
+            return hours * 3600 + minutes * 60 + seconds;
+          }
+          return 0;
+        });
+        const maxDuration = Math.max(...durations);
+        const durationMinutes = Math.ceil(maxDuration / 60);
+
+        return {
+          id: index + 1,
+          title: source,
+          date: date,
+          participants: uniqueSpeakers,
+          duration: `${durationMinutes} minutes`,
+          sections: items.map((item, sectionIndex) => ({
+            id: `s${sectionIndex + 1}`,
+            title: `${item.speaker} - ${item.timestamp}`,
+            startTime: item.timestamp,
+            content: item.text,
+            speaker: item.speaker,
+            topics: item.topics || []
+          })),
+          tags: uniqueTopics.slice(0, 10)
+        };
+      });
+
+      setTranscripts(transcriptObjects);
+      setFilteredTranscripts(transcriptObjects);
+      setIsLoading(false);
+    }
+    
+    else {
+      console.error('No transcript data found');
+      setIsLoading(false);
+    }
+  }, []);
+
+  // Filter by speaker
+  const filteredSections = selectedTranscript ? 
+    selectedSpeaker ? 
+      selectedTranscript.sections.filter(section => section.speaker === selectedSpeaker)
+      : selectedTranscript.sections
+    : [];
+
+  /* ==================== Search and filter ==================== */
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredTranscripts(transcripts)
+      return
+    }
+
+    const query = searchQuery.toLowerCase()
+    const filtered = transcripts.filter(transcript => 
+      transcript.title.toLowerCase().includes(query) ||
+      transcript.participants.some(p => p.toLowerCase().includes(query)) ||
+      transcript.tags.some(tag => tag.toLowerCase().includes(query)) ||
+      transcript.sections.some(section => 
+        section.content.toLowerCase().includes(query) ||
+        section.speaker.toLowerCase().includes(query)
+      )
+    )
+    setFilteredTranscripts(filtered)
+  }, [searchQuery, transcripts])
+
+  // Highlight text
+  const highlightText = (text, highlight) => {
+    if (!highlight) return text
+    
+    const parts = text.split(new RegExp(`(${highlight})`, 'gi'))
+    return parts.map((part, index) => 
+      part.toLowerCase() === highlight.toLowerCase() ? 
+        <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark> : 
+        part
+    )
+  }
+
+  // Scroll to section
+  const scrollToSection = (sectionId) => {
+    const element = transcriptRefs.current[sectionId]
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      element.classList.add('ring-2', 'ring-blue-500')
+      setTimeout(() => {
+        element.classList.remove('ring-2', 'ring-blue-500')
+      }, 2000)
+    }
+  }
+
+  /* ==================== Scroll ==================== */
   const smoothScrollTo = (element, duration = 1000) => {
     isScrolling.current = true
     const start = window.pageYOffset;
@@ -89,35 +217,6 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
     }
   };
 
-  // Shooting star animation
-  useEffect(() => {
-    const createStar = () => {
-      const newStar = {
-        id: Math.random(),
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      // Animation completes
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    // Create stars
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    // Continue creating stars
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
-
   // Update current section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -149,9 +248,38 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* ==================== Shooting star animation ==================== */
+  useEffect(() => {
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
+
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
-      {/* Shooting stars effect */}
+      {/* ==================== Shooting star animation ==================== */}
       <div className="fixed inset-0 pointer-events-none z-0">
         {stars.map(star => (
           <div
@@ -169,7 +297,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         ))}
       </div>
       
-      {/* Scroll Indicator */}
+      {/* ==================== Scroll Indicator ==================== */}
       <motion.div
         className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
         initial={{ opacity: 0 }}
@@ -198,7 +326,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </div>
       </motion.div>
 
-      {/* Hero Section */}
+      {/* ==================== Hero Section ==================== */}
       <section 
         id="hero"
         className="min-h-screen w-full flex flex-col items-center justify-center px-8 text-center relative z-10"
@@ -229,7 +357,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </motion.div>
       </section>
 
-      {/* Browse Collection Section */}
+      {/* ==================== Browse Collection Section ==================== */}
       <section
         id="browse"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -265,7 +393,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
                     placeholder="Search transcripts by title, participant, tags, or content..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-6 py-4 bg-white/5 backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
+                    className="w-full px-6 py-4 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
                   />
                   <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,8 +412,35 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
                   transition={{ delay: 0.3, duration: 0.5 }}
                   className="lg:col-span-1"
                 >
-                  <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 text-left">
-                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts (1)</h2>
+                  <div className="bg-[#251f2e] backdrop-blur-lg rounded-2xl border border-white/20 p-6 text-left">
+                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts ({filteredTranscripts.length})</h2>
+
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      <AnimatePresence>
+                        {filteredTranscripts.map((transcript, index) => (
+                          <motion.div
+                            key={transcript.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 text-left ${
+                              selectedTranscript?.id === transcript.id 
+                                ? 'bg-electric-purple/20 border-electric-purple shadow-lg' 
+                                : 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'
+                            }`}
+                            onClick={() => {
+                              setSelectedTranscript(transcript)
+                              setSelectedSpeaker(null)
+                            }}
+                          >
+                            <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
+                            <div className="text-sm text-dark-silver space-y-1 text-left">
+                              <p className="text-left">{transcript.date} • {transcript.duration}</p>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </AnimatePresence>
+                    </div>
                   </div>
                 </motion.div>
 
@@ -296,16 +451,88 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
                   transition={{ delay: 0.4, duration: 0.5 }}
                   className="lg:col-span-2"
                 >
-                  <div className="bg-white/5 backdrop-blur-lg rounded-2xl border border-white/20 p-6 h-full text-left">
-                    <div className="h-full flex items-center justify-center text-dark-silver">
-                      <div className="text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-lg">Select a transcript to view its content</p>
-                        <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
+                  <div className="bg-[#251f2e] backdrop-blur-lg rounded-2xl border border-white/20 p-6 h-full text-left">
+                    {selectedTranscript ? (
+                      <div className="h-full flex flex-col text-left">
+                        {/* Transcript Header */}
+                        <div className="mb-6 text-left">
+                          <h2 className="text-3xl font-bold text-white mb-2 text-left">{selectedTranscript.title}</h2>
+                          <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
+                            <span>Date: {selectedTranscript.date}</span>
+                            <span>Duration: {selectedTranscript.duration}</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2 text-left">
+                            {selectedTranscript.tags.slice(0, 6).map(tag => (
+                              <span key={tag} className="px-3 py-1 bg-electric-purple/50 text-white rounded-full text-sm">
+                                {tag.replace(/_/g, ' ')}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Speakers Navigation */}
+                        <div className="mb-6 text-left">
+                          <h3 className="text-lg font-semibold mb-3 text-left">Speakers</h3>
+                          <div className="flex flex-wrap gap-2 text-left">
+                            {selectedTranscript.participants.map(speaker => (
+                              <button
+                                key={speaker}
+                                onClick={() => setSelectedSpeaker(selectedSpeaker === speaker ? null : speaker)}
+                                className={`px-3 py-2 rounded-lg border border-white/20 text-sm transition-all duration-300 text-left ${
+                                  selectedSpeaker === speaker
+                                    ? 'bg-electric-purple/50 text-white'
+                                    : 'bg-white/10 text-dark-silver hover:bg-white/20 hover:text-white'
+                                }`}
+                              >
+                                {speaker}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Transcript Content */}
+                        <div className="flex-1 overflow-y-auto max-h-[500px]">
+                          <div className="space-y-6">
+                            {filteredSections.map(section => (
+                              <div
+                                key={section.id}
+                                ref={el => transcriptRefs.current[section.id] = el}
+                                className="p-4 rounded-xl border transition-all duration-300 text-left bg-white/5 border-white/10"
+                              >
+                                <div className="flex justify-between items-start mb-3 text-left">
+                                  <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
+                                  <span className="text-dark-silver text-sm bg-white/10 px-2 py-1 rounded">
+                                    {section.startTime}
+                                  </span>
+                                </div>
+                                <p className="text-dark-silver leading-relaxed text-left">
+                                  {searchQuery ? highlightText(section.content, searchQuery) : section.content}
+                                </p>
+                                {section.topics && section.topics.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-3 text-left">
+                                    {section.topics.map(topic => (
+                                      <span key={topic} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                        {topic.replace(/_/g, ' ')}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="h-full flex items-center justify-center text-dark-silver">
+                        <div className="text-center">
+                          <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <p className="text-lg">Select a transcript to view its content</p>
+                          <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               </div>
@@ -314,7 +541,7 @@ function Transcripts({ onGetStarted, onModalStateChange }) {
         </div>
       </section>
 
-      {/* Shooting star animation */}
+      {/* ==================== Shooting star animation ==================== */}
       <style>
         {`
           @keyframes shooting-star {
