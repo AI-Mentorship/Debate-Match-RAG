@@ -29,8 +29,20 @@ function Transcripts({ onGetStarted }) {
 
       // Transcript objects for each debate_name
       const transcriptObjects = Object.entries(transcriptsBySource).map(([debate_name, items], index) => {
+        // Last name only
+          const processSpeakerName = (speaker) => {
+            if (!speaker) return '';
+            
+            // Split
+            const nameParts = speaker.trim().split(/\s+/);
+            const lastName = nameParts[nameParts.length - 1];
+            
+            // Capitalize first letter only
+            return lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
+          };
+        
         // Unique speakers
-        const uniqueSpeakers = [...new Set(items.map(item => item.speaker))];
+        const uniqueSpeakers = [...new Set(items.map(item => processSpeakerName(item.speaker)))].filter(Boolean);
         
         // Unique topics
         const allTopics = items.flatMap(item => item.topics || []);
@@ -64,10 +76,10 @@ function Transcripts({ onGetStarted }) {
           duration: `${durationMinutes} minutes`,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
-            title: `${item.speaker} - ${item.timestamp}`,
+            title: `${processSpeakerName(item.speaker)} - ${item.timestamp}`,
             startTime: item.timestamp,
             content: item.text,
-            speaker: item.speaker,
+            speaker: processSpeakerName(item.speaker),
             topics: item.topics || []
           })),
           tags: uniqueTopics.slice(0, 10)
