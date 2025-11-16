@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Paperclip } from "lucide-react";
+import { Paperclip, Upload } from "lucide-react";
 
 const SYSTEM_PROMPTS = {
   "Debate Opponent":
@@ -33,8 +33,13 @@ function Analyzer({ onBackToHome }) {
     SYSTEM_PROMPTS["Debate Opponent"]
   );
 
+  // Upload state
+  const [currentStage, setCurrentStage] = useState("upload");
+  const [uploadedTranscript, setUploadedTranscript] = useState(null);
+
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const transcriptInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
   // Shooting star animation
@@ -49,18 +54,15 @@ function Analyzer({ onBackToHome }) {
       }
       setStars(prev => [...prev, newStar])
 
-      // Animation completes
       setTimeout(() => {
         setStars(prev => prev.filter(star => star.id !== newStar.id))
       }, (newStar.duration + newStar.delay) * 1000)
     }
 
-    // Create stars
     for (let i = 0; i < 8; i++) {
       setTimeout(createStar, i * 300)
     }
 
-    // Continue creating stars
     const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
@@ -78,6 +80,40 @@ function Analyzer({ onBackToHome }) {
     onComplete();
   };
 
+  // Handle transcript upload
+  const handleTranscriptUpload = (e) => {
+    console.log("handleTranscriptUpload called");
+    const f = e.target.files[0];
+    if (!f) {
+      console.log("No file selected");
+      return;
+    }
+
+    console.log("File:", f.name);
+
+    if (!f.name.endsWith(".txt")) {
+      alert("Please upload only .txt files.");
+      e.target.value = "";
+      return;
+    }
+
+    setUploadedTranscript(f);
+    alert(`Transcript "${f.name}" uploaded successfully!`);
+  };
+
+  // Trigger file input click - with logging
+  const handleUploadBoxClick = (e) => {
+    console.log("Upload box clicked!");
+    console.log("Event:", e);
+    console.log("Input ref:", transcriptInputRef.current);
+    if (transcriptInputRef.current) {
+      transcriptInputRef.current.click();
+      console.log("Click triggered on input");
+    } else {
+      console.error("Input ref is null!");
+    }
+  };
+
   // Send message
   const sendMessage = async () => {
     if (!input.trim() && !file) return;
@@ -87,9 +123,7 @@ function Analyzer({ onBackToHome }) {
     setInput("");
     setLoading(true);
 
-    
-
-       try {
+    try {
       const formData = new FormData();
       formData.append("user_query", input || "");
       if (file) formData.append("file", file);
@@ -101,7 +135,6 @@ function Analyzer({ onBackToHome }) {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
 
       const aiResponse =
         response.data?.response || response.data?.answer || response.data?.error ||"Unexpected response.";
@@ -148,7 +181,7 @@ function Analyzer({ onBackToHome }) {
   // Scroll to bottom when new messages appear
   useEffect(() => {
     messagesContainerRef.current?.scrollTo({
-      top: 0, // reversed column
+      top: 0,
       behavior: "smooth",
     });
   }, [messages, typingMessage]);
@@ -156,7 +189,7 @@ function Analyzer({ onBackToHome }) {
   return (
     <div className="relative flex flex-col h-screen bg-gradient-to-b from-[#0a0a0a] via-[#141414] to-[#1e1e20] text-white overflow-hidden">
       {/* Stars */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((s) => (
           <motion.div
             key={s.id}
@@ -172,167 +205,275 @@ function Analyzer({ onBackToHome }) {
         ))}
       </div>
 
-      {/* Messages Container */}
-      <div
-        ref={messagesContainerRef}
-        className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative"
-      >
-        {/* Fade overlay fixed at top */}
-        <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
-
-        {/* "Start a Debate" placeholder */}
-        <AnimatePresence>
-          {messages.length === 0 && !loading && (
-            <motion.div
-              initial={{ opacity: 0, y: -300, scale: 0.9 }}
-              animate={{ opacity: 1, y: -200, scale: 1 }}
-              exit={{ opacity: 0, y: -500, scale: 0.9 }}
-              transition={{
-                type: "spring",
-                stiffness: 120,
-                damping: 12,
-                mass: 2
-              }}
-              className="absolute bottom-32 left-1/2 transform -translate-x-1/2 text-center max-w-2xl z-10"
-            >
-              <h2 className="text-4xl font-bold text-white mb-4">
-                Start a Debate
-              </h2>
-              <p className="text-lg text-light-silver">
-                Ask me anything, upload transcripts, or analyze arguments.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Messages */}
-        <div className="flex flex-col space-y-6">
-          {messages.map((m, i) => (
-            <div key={i} className="flex justify-center">
-              <div
-                className={`max-w-5xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
-                  m.role === "user"
-                    ? "bg-electric-purple/10 border-electric-purple/30 text-white"
-                    : "bg-white/10 border-white/20 text-white"
-                }`}
-              >
-                <p className="whitespace-pre-wrap">{m.content}</p>
-              </div>
-            </div>
-          ))}
-          {isTyping && (
-            <div className="flex justify-center">
-              <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
-                <p className="whitespace-pre-wrap">
-                  {typingMessage}
-                  <span className="animate-pulse">▊</span>
-                </p>
-              </div>
-            </div>
-          )}
-          {loading && !isTyping && (
-            <div className="flex justify-center">
-              <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center space-x-4">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-white rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-white rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </div>
-                <span className="text-light-silver text-sm">
-                  Analyzing arguments...
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Bar */}
-      <AnimatePresence mode="wait">
+      {/* Upload Transcript */}
+      {currentStage === "upload" && (
         <motion.div
-          key="inputBar"
-          initial={{ y: messages.length === 0 ? -275 : -325, opacity: 1 }}
-          animate={{ y: messages.length === 0 ? -275 : -70, opacity: 1 }}
-          transition={{ duration: 1.0, type: "spring" }}
-          className="px-6 py-6"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="flex-1 flex items-center justify-center px-6 relative z-10"
         >
-          <div className="max-w-5xl mx-auto space-y-2">
-            <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
-              <label className="cursor-pointer px-3" title="Upload transcript">
-                <Paperclip
-                  className="text-light-silver hover:text-white"
-                  size={22}
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".txt"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-              </label>
+          <div className="text-center max-w-2xl w-full">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Upload Debate Transcript
+            </h2>
+            <p className="text-lg text-light-silver mb-8">
+              Start by uploading a debate transcript (.txt file)
+            </p>
 
-              <textarea
-                className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
-                placeholder="Ask something..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
+            <div className="w-full max-w-xl mx-auto">
+              {/* Hidden file input */}
+              <input
+                ref={transcriptInputRef}
+                type="file"
+                accept=".txt"
+                onChange={handleTranscriptUpload}
+                style={{ 
+                  position: 'absolute',
+                  width: '1px',
+                  height: '1px',
+                  padding: 0,
+                  margin: '-1px',
+                  overflow: 'hidden',
+                  clip: 'rect(0,0,0,0)',
+                  whiteSpace: 'nowrap',
+                  border: 0
+                }}
               />
-
+              
+              {/* Clickable upload box */}
               <button
-                onClick={sendMessage}
-                disabled={loading || (!input.trim() && !file)}
-                className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition ${
-                  loading || (!input.trim() && !file)
-                    ? "bg-gray-600 cursor-not-allowed opacity-60"
-                    : "bg-electric-purple hover:bg-purple-700 active:scale-95"
-                }`}
+                type="button"
+                onClick={handleUploadBoxClick}
+                style={{
+                  all: 'unset',
+                  display: 'block',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
               >
-                Send
+                <div
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: '#2c2c30',
+                    border: '2px dashed rgba(139, 92, 246, 0.5)',
+                    borderRadius: '16px',
+                    padding: '48px',
+                    transition: 'border-color 0.2s',
+                    textAlign: 'center'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#8b5cf6'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)'}
+                >
+                  <Upload 
+                    style={{ 
+                      margin: '0 auto 16px',
+                      color: '#8b5cf6',
+                      display: 'block'
+                    }} 
+                    size={64} 
+                  />
+                  <p style={{ 
+                    color: 'white',
+                    fontSize: '18px',
+                    marginBottom: '8px',
+                    fontWeight: 500
+                  }}>
+                    Click to upload or drag and drop
+                  </p>
+                  <p style={{ 
+                    color: '#a0aec0',
+                    fontSize: '14px'
+                  }}>
+                    Accepted format: .txt
+                  </p>
+                </div>
               </button>
             </div>
 
-            {file && (
-              <p className="text-sm text-light-silver mt-2 ml-2 flex items-center">
-                📎 {file.name}
-                <button
-                  onClick={() => setFile(null)}
-                  className="ml-2 text-red-400 hover:text-red-500"
-                >
-                  ✕
-                </button>
-              </p>
+            {uploadedTranscript && (
+              <div style={{
+                marginTop: '24px',
+                padding: '16px',
+                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                borderRadius: '8px'
+              }}>
+                <p style={{ color: '#4ade80' }}>
+                  ✓ {uploadedTranscript.name} uploaded successfully!
+                </p>
+              </div>
             )}
-
-            {/* AI Mode Dropdown */}
-            <div className="flex items-center gap-2 justify-center pt-1">
-              <label className="text-sm text-light-silver">AI Mode:</label>
-              <select
-                value={aiMode}
-                onChange={(e) => {
-                  const mode = e.target.value;
-                  setAiMode(mode);
-                  setSystemPrompt(SYSTEM_PROMPTS[mode]);
-                }}
-                className="bg-[#1e1e23] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
-              >
-                {Object.keys(SYSTEM_PROMPTS).map((mode) => (
-                  <option key={mode}>{mode}</option>
-                ))}
-              </select>
-            </div>
           </div>
         </motion.div>
-      </AnimatePresence>
+      )}
+
+      {/* Original UI - Hidden during upload */}
+      {currentStage !== "upload" && (
+        <>
+          {/* Messages Container */}
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative"
+          >
+            {/* Fade overlay fixed at top */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
+
+            {/* "Start a Debate" placeholder */}
+            <AnimatePresence>
+              {messages.length === 0 && !loading && (
+                <motion.div
+                  initial={{ opacity: 0, y: -300, scale: 0.9 }}
+                  animate={{ opacity: 1, y: -200, scale: 1 }}
+                  exit={{ opacity: 0, y: -500, scale: 0.9 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 120,
+                    damping: 12,
+                    mass: 2
+                  }}
+                  className="absolute bottom-32 left-1/2 transform -translate-x-1/2 text-center max-w-2xl z-10"
+                >
+                  <h2 className="text-4xl font-bold text-white mb-4">
+                    Start a Debate
+                  </h2>
+                  <p className="text-lg text-light-silver">
+                    Ask me anything, upload transcripts, or analyze arguments.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Messages */}
+            <div className="flex flex-col space-y-6">
+              {messages.map((m, i) => (
+                <div key={i} className="flex justify-center">
+                  <div
+                    className={`max-w-5xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
+                      m.role === "user"
+                        ? "bg-electric-purple/10 border-electric-purple/30 text-white"
+                        : "bg-white/10 border-white/20 text-white"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{m.content}</p>
+                  </div>
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex justify-center">
+                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
+                    <p className="whitespace-pre-wrap">
+                      {typingMessage}
+                      <span className="animate-pulse">▊</span>
+                    </p>
+                  </div>
+                </div>
+              )}
+              {loading && !isTyping && (
+                <div className="flex justify-center">
+                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center space-x-4">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                    <span className="text-light-silver text-sm">
+                      Analyzing arguments...
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Bar */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="inputBar"
+              initial={{ y: messages.length === 0 ? -275 : -325, opacity: 1 }}
+              animate={{ y: messages.length === 0 ? -275 : -70, opacity: 1 }}
+              transition={{ duration: 1.0, type: "spring" }}
+              className="px-6 py-6"
+            >
+              <div className="max-w-5xl mx-auto space-y-2">
+                <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                  <label className="cursor-pointer px-3" title="Upload transcript">
+                    <Paperclip
+                      className="text-light-silver hover:text-white"
+                      size={22}
+                    />
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".txt"
+                      onChange={handleFileChange}
+                      style={{ display: "none" }}
+                    />
+                  </label>
+
+                  <textarea
+                    className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                    placeholder="Ask something..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    rows={1}
+                  />
+
+                  <button
+                    onClick={sendMessage}
+                    disabled={loading || (!input.trim() && !file)}
+                    className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition ${
+                      loading || (!input.trim() && !file)
+                        ? "bg-gray-600 cursor-not-allowed opacity-60"
+                        : "bg-electric-purple hover:bg-purple-700 active:scale-95"
+                    }`}
+                  >
+                    Send
+                  </button>
+                </div>
+
+                {file && (
+                  <p className="text-sm text-light-silver mt-2 ml-2 flex items-center">
+                    📎 {file.name}
+                    <button
+                      onClick={() => setFile(null)}
+                      className="ml-2 text-red-400 hover:text-red-500"
+                    >
+                      ✕
+                    </button>
+                  </p>
+                )}
+
+                {/* AI Mode Dropdown */}
+                <div className="flex items-center gap-2 justify-center pt-1">
+                  <label className="text-sm text-light-silver">AI Mode:</label>
+                  <select
+                    value={aiMode}
+                    onChange={(e) => {
+                      const mode = e.target.value;
+                      setAiMode(mode);
+                      setSystemPrompt(SYSTEM_PROMPTS[mode]);
+                    }}
+                    className="bg-[#1e1e23] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
+                  >
+                    {Object.keys(SYSTEM_PROMPTS).map((mode) => (
+                      <option key={mode}>{mode}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </>
+      )}
     </div>
   );
 }
