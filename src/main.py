@@ -302,6 +302,107 @@ def message():
         }
     )
 '''
+@app.route('/api/upload-debate', methods=['POST'])
+def upload_debate():
+    """
+    Stage 2: Upload debate transcript with metadata (name and date)
+    Processes the file through the entire pipeline:
+    1. Saves the file
+    2. Runs preprocessing with debate name and date
+    3. Sets up database
+    4. Builds FAISS index
+    """
+    try:
+        # Get form data
+        uploaded_file = request.files.get('file')
+        debate_name = request.form.get('debate_name', '').strip()
+        debate_date = request.form.get('debate_date', '').strip()
+        
+        print(f"Received debate upload request:")
+        print(f"  - File: {uploaded_file.filename if uploaded_file else 'None'}")
+        print(f"  - Debate Name: {debate_name}")
+        print(f"  - Debate Date: {debate_date}")
+        
+        # Validation
+        if not uploaded_file:
+            return jsonify({"error": "No file uploaded"}), 400
+        
+        if not debate_name:
+            return jsonify({"error": "Debate name is required"}), 400
+        
+        if not debate_date:
+            return jsonify({"error": "Debate date is required"}), 400
+        
+        filename = uploaded_file.filename
+        
+        # Restrict file types
+        if not filename.lower().endswith(".txt"):
+            return jsonify({"error": "Only .txt files are allowed"}), 400
+        
+        # Validate date format
+        try:
+            datetime.strptime(debate_date, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+        
+        # Save file with timestamp to prevent overwriting
+        safe_name = f"{int(time.time())}_{filename}"
+        file_path = UPLOAD_FOLDER / safe_name
+        
+        print(f"Saving file to: {file_path}")
+        uploaded_file.save(file_path)
+        
+        # Get file size
+        file_size = file_path.stat().st_size
+        
+        # Process the debate through the pipeline
+        try:
+            print(f"\n{'='*80}")
+            print(f"PROCESSING DEBATE: {debate_name} ({debate_date})")
+            print(f"{'='*80}\n")
+            
+            # Step 1: Preprocessing - pass the file path
+            print("Step 1/3: Running preprocessing...")
+            preprocess_result = preprocess(debate_name, debate_date, str(file_path))
+            print("Preprocessing complete")
+            print(f"  - Processed {preprocess_result['speaker_count']} speaker turns")
+            print(f"  - CSV: {preprocess_result['csv_path']}")
+            print(f"  - JSON: {preprocess_result['json_path']}")
+            
+            # Step 2: Database setup
+            print("\nStep 2/3: Setting up database...")
+            setup_database()
+            print("Database setup complete")
+            
+            # Step 3: Build FAISS index
+            print("\nStep 3/3: Building FAISS index...")
+            build_index()
+            print("FAISS index built")
+            
+            print(f"\n{'='*80}")
+            print(f"DEBATE PROCESSING COMPLETE")
+            print(f"{'='*80}\n")
+            
+            return jsonify({
+                "success": True,
+                "message": f"Debate '{debate_name}' ({debate_date}) processed successfully!",
+                "debate_name": debate_name,
+                "debate_date": debate_date,
+                "file_size": file_size,
+                "filename": filename
+            }), 200
+            
+        except Exception as processing_error:
+            print(f"Error during pipeline processing: {processing_error}")
+            return jsonify({
+                "error": f"Pipeline processing failed: {str(processing_error)}"
+            }), 500
+    
+    except Exception as e:
+        print(f"Error in upload_debate: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/retrieve-response', methods=['POST'])
 def retrieve_response():
     try:
