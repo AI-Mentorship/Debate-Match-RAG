@@ -224,7 +224,7 @@ function Analyzer({ onBackToHome }) {
       ...prev,
       {
         role: "assistant",
-        content: "🔍 Switched to Fact Checker mode. I'll now verify claims using Wikipedia, news sources, and advanced analysis. Enter a claim to fact-check.",
+        content: "Switched to Fact Checker mode. I'll now verify claims using Wikipedia, news sources, and advanced analysis. Enter a claim to fact-check.",
       },
     ]);
   };
@@ -238,7 +238,7 @@ function Analyzer({ onBackToHome }) {
       ...prev,
       {
         role: "assistant",
-        content: "💬 Switched to Retriever + QA mode. Ask me questions about the debate!",
+        content: "Switched to Retriever + QA mode. Ask me questions about the debate!",
       },
     ]);
   };
@@ -542,7 +542,7 @@ function Analyzer({ onBackToHome }) {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-light-silver">Mode:</span>
-                      <span className="text-sm text-electric-purple font-medium">💬 Retriever + QA</span>
+                      <span className="text-sm text-electric-purple font-medium"> Retriever + QA</span>
                     </div>
                     <button
                       onClick={switchToFactChecker}
@@ -554,8 +554,9 @@ function Analyzer({ onBackToHome }) {
                 ) : (
                   <>
                     <div className="flex items-center gap-2">
+                      <span className="text-sm text-light-silver">Mode:</span>
                       <span className="text-sm text-green-400 font-medium">
-                        🔍 Fact Checker Mode Active
+                        Fact Checker Mode
                       </span>
                     </div>
                     <button
