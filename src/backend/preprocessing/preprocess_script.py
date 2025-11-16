@@ -298,21 +298,32 @@ def save_as_json(data, output_path):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 
-def preprocess(debate_name, debate_date):
-    # Main preprocessing function.
+def preprocess(debate_name, debate_date, input_file_path=None):
+    """
+    Main preprocessing function.
+    
+    Args:
+        debate_name: Name of the debate (e.g., "2024 CNN Presidential Debate")
+        debate_date: Date in YYYY-MM-DD format
+        input_file_path: Path to input transcript file (optional, falls back to CLI arg)
+    """
 
-    # Check for input file argument
-    if len(sys.argv) < 2:
+    # Get input file from parameter or CLI argument
+    if input_file_path:
+        input_file = Path(input_file_path)
+    elif len(sys.argv) >= 2:
+        input_file = Path(sys.argv[1])
+    else:
+        print("Error: No input file provided!")
         print("Usage: python main.py <input_file.txt>")
         print("Example: python main.py debate_raw.txt")
         sys.exit(1)
     
-    input_file = Path(sys.argv[1])
-    
     # Verify input file exists
     if not input_file.exists():
-        print(f"Error: Input file '{input_file}' not found!")
-        sys.exit(1)
+        error_msg = f"Input file '{input_file}' not found!"
+        print(f"Error: {error_msg}")
+        raise FileNotFoundError(error_msg)
     
     # Use debate_name from parameter or prompt user
     if debate_name:
@@ -359,6 +370,7 @@ def preprocess(debate_name, debate_date):
     speaker_turns = extract_speaker_turns(cleaned_text, source, date)
     
     if not speaker_turns:
+        error_msg = "No speaker turns found in transcript!"
         print("\nWarning: No speaker turns found!")
         print("\nExpected formats:")
         print("  - Speaker Name ([timestamp]): text")
@@ -367,7 +379,7 @@ def preprocess(debate_name, debate_date):
         print("  - [timestamp] Speaker Name: text")
         print("\nShowing cleaned text sample:")
         print(cleaned_text[:500])
-        sys.exit(1)
+        raise ValueError(error_msg)
     
     print(f"📊 Found {len(speaker_turns)} speaker turns")
     print(f"   Source: {source}")
@@ -396,6 +408,14 @@ def preprocess(debate_name, debate_date):
     print(f"\nOutput files:")
     print(f"  - {output_csv}")
     print(f"  - {output_json}\n")
+    
+    return {
+        'csv_path': str(output_csv),
+        'json_path': str(output_json),
+        'speaker_count': len(speaker_turns),
+        'source': source,
+        'date': date
+    }
 
 if __name__ == "__main__":
-    preprocess()
+    preprocess(None, None)
