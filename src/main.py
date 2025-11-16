@@ -71,7 +71,7 @@ def setup_database():
 
         # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("debate_raw_transcript_clean.csv")
+        inserter.process_transcript_file("transcripts/2023_republican_alabama_clean.csv")
 
         print("\nDatabase setup complete!")
         print("Available collections:")
@@ -357,7 +357,7 @@ def initiate_pipeline():
 
     # Embedding + FAISS
     build_index()
-
+'''
     # Get user query and number of results for retriever
     query = get_user_query()
 
@@ -378,7 +378,7 @@ def initiate_pipeline():
     # Fact Checker
     run_fact_checker_loop(initial_claim=response, top_k=3, use_news=True)
     #log.info("**********ALL COMPONENTS EXECUTED**********")
-
+'''
 
 
 @app.route("/query", methods=["POST"])
@@ -423,5 +423,5 @@ def query():
     return jsonify({"response": ai_reply})
 
 if __name__ == "__main__":
-    # initiate_pipeline()
-    app.run(debug=False, port=3000)
+    initiate_pipeline()
+    #app.run(debug=False, port=3000)
