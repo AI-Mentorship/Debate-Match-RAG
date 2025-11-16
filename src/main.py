@@ -405,47 +405,43 @@ def upload_debate():
 
 @app.route('/api/retrieve-response', methods=['POST'])
 def retrieve_response():
+    """
+    Q&A Mode - Query the processed debate using retriever + QA pipeline
+    """
     try:
         user_query = request.form.get('user_query', '').strip()
-        print(f"User query: {user_query}")
-        uploaded_file = request.files.get('file')
-        print(f"Any file uploaded: {uploaded_file}")
-
-        response_message = ""
-
-        if uploaded_file:
-            filename = uploaded_file.filename
-
-            # Restrict file types
-            if not filename.lower().endswith(".txt"):
-                return jsonify({"error": "Only .txt files are allowed"}), 400
-
-            # Create unique name to prevent overwriting
-            safe_name = f"{int(time.time())}_{filename}"
-
-            # Pathlib handles all OS differences internally
-            file_path = UPLOAD_FOLDER / safe_name
-            print(f"Uploading file '{filename}' at path '{file_path}'")
-            uploaded_file.save(file_path)
-
-            # Process file
-            with file_path.open('r', encoding='utf-8') as f:
-                contents = f.read()
-
-            response_message += f"Received file '{filename}' ({len(contents)} characters)."
-
-        if user_query:
-            response_message += f" You asked: '{user_query}'"
-
-        if not uploaded_file and not user_query:
-            return jsonify({"error": "No file or query provided"}), 400
-
-        final_reply = f"Processed successfully! {response_message}"
-        return jsonify(final_reply)
-
+        print(f"\n{'='*80}")
+        print(f"Q&A MODE - User Query: {user_query}")
+        print(f"{'='*80}\n")
+        
+        if not user_query:
+            return jsonify({"error": "No query provided"}), 400
+        
+        # Step 1: Run retriever to get relevant passages
+        print("Step 1/2: Running retriever...")
+        top_k = 10  # Number of relevant passages to retrieve
+        retriever_results = run_retriever(user_query, top_k)
+        print(f"Retrieved {len(retriever_results) if retriever_results else 0} relevant passages")
+        
+        # Step 2: Run QA pipeline
+        print("\nStep 2/2: Running QA pipeline...")
+        qa_response = query_rag(user_query)
+        print(f"Generated answer")
+        print(f"\nAnswer: {qa_response[:200]}{'...' if len(qa_response) > 200 else ''}\n")
+        
+        return jsonify({
+            "success": True,
+            "response": qa_response,
+            "query": user_query
+        }), 200
+        
     except Exception as e:
-        print("Error:", e)
-        return jsonify({"error": str(e)}), 500
+        print(f"\nError in Q&A pipeline: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "error": f"Q&A pipeline error: {str(e)}"
+        }), 500
 
 def initiate_pipeline():
     #log.info("**********INITIATING ALL COMPONENTS**********")

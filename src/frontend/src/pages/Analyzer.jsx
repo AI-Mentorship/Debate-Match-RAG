@@ -4,20 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Paperclip, Upload, CheckCircle } from "lucide-react";
 
 const SYSTEM_PROMPTS = {
-  "Debate Opponent":
-    "You are a skilled debate opponent. Engage directly with the user's arguments by presenting thoughtful counterarguments, acknowledging valid points, and challenging weak reasoning. Be respectful but intellectually rigorous.",
-  "Debate Analyst":
-    "You are an expert debate analyst. Analyze both sides' arguments objectively, highlight logical strengths and fallacies, and provide a reasoned conclusion.",
-  "Friendly Coach":
-    "You are a friendly debate coach. Offer constructive feedback, encouragement, and tips for improving argumentation and delivery.",
-  "Fact Checker":
-    "You are a meticulous fact checker. Identify any factual inaccuracies, verify data or claims, and cite credible sources when possible.",
-  "Neutral Moderator":
-    "You are a neutral debate moderator. Keep the discussion balanced, clarify misunderstandings, and ensure both perspectives are heard.",
-  "Critical Thinking Teacher":
-    "You are a teacher of critical thinking. Guide the user to question assumptions, identify biases, and think logically about arguments.",
-  "Socratic Questioner":
-    "You are a Socratic questioner. Respond to the user's arguments with probing questions that stimulate deeper reasoning and reflection.",
+  "Retriever + QA": "You are a debate analysis assistant. Use the retriever to find relevant passages from the debate transcript, then provide accurate, well-sourced answers based on the retrieved context.",
 };
 
 function Analyzer({ onBackToHome }) {
@@ -28,9 +15,9 @@ function Analyzer({ onBackToHome }) {
   const [typingMessage, setTypingMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [file, setFile] = useState(null);
-  const [aiMode, setAiMode] = useState("Debate Opponent");
+  const [aiMode, setAiMode] = useState("Retriever + QA");
   const [systemPrompt, setSystemPrompt] = useState(
-    SYSTEM_PROMPTS["Debate Opponent"]
+    SYSTEM_PROMPTS["Retriever + QA"]
   );
 
   // Multi-stage state
@@ -504,24 +491,10 @@ function Analyzer({ onBackToHome }) {
                 </button>
               </div>
 
-              {/* AI Mode Dropdown */}
+              {/* Current Mode Display */}
               <div className="flex items-center gap-2 justify-center pt-1">
-                <label className="text-sm text-light-silver">AI Mode:</label>
-                <select
-                  value={aiMode}
-                  onChange={(e) => {
-                    const mode = e.target.value;
-                    setAiMode(mode);
-                    setSystemPrompt(SYSTEM_PROMPTS[mode]);
-                  }}
-                  className="bg-[#1e1e23] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
-                >
-                  {Object.keys(SYSTEM_PROMPTS)
-                    .filter((m) => m !== "Fact Checker")
-                    .map((mode) => (
-                      <option key={mode}>{mode}</option>
-                    ))}
-                </select>
+                <span className="text-sm text-light-silver">Mode:</span>
+                <span className="text-sm text-electric-purple font-medium">Retriever + QA</span>
               </div>
             </div>
           </motion.div>

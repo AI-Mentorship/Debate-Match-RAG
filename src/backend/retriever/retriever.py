@@ -33,7 +33,7 @@ class DebateRetriever:
         self.client = OpenAI(api_key=OPENAI_API_KEY)
         print("OpenAI client loaded")
     
-    def retrieve(self, query, top_k=3):
+    def retrieve(self, query, top_k):
         """
         Retrieve top-k most relevant passages for a query from all debates in database.
 
