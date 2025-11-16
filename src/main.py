@@ -105,7 +105,7 @@ def get_user_query():
 @app.route('/api/upload-debate', methods=['POST'])
 def upload_debate():
     """
-    Stage 2: Upload debate transcript with metadata (name and date)
+    Upload debate transcript with metadata (name and date)
     Processes the file through the entire pipeline:
     1. Saves the file
     2. Runs preprocessing with debate name and date
@@ -247,7 +247,7 @@ def retrieve_response():
 @app.route('/api/fact-check', methods=['POST'])
 def fact_check():
     """
-    Stage 4: Fact Checker Mode - Verify claims using Wikipedia, NewsAPI, and LLM
+    Fact Checker Mode - Verify claims using Wikipedia, NewsAPI, and LLM
     """
     try:
         user_claim = request.form.get('user_query', '').strip()
