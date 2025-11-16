@@ -71,7 +71,7 @@ def setup_database():
 
         # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("debate_transcript_clean.csv")
+        inserter.process_transcript_file("transcripts/2023_RNC_fourth_presidential_primary_alabama_clean.csv")
 
         print("\nDatabase setup complete!")
         print("Available collections:")

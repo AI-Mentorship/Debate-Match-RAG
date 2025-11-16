@@ -29,17 +29,15 @@ function Transcripts({ onGetStarted }) {
 
       // Transcript objects for each debate_name
       const transcriptObjects = Object.entries(transcriptsBySource).map(([debate_name, items], index) => {
-        // Last name only
-          const processSpeakerName = (speaker) => {
-            if (!speaker) return '';
-            
-            // Split
-            const nameParts = speaker.trim().split(/\s+/);
-            const lastName = nameParts[nameParts.length - 1];
-            
-            // Capitalize first letter only
-            return lastName.charAt(0).toUpperCase() + lastName.slice(1).toLowerCase();
-          };
+        const processSpeakerName = (speaker) => {
+          if (!speaker) return '';
+          
+          return speaker
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        };
         
         // Unique speakers
         const uniqueSpeakers = [...new Set(items.map(item => processSpeakerName(item.speaker)))].filter(Boolean);
@@ -76,8 +74,8 @@ function Transcripts({ onGetStarted }) {
           duration: `${durationMinutes} minutes`,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
-            title: `${processSpeakerName(item.speaker)} - ${item.timestamp}`,
-            startTime: item.timestamp,
+            title: `${processSpeakerName(item.speaker)} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
+            startTime: item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1'),
             content: item.text,
             speaker: processSpeakerName(item.speaker),
             topics: item.topics || []
