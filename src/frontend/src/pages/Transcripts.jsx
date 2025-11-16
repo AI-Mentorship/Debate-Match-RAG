@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import debateTranscripts from "./transcript_database.json"
+import debateTranscripts from "../../../debates_metadata.json"
 
 function Transcripts({ onGetStarted }) {
   const [stars, setStars] = useState([])
@@ -18,26 +18,26 @@ function Transcripts({ onGetStarted }) {
   /* ==================== Data from JSON ==================== */
   useEffect(() => {
     if (debateTranscripts && debateTranscripts.length > 0) {
-      // Group transcripts by source
+      // Group transcripts by debate_name
       const transcriptsBySource = debateTranscripts.reduce((acc, item) => {
-        if (!acc[item.source]) {
-          acc[item.source] = [];
+        if (!acc[item.debate_name]) {
+          acc[item.debate_name] = [];
         }
-        acc[item.source].push(item);
+        acc[item.debate_name].push(item);
         return acc;
       }, {});
 
-      // Create transcript objects for each source
-      const transcriptObjects = Object.entries(transcriptsBySource).map(([source, items], index) => {
-        // Unique speakers for this transcript
+      // Transcript objects for each debate_name
+      const transcriptObjects = Object.entries(transcriptsBySource).map(([debate_name, items], index) => {
+        // Unique speakers
         const uniqueSpeakers = [...new Set(items.map(item => item.speaker))];
         
-        // Unique topics for this transcript
+        // Unique topics
         const allTopics = items.flatMap(item => item.topics || []);
         const uniqueTopics = [...new Set(allTopics)];
 
-        // Get date from the first item (all items in same source should have same date)
-        const date = items[0].date || `${new Date().getFullYear()}-01-01`;
+        // Get date from the first item
+        const date = items[0].debate_date || `${new Date().getFullYear()}-01-01`;
         
         // Calculate duration based on timestamps
         const durations = items.map(item => {
@@ -58,7 +58,7 @@ function Transcripts({ onGetStarted }) {
 
         return {
           id: index + 1,
-          title: source,
+          title: debate_name,
           date: date,
           participants: uniqueSpeakers,
           duration: `${durationMinutes} minutes`,
