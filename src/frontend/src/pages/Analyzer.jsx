@@ -5,6 +5,7 @@ import { Paperclip, Upload, CheckCircle } from "lucide-react";
 
 const SYSTEM_PROMPTS = {
   "Retriever + QA": "You are a debate analysis assistant. Use the retriever to find relevant passages from the debate transcript, then provide accurate, well-sourced answers based on the retrieved context.",
+  "Fact Checker": "You are a meticulous fact checker. Verify claims using multiple sources including Wikipedia, news articles, and advanced semantic analysis. Provide evidence-based verdicts with confidence scores.",
 };
 
 function Analyzer({ onBackToHome }) {
@@ -22,6 +23,7 @@ function Analyzer({ onBackToHome }) {
 
   // Multi-stage state
   const [currentStage, setCurrentStage] = useState("upload");
+  const [currentMode, setCurrentMode] = useState("qa");
   const [uploadedTranscript, setUploadedTranscript] = useState(null);
   const [debateName, setDebateName] = useState("");
   const [debateDate, setDebateDate] = useState("");
@@ -164,16 +166,27 @@ function Analyzer({ onBackToHome }) {
       const formData = new FormData();
       formData.append("user_query", input);
 
-      const response = await axios.post(
-        "http://localhost:3000/api/retrieve-response",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      // Choose endpoint based on current mode
+      const endpoint = currentMode === "factcheck" 
+        ? "http://localhost:3000/api/fact-check"
+        : "http://localhost:3000/api/retrieve-response";
+
+      console.log(`Sending to ${currentMode} endpoint:`, endpoint);
+
+      const response = await axios.post(endpoint, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       const aiResponse =
-        response.data?.response || response.data?.answer || response.data?.error || "Unexpected response.";
+        response.data?.response || 
+        response.data?.answer || 
+        response.data?.message ||
+        (typeof response.data === 'string' ? response.data : null) ||
+        response.data?.error || 
+        "Unexpected response.";
+
+      console.log("Backend response:", response.data);
+      console.log("Parsed AI response:", aiResponse);
 
       typeText(aiResponse, () => {
         setMessages((prev) => [
@@ -200,6 +213,34 @@ function Analyzer({ onBackToHome }) {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  // Switch to Fact Checker mode
+  const switchToFactChecker = () => {
+    setCurrentMode("factcheck");
+    setAiMode("Fact Checker");
+    setSystemPrompt(SYSTEM_PROMPTS["Fact Checker"]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "🔍 Switched to Fact Checker mode. I'll now verify claims using Wikipedia, news sources, and advanced analysis. Enter a claim to fact-check.",
+      },
+    ]);
+  };
+
+  // Switch back to Q&A mode
+  const switchToQA = () => {
+    setCurrentMode("qa");
+    setAiMode("Retriever + QA");
+    setSystemPrompt(SYSTEM_PROMPTS["Retriever + QA"]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "💬 Switched to Retriever + QA mode. Ask me questions about the debate!",
+      },
+    ]);
   };
 
   const handleFileChange = (e) => {
@@ -451,7 +492,7 @@ function Analyzer({ onBackToHome }) {
                       ></div>
                     </div>
                     <span className="text-light-silver text-sm">
-                      Analyzing arguments...
+                      {currentMode === "factcheck" ? "Fact-checking claim..." : "Analyzing arguments..."}
                     </span>
                   </div>
                 </div>
@@ -471,7 +512,11 @@ function Analyzer({ onBackToHome }) {
               <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
                 <textarea
                   className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
-                  placeholder="Ask a question about the debate..."
+                  placeholder={
+                    currentMode === "factcheck"
+                      ? "Enter a claim to fact-check..."
+                      : "Ask a question about the debate..."
+                  }
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
@@ -491,10 +536,36 @@ function Analyzer({ onBackToHome }) {
                 </button>
               </div>
 
-              {/* Current Mode Display */}
-              <div className="flex items-center gap-2 justify-center pt-1">
-                <span className="text-sm text-light-silver">Mode:</span>
-                <span className="text-sm text-electric-purple font-medium">Retriever + QA</span>
+              {/* Mode Switcher */}
+              <div className="flex items-center gap-4 justify-center pt-1">
+                {currentMode === "qa" ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-light-silver">Mode:</span>
+                      <span className="text-sm text-electric-purple font-medium">💬 Retriever + QA</span>
+                    </div>
+                    <button
+                      onClick={switchToFactChecker}
+                      className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
+                    >
+                      Switch to Fact Checker
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-green-400 font-medium">
+                        🔍 Fact Checker Mode Active
+                      </span>
+                    </div>
+                    <button
+                      onClick={switchToQA}
+                      className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] transition"
+                    >
+                      Back to Q&A
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

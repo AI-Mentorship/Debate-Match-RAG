@@ -443,6 +443,126 @@ def retrieve_response():
             "error": f"Q&A pipeline error: {str(e)}"
         }), 500
 
+
+@app.route('/api/fact-check', methods=['POST'])
+def fact_check():
+    """
+    Stage 4: Fact Checker Mode - Verify claims using Wikipedia, NewsAPI, and LLM
+    """
+    try:
+        user_claim = request.form.get('user_query', '').strip()
+        print(f"\n{'='*80}")
+        print(f"FACT CHECKER MODE - Claim: {user_claim}")
+        print(f"{'='*80}\n")
+        
+        if not user_claim:
+            return jsonify({"error": "No claim provided"}), 400
+        
+        # Initialize EnhancedFactChecker
+        print("Initializing fact checker...")
+        fact_checker = EnhancedFactChecker(
+            use_wikipedia=True,
+            use_news_api=True,
+            use_llm_verification=True,
+            use_semantic_similarity=True
+        )
+        
+        # Extract core claim if it's from a QA response
+        core_claim = extract_core_claim(user_claim)
+        
+        if core_claim != user_claim:
+            print(f"Original: {user_claim[:100]}...")
+            print(f"Extracted claim: {core_claim}\n")
+        
+        # Run fact check
+        print("Running fact check with multiple sources...")
+        result = fact_checker.check_claim(core_claim, top_k=3)
+        
+        # Format the result for frontend
+        formatted_result = format_fact_check_result(result)
+        
+        print(f"\n✓ Fact check complete")
+        print(f"Verdict: {result.verdict} ({result.confidence:.1f}% confidence)\n")
+        
+        return jsonify({
+            "success": True,
+            "response": formatted_result,
+            "claim": core_claim,
+            "verdict": result.verdict,
+            "confidence": result.confidence,
+            "badge": result.badge
+        }), 200
+        
+    except Exception as e:
+        print(f"\nError in fact checking: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "error": f"Fact checking error: {str(e)}"
+        }), 500
+
+
+def format_fact_check_result(result):
+    """
+    Format FactCheckResult into a nice response for the frontend.
+    
+    Args:
+        result: FactCheckResult dataclass from EnhancedFactChecker
+        
+    Returns:
+        Formatted string for display
+    """
+    output = []
+    
+    # Header with verdict
+    output.append(f"🔍 FACT CHECK RESULT")
+    output.append(f"\n{'='*60}\n")
+    output.append(f"**Claim:** {result.claim}\n")
+    output.append(f"**Verdict:** {result.verdict} {result.badge}")
+    output.append(f"**Confidence:** {result.confidence:.1f}%\n")
+    
+    # Explanation
+    if result.explanation:
+        output.append(f"**Explanation:**")
+        output.append(f"{result.explanation}\n")
+    
+    # Evidence for
+    if result.evidence_for:
+        output.append(f"**Supporting Evidence:**")
+        for i, evidence in enumerate(result.evidence_for[:3], 1):
+            output.append(f"{i}. {evidence[:150]}...")
+        output.append("")
+    
+    # Evidence against
+    if result.evidence_against:
+        output.append(f"**Contradicting Evidence:**")
+        for i, evidence in enumerate(result.evidence_against[:3], 1):
+            output.append(f"{i}. {evidence[:150]}...")
+        output.append("")
+    
+    # Sources
+    if result.sources:
+        output.append(f"**Sources Used ({len(result.sources)} total):**")
+        for i, source in enumerate(result.sources[:5], 1):
+            output.append(f"\n{i}. **{source['title']}** ({source['source']})")
+            output.append(f"   Credibility: {source.get('credibility', 0)*100:.0f}%")
+            if source.get('url'):
+                output.append(f"   URL: {source['url']}")
+        output.append("")
+    
+    # Per-source breakdown (condensed)
+    if result.per_source and len(result.per_source) > 0:
+        output.append(f"**Detailed Analysis:**")
+        for entry in result.per_source[:3]:
+            output.append(f"\n• [{entry['source']}] {entry.get('title', 'N/A')}")
+            output.append(f"  Judgment: {entry['label']} (score: {entry['score']:.2f})")
+        output.append("")
+    
+    output.append(f"{'='*60}")
+    
+    return "\n".join(output)
+
+
 def initiate_pipeline():
     #log.info("**********INITIATING ALL COMPONENTS**********")
     # Preprocessing
