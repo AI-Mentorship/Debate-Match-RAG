@@ -181,7 +181,7 @@ function App() {
       </div>
 
       {/* Custom glow and neon effects */}
-      <style jsx global>{`
+      <style>{`
         ::-webkit-scrollbar {
           display: none;
         }

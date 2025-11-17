@@ -321,7 +321,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden z-50"
+              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col h-full">
@@ -389,12 +389,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         ref={el => transcriptRefs.current[section.id] = el}
                         className="p-6 rounded-2xl border transition-all duration-300 text-left bg-white/5 border-white/10 hover:border-white/20"
                       >
-                        <div className="flex justify-between items-start mb-4">
-                          <h4 className="text-xl font-semibold text-white text-left">{section.speaker}</h4>
-                          <span className="text-dark-silver text-sm bg-white/10 px-3 py-1 rounded-full">
-                            {section.startTime}
-                          </span>
-                        </div>
+                        <h4 className="flex justify-between items-start text-xl font-semibold text-white text-left mb-4">{section.speaker}</h4>
                         <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-lg">
                           {searchQuery ? highlightText(section.content, searchQuery) : section.content}
                         </p>
@@ -657,6 +652,24 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+          }
+          
+          .modal-content::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+          }
+
+          .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+          }
+
+          .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
           }
         `}
       </style>

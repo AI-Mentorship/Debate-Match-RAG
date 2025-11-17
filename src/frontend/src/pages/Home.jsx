@@ -82,38 +82,38 @@ function Home({ onGetStarted }) {
         </h2>
 
         {/* Description */}
-        <p className="mb-10 text-md md:text-md text-dark-silver max-w-4xl leading-relaxed">
+        <div className="mb-10 text-md md:text-md text-dark-silver max-w-4xl leading-relaxed">
           An AI-powered debate matcher that allows users to ask political questions and receive factually grounded answers based on political debate transcripts
-        </p>
+        </div>
       </motion.div>
-        <motion.p 
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+      <motion.div 
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+      >
+        {/* Button */}
+        <button
+          onClick={onGetStarted}
+          className="mb-40 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
         >
-          {/* Button */}
-          <button
-            onClick={onGetStarted}
-            className="mb-40 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
-          >
-            {/* Silver neon glow effect */}
-            <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
+          {/* Silver neon glow effect */}
+          <div className="absolute inset-0 rounded-full bg-white/0 group-hover:bg-white/30 blur-xl transition-all duration-1000"></div>
 
-            {/* Shine effect */}
-            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+          {/* Shine effect */}
+          <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
 
-            {/* Pulse ring effect */}
-            <div className="absolute inset-0 rounded-full border-2 border-white/0 group-hover:border-white/70 transition-all duration-1000"></div>
+          {/* Pulse ring effect */}
+          <div className="absolute inset-0 rounded-full border-2 border-white/0 group-hover:border-white/70 transition-all duration-1000"></div>
 
-            {/* Text */}
-            <span className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-bold">
-              Start Analyzing
-            </span>
-          </button>
-        </motion.p>
+          {/* Text */}
+          <span className="relative z-10 text-gray-200 group-hover:text-white transition-colors duration-300 font-bold">
+            Start Analyzing
+          </span>
+        </button>
+      </motion.div>
 
       {/* ==================== Shooting star animation ==================== */}
-      <style jsx global>{`
+      <style>{`
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);

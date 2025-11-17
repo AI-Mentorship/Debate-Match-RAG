@@ -222,16 +222,16 @@ function Missions({ onGetStarted }) {
         </motion.div>
 
         {/* Description */}
-        <motion.p 
+        <motion.div
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
-          <p className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
+          <div className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
             To assist voters, we offer thoughtful, AI-powered analysis of debate transcripts,
             helping the public discern factual statements from political rhetoric.
-          </p>
-        </motion.p>
+          </div>
+        </motion.div>
       </section>
 
       {/* ==================== Why We Build DebateMatch.RAG Section ==================== */}
@@ -524,7 +524,7 @@ function Missions({ onGetStarted }) {
       </section>
 
       {/* ==================== Styles ==================== */}
-      <style jsx global>{`
+      <style>{`
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);
