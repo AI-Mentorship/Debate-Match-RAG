@@ -50,20 +50,21 @@ function App() {
 
   /* ==================== Scroll ==================== */
   useEffect(() => {
-    if (isModalOpen || selectedTranscript) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    }
+    const scrollPositionRef = { current: window.scrollY };
     
-    else {
+    if (isModalOpen || selectedTranscript) {
+      // Store scroll position and prevent scrolling
+      scrollPositionRef.current = window.scrollY;
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Restore scrolling
       document.body.style.overflow = 'unset';
-      document.body.style.position = 'static';
+      // Restore scroll position
+      window.scrollTo(0, scrollPositionRef.current);
     }
     
     return () => {
       document.body.style.overflow = 'unset';
-      document.body.style.position = 'static';
     };
   }, [isModalOpen, selectedTranscript]);
 

@@ -12,6 +12,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [hoveredCard, setHoveredCard] = useState(null)
+  const scrollPositionRef = useRef(0);
   const isScrolling = useRef(false)
   const transcriptRefs = useRef({})
 
@@ -245,25 +246,6 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Prevent background scroll when modal is open
-  useEffect(() => {
-    if (selectedTranscript) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    }
-    
-    else {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'static';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'static';
-    };
-  }, [selectedTranscript]);
 
   /* ==================== Shooting star animation ==================== */
   useEffect(() => {
@@ -608,7 +590,11 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                           {/* View Transcript Button */}
                           <div className="mt-auto h-16 flex-shrink-0">
                             <button 
-                              onClick={() => setSelectedTranscript(transcript)}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setSelectedTranscript(transcript);
+                              }}
                               className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
                             >
                               <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">

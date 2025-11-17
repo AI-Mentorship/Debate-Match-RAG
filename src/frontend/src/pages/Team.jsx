@@ -7,6 +7,7 @@ function Team({ onGetStarted, onModalStateChange }) {
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
   const [selectedMember, setSelectedMember] = useState(null)
+  const scrollPositionRef = useRef(0);
   const isScrolling = useRef(false)
   
   /* ==================== Scroll ==================== */
@@ -127,11 +128,13 @@ function Team({ onGetStarted, onModalStateChange }) {
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (selectedMember) {
+      scrollPositionRef.current = window.scrollY;
       document.body.style.overflow = 'hidden';
     }
     
     else {
       document.body.style.overflow = 'unset';
+      window.scrollTo(0, scrollPositionRef.current);
     }
     
     return () => {
@@ -289,7 +292,7 @@ function Team({ onGetStarted, onModalStateChange }) {
           >
             {/* Backdrop */}
             <motion.div 
-              className="absolute inset-0 bg-black/80"
+              className="absolute inset-0 bg-black/80 z-50"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -302,7 +305,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden"
+              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col md:flex-row h-full">
@@ -407,7 +410,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       </AnimatePresence>
 
       {/* ==================== Scroll Indicator ==================== */}
-      
+      {!selectedMember && (
         <motion.div
           className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
           initial={{ opacity: 0 }}
@@ -437,6 +440,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             </div>
           </div>
         </motion.div>
+      )}
 
       {/* ==================== Hero Section ==================== */}
       <section 
@@ -540,7 +544,11 @@ function Team({ onGetStarted, onModalStateChange }) {
                   {/* View Profile Button */}
                   <div className="mt-auto h-16 flex-shrink-0">
                     <button 
-                      onClick={() => setSelectedMember(member)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedMember(member);
+                      }}
                       className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
