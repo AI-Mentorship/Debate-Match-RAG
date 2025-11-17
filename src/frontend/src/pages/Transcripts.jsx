@@ -490,13 +490,8 @@ function Transcripts({ onGetStarted }) {
                                 ref={el => transcriptRefs.current[section.id] = el}
                                 className="p-4 rounded-xl border transition-all duration-300 text-left bg-white/5 border-white/10"
                               >
-                                <div className="flex justify-between items-start mb-3 text-left">
-                                  <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
-                                  <span className="text-dark-silver text-sm bg-white/10 px-2 py-1 rounded">
-                                    {section.startTime}
-                                  </span>
-                                </div>
-                                <p className="text-dark-silver leading-relaxed text-left">
+                                <h4 className="flex justify-between items-start mb-3 font-semibold text-white text-left">{section.speaker}</h4>
+                                <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line">
                                   {searchQuery ? highlightText(section.content, searchQuery) : section.content}
                                 </p>
                                 {section.topics && section.topics.length > 0 && (
