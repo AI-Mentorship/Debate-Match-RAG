@@ -318,7 +318,7 @@ function Analyzer({ onBackToHome }) {
             <h2 className="text-4xl font-bold text-white mb-4">
               Upload Debate Transcript
             </h2>
-            <p className="text-lg text-light-silver mb-8">
+            <p className="text-lg text-dark-silver mb-8">
               Start by uploading a debate transcript (.txt file)
             </p>
 
@@ -476,9 +476,6 @@ function Analyzer({ onBackToHome }) {
             ref={messagesContainerRef}
             className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative z-20"
           >
-            {/* Fade overlay fixed at top */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
-
             {/* Messages */}
             <div className="flex flex-col space-y-6">
               {messages.map((m, i) => (
@@ -569,11 +566,11 @@ function Analyzer({ onBackToHome }) {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-light-silver">Mode:</span>
-                      <span className="text-sm text-electric-purple font-medium"> Retriever + QA</span>
+                      <span className="text-sm text-light-silver font-medium"> Retriever + QA</span>
                     </div>
                     <button
                       onClick={switchToFactChecker}
-                      className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
+                      className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
                     >
                       Switch to Fact Checker
                     </button>
@@ -582,7 +579,7 @@ function Analyzer({ onBackToHome }) {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-light-silver">Mode:</span>
-                      <span className="text-sm text-green-400 font-medium">
+                      <span className="text-sm text-light-silver font-medium">
                         Fact Checker Mode
                       </span>
                     </div>
@@ -590,7 +587,7 @@ function Analyzer({ onBackToHome }) {
                       onClick={switchToQA}
                       className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] transition"
                     >
-                      Back to Q&A
+                      Switch to Q&A
                     </button>
                   </>
                 )}
