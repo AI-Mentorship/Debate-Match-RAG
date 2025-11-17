@@ -48,30 +48,12 @@ function Transcripts({ onGetStarted }) {
 
         // Get date from the first item
         const date = items[0].debate_date || `${new Date().getFullYear()}-01-01`;
-        
-        // Calculate duration based on timestamps
-        const durations = items.map(item => {
-          const timeParts = item.timestamp.split(':');
-          if (timeParts.length === 2) {
-            const [minutes, seconds] = timeParts.map(Number);
-            return minutes * 60 + seconds;
-          }
-          
-          else if (timeParts.length === 3) {
-            const [hours, minutes, seconds] = timeParts.map(Number);
-            return hours * 3600 + minutes * 60 + seconds;
-          }
-          return 0;
-        });
-        const maxDuration = Math.max(...durations);
-        const durationMinutes = Math.ceil(maxDuration / 60);
 
         return {
           id: index + 1,
           title: debate_name,
           date: date,
           participants: uniqueSpeakers,
-          duration: `${durationMinutes} minutes`,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
             title: `${processSpeakerName(item.speaker)} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
@@ -445,7 +427,7 @@ function Transcripts({ onGetStarted }) {
                           >
                             <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
                             <div className="text-sm text-dark-silver space-y-1 text-left">
-                              <p className="text-left">{transcript.date} • {transcript.duration}</p>
+                              <p className="text-left">{transcript.date}</p>
                             </div>
                           </motion.div>
                         ))}
@@ -469,7 +451,6 @@ function Transcripts({ onGetStarted }) {
                           <h2 className="text-3xl font-bold text-white mb-2 text-left">{selectedTranscript.title}</h2>
                           <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
                             <span>Date: {selectedTranscript.date}</span>
-                            <span>Duration: {selectedTranscript.duration}</span>
                           </div>
                           <div className="flex flex-wrap gap-2 text-left">
                             {selectedTranscript.tags.slice(0, 6).map(tag => (
