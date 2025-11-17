@@ -365,10 +365,10 @@ class OpenAIIntegration:
             return "NOT ENOUGH EVIDENCE", 0.0, "No LLM verification available", [], []
         
         try:
-            # Prepare evidence text
+            # Prepare evidence text with source titles
             evidence_text = "\n\n".join([
-                f"Source {i+1} ({src['source']} - credibility: {src.get('credibility', 0.5):.0%}):\n{src.get('extract', src.get('snippet', ''))[:500]}"
-                for i, src in enumerate(evidence[:5])
+                f"[{src['title']}] ({src['source']} - credibility: {src.get('credibility', 0.5):.0%}):\n{src.get('extract', src.get('snippet', ''))[:500]}"
+                for src in evidence[:5]
             ])
             
             response = requests.post(
@@ -383,11 +383,13 @@ class OpenAIIntegration:
                         {
                             "role": "system",
                             "content": """You are an expert fact-checker. Analyze the claim against the provided evidence and determine:
-1. Verdict: SUPPORTED, REFUTED, PARTIALLY_SUPPORTED, or NOT_ENOUGH_EVIDENCE
+1. Verdict: SUPPORTED, REFUTED, PARTIALLY SUPPORTED, or NOT ENOUGH EVIDENCE
 2. Confidence: 0-100 (how certain you are)
 3. Explanation: Brief reasoning for your verdict
 4. Supporting evidence: List of evidence that supports the claim
 5. Contradicting evidence: List of evidence that contradicts the claim
+
+IMPORTANT: When referring to sources in your evidence lists, always use the source title shown in brackets [Title]
 
 Return as JSON with keys: verdict, confidence, explanation, supporting_evidence, contradicting_evidence"""
                         },
@@ -407,7 +409,7 @@ Return as JSON with keys: verdict, confidence, explanation, supporting_evidence,
                 content = result["choices"][0]["message"]["content"]
                 analysis = json.loads(content)
                 
-                verdict = analysis.get("verdict", "NOT_ENOUGH_EVIDENCE").upper()
+                verdict = analysis.get("verdict", "NOT ENOUGH EVIDENCE").upper()
                 confidence = float(analysis.get("confidence", 0))
                 explanation = analysis.get("explanation", "")
                 supporting = analysis.get("supporting_evidence", [])
@@ -729,7 +731,7 @@ class EnhancedFactChecker:
         badge_map = {
             "SUPPORTED": "✓",
             "REFUTED": "✗",
-            "PARTIALLY_SUPPORTED": "~",
+            "PARTIALLY SUPPORTED": "~",
             "NOT ENOUGH EVIDENCE": "?"
         }
         
@@ -753,7 +755,7 @@ class EnhancedFactChecker:
         explanations = {
             "SUPPORTED": f"The claim is supported by {counts.get('supports', 0)} of {total_sources} sources.",
             "REFUTED": f"The claim is refuted by {counts.get('refutes', 0)} of {total_sources} sources.",
-            "PARTIALLY_SUPPORTED": f"The claim is partially supported by available evidence from {total_sources} sources.",
+            "PARTIALLY SUPPORTED": f"The claim is partially supported by available evidence from {total_sources} sources.",
             "NOT ENOUGH EVIDENCE": f"Insufficient evidence from {total_sources} sources to verify this claim."
         }
         

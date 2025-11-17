@@ -261,23 +261,50 @@ function Analyzer({ onBackToHome }) {
   }, [messages, typingMessage]);
 
   return (
-    <div className="relative flex flex-col h-screen bg-gradient-to-b from-[#0a0a0a] via-[#141414] to-[#1e1e20] text-white overflow-hidden">
-      {/* Stars */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="relative flex flex-col h-screen text-white overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/assets/img/background.png')" }}
+      ></div>
+
+      {/* Stars - Using Home's animation style */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
         {stars.map((s) => (
-          <motion.div
+          <div
             key={s.id}
-            className="absolute bg-white rounded-full opacity-70"
-            style={{ left: `${s.left}%`, width: s.size, height: s.size }}
-            animate={{ y: ["0%", "-120vh"], opacity: [1, 0] }}
-            transition={{
-              duration: s.duration,
-              delay: s.delay,
-              ease: "easeOut",
+            className="absolute w-1 h-1 bg-white rounded-full shadow-lg animate-shooting-star"
+            style={{
+              left: `${s.left}%`,
+              top: '-10px',
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+              width: `${s.size}px`,
+              height: `${s.size}px`
             }}
-          />
+          ></div>
         ))}
       </div>
+
+      {/* Shooting star keyframe animation */}
+      <style jsx global>{`
+        @keyframes shooting-star {
+          0% {
+            transform: translateY(0) translateX(0) rotate(45deg);
+            opacity: 1;
+          }
+          10% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) translateX(100px) rotate(45deg);
+            opacity: 0;
+          }
+        }
+        .animate-shooting-star {
+          animation: shooting-star linear forwards;
+        }
+      `}</style>
 
       {/* Upload Transcript */}
       {currentStage === "upload" && (
@@ -291,7 +318,7 @@ function Analyzer({ onBackToHome }) {
             <h2 className="text-4xl font-bold text-white mb-4">
               Upload Debate Transcript
             </h2>
-            <p className="text-lg text-light-silver mb-8">
+            <p className="text-lg text-dark-silver mb-8">
               Start by uploading a debate transcript (.txt file)
             </p>
 
@@ -371,7 +398,7 @@ function Analyzer({ onBackToHome }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 flex items-center justify-center px-6 relative z-10"
+          className="flex-1 flex items-center justify-center px-6 relative z-20"
         >
           <div className="text-center max-w-2xl w-full">
             <div className="mb-6 flex items-center justify-center gap-2">
@@ -447,11 +474,8 @@ function Analyzer({ onBackToHome }) {
           {/* Messages Container */}
           <div
             ref={messagesContainerRef}
-            className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative"
+            className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative z-20"
           >
-            {/* Fade overlay fixed at top */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
-
             {/* Messages */}
             <div className="flex flex-col space-y-6">
               {messages.map((m, i) => (
@@ -506,7 +530,7 @@ function Analyzer({ onBackToHome }) {
             initial={{ y: -70, opacity: 1 }}
             animate={{ y: -70, opacity: 1 }}
             transition={{ duration: 1.0, type: "spring" }}
-            className="px-6 py-6"
+            className="px-6 py-6 relative z-30"
           >
             <div className="max-w-5xl mx-auto space-y-2">
               <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
@@ -542,11 +566,11 @@ function Analyzer({ onBackToHome }) {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-light-silver">Mode:</span>
-                      <span className="text-sm text-electric-purple font-medium"> Retriever + QA</span>
+                      <span className="text-sm text-light-silver font-medium"> Retriever + QA</span>
                     </div>
                     <button
                       onClick={switchToFactChecker}
-                      className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
+                      className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
                     >
                       Switch to Fact Checker
                     </button>
@@ -555,7 +579,7 @@ function Analyzer({ onBackToHome }) {
                   <>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-light-silver">Mode:</span>
-                      <span className="text-sm text-green-400 font-medium">
+                      <span className="text-sm text-light-silver font-medium">
                         Fact Checker Mode
                       </span>
                     </div>
@@ -563,7 +587,7 @@ function Analyzer({ onBackToHome }) {
                       onClick={switchToQA}
                       className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] transition"
                     >
-                      Back to Q&A
+                      Switch to Q&A
                     </button>
                   </>
                 )}
