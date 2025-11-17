@@ -322,33 +322,29 @@ def format_fact_check_result(result):
     if result.evidence_for:
         output.append(f"Supporting Evidence:")
         for i, evidence in enumerate(result.evidence_for[:3], 1):
-            output.append(f"{i}. {evidence[:150]}...")
+            output.append(f"{i}. {evidence}")
         output.append("")
     
     # Evidence against
     if result.evidence_against:
         output.append(f"Contradicting Evidence:")
         for i, evidence in enumerate(result.evidence_against[:3], 1):
-            output.append(f"{i}. {evidence[:150]}...")
+            output.append(f"{i}. {evidence}")
         output.append("")
     
     # Sources
     if result.sources:
         output.append(f"Sources Used ({len(result.sources)} total):")
         for i, source in enumerate(result.sources[:5], 1):
-            output.append(f"\n{i}. **{source['title']}** ({source['source']})")
-            output.append(f"   Credibility: {source.get('credibility', 0)*100:.0f}%")
-            if source.get('url'):
-                output.append(f"   URL: {source['url']}")
-        output.append("")
-    
-    # Per-source breakdown (condensed)
-    if result.per_source and len(result.per_source) > 0:
-        output.append(f"Detailed Analysis:")
-        for entry in result.per_source[:3]:
-            output.append(f"\n• [{entry['source']}] {entry.get('title', 'N/A')}")
-            output.append(f"  Judgment: {entry['label']} (score: {entry['score']:.2f})")
-        output.append("")
+            output.append(f"\n{i}. {source['title']} ({source['source']})")
+            output.append(f"    URL: {source['url']}")
+            
+            # Find and show ONLY the matching judgment for THIS source
+            if result.per_source:
+                for entry in result.per_source:
+                    if entry.get('url') == source.get('url') or entry.get('title') == source.get('title'):
+                        output.append(f"    Judgment: {entry['label']} (score: {entry['score']:.2f})")
+                        break  # Stop after finding the match
     
     return "\n".join(output)
 
