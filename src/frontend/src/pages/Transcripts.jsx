@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import debateTranscripts from "./transcript_database.json"
+import debateTranscripts from "../../../debates_metadata.json"
 
 function Transcripts({ onGetStarted }) {
   const [stars, setStars] = useState([])
@@ -18,56 +18,48 @@ function Transcripts({ onGetStarted }) {
   /* ==================== Data from JSON ==================== */
   useEffect(() => {
     if (debateTranscripts && debateTranscripts.length > 0) {
-      // Group transcripts by source
+      // Group transcripts by debate_name
       const transcriptsBySource = debateTranscripts.reduce((acc, item) => {
-        if (!acc[item.source]) {
-          acc[item.source] = [];
+        if (!acc[item.debate_name]) {
+          acc[item.debate_name] = [];
         }
-        acc[item.source].push(item);
+        acc[item.debate_name].push(item);
         return acc;
       }, {});
 
-      // Create transcript objects for each source
-      const transcriptObjects = Object.entries(transcriptsBySource).map(([source, items], index) => {
-        // Unique speakers for this transcript
-        const uniqueSpeakers = [...new Set(items.map(item => item.speaker))];
+      // Transcript objects for each debate_name
+      const transcriptObjects = Object.entries(transcriptsBySource).map(([debate_name, items], index) => {
+        const processSpeakerName = (speaker) => {
+          if (!speaker) return '';
+          
+          return speaker
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+        };
         
-        // Unique topics for this transcript
+        // Unique speakers
+        const uniqueSpeakers = [...new Set(items.map(item => processSpeakerName(item.speaker)))].filter(Boolean);
+        
+        // Unique topics
         const allTopics = items.flatMap(item => item.topics || []);
         const uniqueTopics = [...new Set(allTopics)];
 
-        // Get date from the first item (all items in same source should have same date)
-        const date = items[0].date || `${new Date().getFullYear()}-01-01`;
-        
-        // Calculate duration based on timestamps
-        const durations = items.map(item => {
-          const timeParts = item.timestamp.split(':');
-          if (timeParts.length === 2) {
-            const [minutes, seconds] = timeParts.map(Number);
-            return minutes * 60 + seconds;
-          }
-          
-          else if (timeParts.length === 3) {
-            const [hours, minutes, seconds] = timeParts.map(Number);
-            return hours * 3600 + minutes * 60 + seconds;
-          }
-          return 0;
-        });
-        const maxDuration = Math.max(...durations);
-        const durationMinutes = Math.ceil(maxDuration / 60);
+        // Get date from the first item
+        const date = items[0].debate_date || `${new Date().getFullYear()}-01-01`;
 
         return {
           id: index + 1,
-          title: source,
+          title: debate_name,
           date: date,
           participants: uniqueSpeakers,
-          duration: `${durationMinutes} minutes`,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
-            title: `${item.speaker} - ${item.timestamp}`,
-            startTime: item.timestamp,
+            title: `${processSpeakerName(item.speaker)} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
+            startTime: item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1'),
             content: item.text,
-            speaker: item.speaker,
+            speaker: processSpeakerName(item.speaker),
             topics: item.topics || []
           })),
           tags: uniqueTopics.slice(0, 10)
@@ -435,7 +427,7 @@ function Transcripts({ onGetStarted }) {
                           >
                             <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
                             <div className="text-sm text-dark-silver space-y-1 text-left">
-                              <p className="text-left">{transcript.date} • {transcript.duration}</p>
+                              <p className="text-left">{transcript.date}</p>
                             </div>
                           </motion.div>
                         ))}
@@ -459,7 +451,6 @@ function Transcripts({ onGetStarted }) {
                           <h2 className="text-3xl font-bold text-white mb-2 text-left">{selectedTranscript.title}</h2>
                           <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
                             <span>Date: {selectedTranscript.date}</span>
-                            <span>Duration: {selectedTranscript.duration}</span>
                           </div>
                           <div className="flex flex-wrap gap-2 text-left">
                             {selectedTranscript.tags.slice(0, 6).map(tag => (
@@ -499,13 +490,8 @@ function Transcripts({ onGetStarted }) {
                                 ref={el => transcriptRefs.current[section.id] = el}
                                 className="p-4 rounded-xl border transition-all duration-300 text-left bg-white/5 border-white/10"
                               >
-                                <div className="flex justify-between items-start mb-3 text-left">
-                                  <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
-                                  <span className="text-dark-silver text-sm bg-white/10 px-2 py-1 rounded">
-                                    {section.startTime}
-                                  </span>
-                                </div>
-                                <p className="text-dark-silver leading-relaxed text-left">
+                                <h4 className="flex justify-between items-start mb-3 font-semibold text-white text-left">{section.speaker}</h4>
+                                <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line">
                                   {searchQuery ? highlightText(section.content, searchQuery) : section.content}
                                 </p>
                                 {section.topics && section.topics.length > 0 && (

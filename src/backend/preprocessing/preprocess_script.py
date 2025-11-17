@@ -171,93 +171,57 @@ def classify_topics_batch(texts, threshold=0.3):
     
     return all_topics
 
-
 def extract_speaker_turns(cleaned_text, source, date):
     """
-    Split cleaned text into speaker turns with timestamps.
-    Handles multiple formats automatically.
-    
-    Args:
-        cleaned_text: Cleaned transcript text
-        source: Name of the debate/source
-        
-    Returns:
-        List of dicts with speaker, timestamp, text, and source
+    Split cleaned text into speaker turns.
+    Only matches 'First Last:' format after manual standardization.
     """
     turns = []
     lines = cleaned_text.split('\n')
     
     current_speaker = None
-    current_timestamp = None
     current_text = []
     
-    # Multiple patterns to handle different transcript formats
-    patterns = [
-        # Pattern 1: Speaker Name ([timestamp]): text
-        r'^([A-Za-z\s\.\']+)\s*\(\[?([\d:]+)\]?\):\s*(.*)$',
-        # Pattern 2: Speaker Name (timestamp): text (no brackets)
-        r'^([A-Za-z\s\.\']+)\s*\(([\d:]+)\):\s*(.*)$',
-        # Pattern 3: Speaker Name: text (no timestamp)
-        r'^([A-Za-z\s\.\']+):\s*(.*)$',
-        # Pattern 4: [timestamp] Speaker Name: text
-        r'^\[?([\d:]+)\]?\s+([A-Za-z\s\.\']+):\s*(.*)$',
-    ]
+    # Pattern for speaker lines
+    speaker_pattern = r'^([A-Z][a-z]+(?: [A-Z][a-zA-Z]+)+):\s*(.*)$'
     
     for line in lines:
         line = line.strip()
-        if not line:
-            continue
         
-        matched = False
+        # Check if this is a speaker line
+        match = re.match(speaker_pattern, line)
         
-        # Try each pattern
-        for pattern_idx, pattern in enumerate(patterns):
-            match = re.match(pattern, line)
+        if match:
+            # Save previous speaker's text if it exists
+            if current_speaker and current_text:
+                text = '\n'.join(current_text).strip()
+                if text:
+                    turns.append({
+                        'speaker': current_speaker,
+                        'timestamp': 'N/A',
+                        'text': text,
+                        'source': source,
+                        'date': date 
+                    })
             
-            if match:
-                # Save previous speaker's text if it exists
-                if current_speaker and current_text:
-                    text = ' '.join(current_text).strip()
-                    if text:
-                        turns.append({
-                            'speaker': current_speaker,
-                            'timestamp': current_timestamp if current_timestamp else 'N/A',
-                            'text': text,
-                            'source': source,
-                            'date': date 
-                        })
-                
-                # Extract based on which pattern matched
-                if pattern_idx == 0 or pattern_idx == 1:
-                    # Patterns with speaker, timestamp, text
-                    current_speaker = match.group(1).strip()
-                    current_timestamp = match.group(2).strip()
-                    current_text = [match.group(3)] if match.group(3) else []
-                elif pattern_idx == 2:
-                    # Pattern with just speaker and text (no timestamp)
-                    current_speaker = match.group(1).strip()
-                    current_timestamp = 'N/A'
-                    current_text = [match.group(2)] if match.group(2) else []
-                elif pattern_idx == 3:
-                    # Pattern with timestamp first, then speaker
-                    current_timestamp = match.group(1).strip()
-                    current_speaker = match.group(2).strip()
-                    current_text = [match.group(3)] if match.group(3) else []
-                
-                matched = True
-                break
-        
-        if not matched and current_speaker:
-            # This is a continuation of the current speaker's text
-            current_text.append(line)
+            # Start new speaker
+            current_speaker = match.group(1).strip()
+            current_text = [match.group(2)] if match.group(2) else []
+            
+        elif current_speaker:
+            if not line and current_text:
+                current_text.append('')
+            
+            elif line:
+                current_text.append(line)
     
-    # Don't forget the last speaker's text
+    # Last speaker
     if current_speaker and current_text:
-        text = ' '.join(current_text).strip()
+        text = '\n'.join(current_text).strip()
         if text:
             turns.append({
                 'speaker': current_speaker,
-                'timestamp': current_timestamp if current_timestamp else 'N/A',
+                'timestamp': 'N/A',
                 'text': text,
                 'source': source,
                 'date': date 
