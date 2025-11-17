@@ -57,7 +57,7 @@ def get_debate_metadata():
     return source, date
 
 # Database
-def setup_database():
+def setup_database(csv_path=None):
     print("Setting up Debate AI Database...")
     
     # Initialize database connection
@@ -67,8 +67,12 @@ def setup_database():
         print("\nLoading data from CSV file...")
 
         # Load CSV file
+        if csv_path is None:
+            csv_path = "debate_transcript_clean.csv"
+
+        # Load CSV file
         inserter = DataInserter()
-        inserter.process_transcript_file("debate_transcript_clean.csv")
+        inserter.process_transcript_file(csv_path)
 
         print("\nDatabase setup complete!")
         print("Available collections:")
@@ -171,7 +175,7 @@ def upload_debate():
             
             # Step 2: Database setup
             print("\nStep 2/3: Setting up database...")
-            setup_database()
+            setup_database(preprocess_result['csv_path'])
             print("Database setup complete")
             
             # Step 3: Build FAISS index
