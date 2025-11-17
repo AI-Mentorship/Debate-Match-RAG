@@ -1,23 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Paperclip } from "lucide-react";
+import { Paperclip, Upload, CheckCircle } from "lucide-react";
 
 const SYSTEM_PROMPTS = {
-  "Debate Opponent":
-    "You are a skilled debate opponent. Engage directly with the user's arguments by presenting thoughtful counterarguments, acknowledging valid points, and challenging weak reasoning. Be respectful but intellectually rigorous.",
-  "Debate Analyst":
-    "You are an expert debate analyst. Analyze both sides' arguments objectively, highlight logical strengths and fallacies, and provide a reasoned conclusion.",
-  "Friendly Coach":
-    "You are a friendly debate coach. Offer constructive feedback, encouragement, and tips for improving argumentation and delivery.",
-  "Fact Checker":
-    "You are a meticulous fact checker. Identify any factual inaccuracies, verify data or claims, and cite credible sources when possible.",
-  "Neutral Moderator":
-    "You are a neutral debate moderator. Keep the discussion balanced, clarify misunderstandings, and ensure both perspectives are heard.",
-  "Critical Thinking Teacher":
-    "You are a teacher of critical thinking. Guide the user to question assumptions, identify biases, and think logically about arguments.",
-  "Socratic Questioner":
-    "You are a Socratic questioner. Respond to the user's arguments with probing questions that stimulate deeper reasoning and reflection.",
+  "Retriever + QA": "You are a debate analysis assistant. Use the retriever to find relevant passages from the debate transcript, then provide accurate, well-sourced answers based on the retrieved context.",
+  "Fact Checker": "You are a meticulous fact checker. Verify claims using multiple sources including Wikipedia, news articles, and advanced semantic analysis. Provide evidence-based verdicts with confidence scores.",
 };
 
 function Analyzer({ onBackToHome }) {
@@ -28,13 +16,22 @@ function Analyzer({ onBackToHome }) {
   const [typingMessage, setTypingMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [file, setFile] = useState(null);
-  const [aiMode, setAiMode] = useState("Debate Opponent");
+  const [aiMode, setAiMode] = useState("Retriever + QA");
   const [systemPrompt, setSystemPrompt] = useState(
-    SYSTEM_PROMPTS["Debate Opponent"]
+    SYSTEM_PROMPTS["Retriever + QA"]
   );
+
+  // Multi-stage state
+  const [currentStage, setCurrentStage] = useState("upload");
+  const [currentMode, setCurrentMode] = useState("qa");
+  const [uploadedTranscript, setUploadedTranscript] = useState(null);
+  const [debateName, setDebateName] = useState("");
+  const [debateDate, setDebateDate] = useState("");
+  const [isProcessingUpload, setIsProcessingUpload] = useState(false);
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const transcriptInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
   // Shooting star animation
@@ -49,18 +46,15 @@ function Analyzer({ onBackToHome }) {
       }
       setStars(prev => [...prev, newStar])
 
-      // Animation completes
       setTimeout(() => {
         setStars(prev => prev.filter(star => star.id !== newStar.id))
       }, (newStar.duration + newStar.delay) * 1000)
     }
 
-    // Create stars
     for (let i = 0; i < 8; i++) {
       setTimeout(createStar, i * 300)
     }
 
-    // Continue creating stars
     const interval = setInterval(createStar, 50)
 
     return () => clearInterval(interval)
@@ -78,33 +72,121 @@ function Analyzer({ onBackToHome }) {
     onComplete();
   };
 
-  // Send message
-  const sendMessage = async () => {
-    if (!input.trim() && !file) return;
+  // Handle transcript upload
+  const handleTranscriptUpload = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
 
-    const userMessage = { role: "user", content: input || `📎 ${file?.name}` };
-    setMessages((prev) => [...prev, userMessage]);
-    setInput("");
-    setLoading(true);
+    if (!f.name.endsWith(".txt")) {
+      alert("Please upload only .txt files.");
+      e.target.value = "";
+      return;
+    }
 
+    setUploadedTranscript(f);
+    // Move to metadata
+    setCurrentStage("metadata");
+  };
+
+  // Trigger file input click
+  const handleUploadBoxClick = () => {
+    transcriptInputRef.current?.click();
+  };
+
+  // Handle metadata submission
+  const handleMetadataSubmit = async () => {
+    if (!debateName.trim() || !debateDate.trim()) {
+      alert("Please provide both debate name and date.");
+      return;
+    }
+
+    // Ensure date is in YYYY-MM-DD format
+    let formattedDate = debateDate;
     
+    // If date is not in YYYY-MM-DD format, try to convert it
+    if (!debateDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      try {
+        const dateObj = new Date(debateDate);
+        formattedDate = dateObj.toISOString().split('T')[0];
+      } catch (e) {
+        alert("Invalid date format. Please use YYYY-MM-DD format.");
+        return;
+      }
+    }
 
-       try {
+    setIsProcessingUpload(true);
+
+    try {
       const formData = new FormData();
-      formData.append("user_query", input || "");
-      if (file) formData.append("file", file);
+      formData.append("file", uploadedTranscript);
+      formData.append("debate_name", debateName);
+      formData.append("debate_date", formattedDate);
 
+      console.log("Uploading debate to backend...");
+      console.log("Debate name:", debateName);
+      console.log("Debate date (formatted):", formattedDate);
+      
       const response = await axios.post(
-        "http://localhost:3000/api/retrieve-response",
+        "http://localhost:3000/api/upload-debate",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
+      console.log("Upload response:", response.data);
+
+      // Success, move to Q&A
+      setCurrentStage("qa");
+      setMessages([
+        {
+          role: "assistant",
+          content: `✅ ${response.data.message}\n\nYou can now ask questions about this debate!`,
+        },
+      ]);
+    } catch (err) {
+      console.error("Upload error:", err);
+      const errorMsg = err.response?.data?.error || "Error uploading debate. Please ensure backend is running.";
+      alert(errorMsg);
+    } finally {
+      setIsProcessingUpload(false);
+    }
+  };
+
+  // Send message
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    const userMessage = { role: "user", content: input };
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("user_query", input);
+
+      // Choose endpoint based on current mode
+      const endpoint = currentMode === "factcheck" 
+        ? "http://localhost:3000/api/fact-check"
+        : "http://localhost:3000/api/retrieve-response";
+
+      console.log(`Sending to ${currentMode} endpoint:`, endpoint);
+
+      const response = await axios.post(endpoint, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       const aiResponse =
-        response.data?.response || response.data?.answer || response.data?.error ||"Unexpected response.";
+        response.data?.response || 
+        response.data?.answer || 
+        response.data?.message ||
+        (typeof response.data === 'string' ? response.data : null) ||
+        response.data?.error || 
+        "Unexpected response.";
+
+      console.log("Backend response:", response.data);
+      console.log("Parsed AI response:", aiResponse);
 
       typeText(aiResponse, () => {
         setMessages((prev) => [
@@ -123,9 +205,6 @@ function Analyzer({ onBackToHome }) {
         ]);
         setLoading(false);
       });
-    } finally {
-      setFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
@@ -134,6 +213,34 @@ function Analyzer({ onBackToHome }) {
       e.preventDefault();
       sendMessage();
     }
+  };
+
+  // Switch to Fact Checker mode
+  const switchToFactChecker = () => {
+    setCurrentMode("factcheck");
+    setAiMode("Fact Checker");
+    setSystemPrompt(SYSTEM_PROMPTS["Fact Checker"]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "Switched to Fact Checker mode. I'll now verify claims using Wikipedia, news sources, and advanced analysis. Enter a claim to fact-check.",
+      },
+    ]);
+  };
+
+  // Switch back to Q&A mode
+  const switchToQA = () => {
+    setCurrentMode("qa");
+    setAiMode("Retriever + QA");
+    setSystemPrompt(SYSTEM_PROMPTS["Retriever + QA"]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "Switched to Retriever + QA mode. Ask me questions about the debate!",
+      },
+    ]);
   };
 
   const handleFileChange = (e) => {
@@ -148,7 +255,7 @@ function Analyzer({ onBackToHome }) {
   // Scroll to bottom when new messages appear
   useEffect(() => {
     messagesContainerRef.current?.scrollTo({
-      top: 0, // reversed column
+      top: 0,
       behavior: "smooth",
     });
   }, [messages, typingMessage]);
@@ -156,7 +263,7 @@ function Analyzer({ onBackToHome }) {
   return (
     <div className="relative flex flex-col h-screen bg-gradient-to-b from-[#0a0a0a] via-[#141414] to-[#1e1e20] text-white overflow-hidden">
       {/* Stars */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((s) => (
           <motion.div
             key={s.id}
@@ -172,167 +279,299 @@ function Analyzer({ onBackToHome }) {
         ))}
       </div>
 
-      {/* Messages Container */}
-      <div
-        ref={messagesContainerRef}
-        className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative"
-      >
-        {/* Fade overlay fixed at top */}
-        <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
+      {/* Upload Transcript */}
+      {currentStage === "upload" && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          className="flex-1 flex items-center justify-center px-6 relative z-10"
+        >
+          <div className="text-center max-w-2xl w-full">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Upload Debate Transcript
+            </h2>
+            <p className="text-lg text-light-silver mb-8">
+              Start by uploading a debate transcript (.txt file)
+            </p>
 
-        {/* "Start a Debate" placeholder */}
-        <AnimatePresence>
-          {messages.length === 0 && !loading && (
-            <motion.div
-              initial={{ opacity: 0, y: -300, scale: 0.9 }}
-              animate={{ opacity: 1, y: -200, scale: 1 }}
-              exit={{ opacity: 0, y: -500, scale: 0.9 }}
-              transition={{
-                type: "spring",
-                stiffness: 120,
-                damping: 12,
-                mass: 2
-              }}
-              className="absolute bottom-32 left-1/2 transform -translate-x-1/2 text-center max-w-2xl z-10"
-            >
-              <h2 className="text-4xl font-bold text-white mb-4">
-                Start a Debate
-              </h2>
-              <p className="text-lg text-light-silver">
-                Ask me anything, upload transcripts, or analyze arguments.
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Messages */}
-        <div className="flex flex-col space-y-6">
-          {messages.map((m, i) => (
-            <div key={i} className="flex justify-center">
-              <div
-                className={`max-w-5xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
-                  m.role === "user"
-                    ? "bg-electric-purple/10 border-electric-purple/30 text-white"
-                    : "bg-white/10 border-white/20 text-white"
-                }`}
+            <div className="w-full max-w-xl mx-auto">
+              <input
+                ref={transcriptInputRef}
+                type="file"
+                accept=".txt"
+                onChange={handleTranscriptUpload}
+                style={{ 
+                  position: 'absolute',
+                  width: '1px',
+                  height: '1px',
+                  padding: 0,
+                  margin: '-1px',
+                  overflow: 'hidden',
+                  clip: 'rect(0,0,0,0)',
+                  whiteSpace: 'nowrap',
+                  border: 0
+                }}
+              />
+              
+              <button
+                type="button"
+                onClick={handleUploadBoxClick}
+                style={{
+                  all: 'unset',
+                  display: 'block',
+                  width: '100%',
+                  boxSizing: 'border-box'
+                }}
               >
-                <p className="whitespace-pre-wrap">{m.content}</p>
-              </div>
+                <div
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: '#2c2c30',
+                    border: '2px dashed rgba(139, 92, 246, 0.5)',
+                    borderRadius: '16px',
+                    padding: '48px',
+                    transition: 'border-color 0.2s',
+                    textAlign: 'center'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = '#8b5cf6'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(139, 92, 246, 0.5)'}
+                >
+                  <Upload 
+                    style={{ 
+                      margin: '0 auto 16px',
+                      color: '#8b5cf6',
+                      display: 'block'
+                    }} 
+                    size={64} 
+                  />
+                  <p style={{ 
+                    color: 'white',
+                    fontSize: '18px',
+                    marginBottom: '8px',
+                    fontWeight: 500
+                  }}>
+                    Click to upload or drag and drop
+                  </p>
+                  <p style={{ 
+                    color: '#a0aec0',
+                    fontSize: '14px'
+                  }}>
+                    Accepted format: .txt
+                  </p>
+                </div>
+              </button>
             </div>
-          ))}
-          {isTyping && (
-            <div className="flex justify-center">
-              <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
-                <p className="whitespace-pre-wrap">
-                  {typingMessage}
-                  <span className="animate-pulse">▊</span>
+          </div>
+        </motion.div>
+      )}
+
+      {/* Enter Metadata */}
+      {currentStage === "metadata" && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 flex items-center justify-center px-6 relative z-10"
+        >
+          <div className="text-center max-w-2xl w-full">
+            <div className="mb-6 flex items-center justify-center gap-2">
+              <CheckCircle className="text-green-500" size={32} />
+              <h2 className="text-3xl font-bold text-white">
+                Transcript Uploaded!
+              </h2>
+            </div>
+            <p className="text-lg text-light-silver mb-2">
+              File: {uploadedTranscript?.name}
+            </p>
+            <p className="text-md text-light-silver mb-8">
+              Now, please provide the debate details
+            </p>
+
+            <div className="bg-[#2c2c30] rounded-2xl p-8 border border-[#47475b] space-y-6">
+              <div className="text-left">
+                <label className="block text-sm text-light-silver mb-2">
+                  Debate Name
+                </label>
+                <input
+                  type="text"
+                  value={debateName}
+                  onChange={(e) => setDebateName(e.target.value)}
+                  placeholder="e.g., 2024 Presidential Debate"
+                  className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
+                />
+              </div>
+
+              <div className="text-left">
+                <label className="block text-sm text-light-silver mb-2">
+                  Debate Date
+                </label>
+                <input
+                  type="date"
+                  value={debateDate}
+                  onChange={(e) => setDebateDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                  required
+                  className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple [color-scheme:dark]"
+                />
+                <p className="text-xs text-light-silver mt-1">
                 </p>
               </div>
-            </div>
-          )}
-          {loading && !isTyping && (
-            <div className="flex justify-center">
-              <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center space-x-4">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-white rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-white rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </div>
-                <span className="text-light-silver text-sm">
-                  Analyzing arguments...
-                </span>
-              </div>
-            </div>
-          )}
-        </div>
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Input Bar */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key="inputBar"
-          initial={{ y: messages.length === 0 ? -275 : -325, opacity: 1 }}
-          animate={{ y: messages.length === 0 ? -275 : -70, opacity: 1 }}
-          transition={{ duration: 1.0, type: "spring" }}
-          className="px-6 py-6"
-        >
-          <div className="max-w-5xl mx-auto space-y-2">
-            <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
-              <label className="cursor-pointer px-3" title="Upload transcript">
-                <Paperclip
-                  className="text-light-silver hover:text-white"
-                  size={22}
-                />
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".txt"
-                  onChange={handleFileChange}
-                  style={{ display: "none" }}
-                />
-              </label>
-
-              <textarea
-                className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
-                placeholder="Ask something..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                rows={1}
-              />
 
               <button
-                onClick={sendMessage}
-                disabled={loading || (!input.trim() && !file)}
-                className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition ${
-                  loading || (!input.trim() && !file)
+                onClick={handleMetadataSubmit}
+                disabled={isProcessingUpload || !debateName.trim() || !debateDate.trim()}
+                className={`w-full py-3 rounded-lg text-white font-medium transition ${
+                  isProcessingUpload || !debateName.trim() || !debateDate.trim()
                     ? "bg-gray-600 cursor-not-allowed opacity-60"
                     : "bg-electric-purple hover:bg-purple-700 active:scale-95"
                 }`}
               >
-                Send
+                {isProcessingUpload ? "Processing..." : "Submit & Continue"}
               </button>
-            </div>
 
-            {file && (
-              <p className="text-sm text-light-silver mt-2 ml-2 flex items-center">
-                📎 {file.name}
-                <button
-                  onClick={() => setFile(null)}
-                  className="ml-2 text-red-400 hover:text-red-500"
-                >
-                  ✕
-                </button>
-              </p>
-            )}
-
-            {/* AI Mode Dropdown */}
-            <div className="flex items-center gap-2 justify-center pt-1">
-              <label className="text-sm text-light-silver">AI Mode:</label>
-              <select
-                value={aiMode}
-                onChange={(e) => {
-                  const mode = e.target.value;
-                  setAiMode(mode);
-                  setSystemPrompt(SYSTEM_PROMPTS[mode]);
-                }}
-                className="bg-[#1e1e23] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
-              >
-                {Object.keys(SYSTEM_PROMPTS).map((mode) => (
-                  <option key={mode}>{mode}</option>
-                ))}
-              </select>
+              {isProcessingUpload && (
+                <div className="text-center">
+                  <p className="text-sm text-light-silver">
+                    Processing debate through pipeline... This may take a minute.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>
-      </AnimatePresence>
+      )}
+
+      {/* Q&A Mode */}
+      {currentStage === "qa" && (
+        <>
+          {/* Messages Container */}
+          <div
+            ref={messagesContainerRef}
+            className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative"
+          >
+            {/* Fade overlay fixed at top */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
+
+            {/* Messages */}
+            <div className="flex flex-col space-y-6">
+              {messages.map((m, i) => (
+                <div key={i} className="flex justify-center">
+                  <div
+                    className={`max-w-5xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
+                      m.role === "user"
+                        ? "bg-electric-purple/10 border-electric-purple/30 text-white"
+                        : "bg-white/10 border-white/20 text-white"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{m.content}</p>
+                  </div>
+                </div>
+              ))}
+              {isTyping && (
+                <div className="flex justify-center">
+                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
+                    <p className="whitespace-pre-wrap">
+                      {typingMessage}
+                      <span className="animate-pulse">▊</span>
+                    </p>
+                  </div>
+                </div>
+              )}
+              {loading && !isTyping && (
+                <div className="flex justify-center">
+                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center space-x-4">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-white rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                    <span className="text-light-silver text-sm">
+                      {currentMode === "factcheck" ? "Fact-checking claim..." : "Analyzing arguments..."}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Bar */}
+          <motion.div
+            initial={{ y: -70, opacity: 1 }}
+            animate={{ y: -70, opacity: 1 }}
+            transition={{ duration: 1.0, type: "spring" }}
+            className="px-6 py-6"
+          >
+            <div className="max-w-5xl mx-auto space-y-2">
+              <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">
+                <textarea
+                  className="flex-1 resize-none bg-transparent text-white px-4 py-2 focus:outline-none"
+                  placeholder={
+                    currentMode === "factcheck"
+                      ? "Enter a claim to fact-check..."
+                      : "Ask a question about the debate..."
+                  }
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+
+                <button
+                  onClick={sendMessage}
+                  disabled={loading || !input.trim()}
+                  className={`ml-2 px-4 py-2 rounded-2xl text-white font-medium transition ${
+                    loading || !input.trim()
+                      ? "bg-gray-600 cursor-not-allowed opacity-60"
+                      : "bg-electric-purple hover:bg-purple-700 active:scale-95"
+                  }`}
+                >
+                  Send
+                </button>
+              </div>
+
+              {/* Mode Switcher */}
+              <div className="flex items-center gap-4 justify-center pt-1">
+                {currentMode === "qa" ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-light-silver">Mode:</span>
+                      <span className="text-sm text-electric-purple font-medium"> Retriever + QA</span>
+                    </div>
+                    <button
+                      onClick={switchToFactChecker}
+                      className="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-1 rounded-lg transition active:scale-95"
+                    >
+                      Switch to Fact Checker
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-light-silver">Mode:</span>
+                      <span className="text-sm text-green-400 font-medium">
+                        Fact Checker Mode
+                      </span>
+                    </div>
+                    <button
+                      onClick={switchToQA}
+                      className="bg-[#1e1e23] hover:bg-[#2c2c30] text-white text-sm px-3 py-1 rounded-lg border border-[#32324a] transition"
+                    >
+                      Back to Q&A
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
     </div>
   );
 }
