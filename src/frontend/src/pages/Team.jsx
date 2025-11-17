@@ -124,6 +124,21 @@ function Team({ onGetStarted, onModalStateChange }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (selectedMember) {
+      document.body.style.overflow = 'hidden';
+    }
+    
+    else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [selectedMember]);
+
   /* ==================== Modal state change ==================== */
   useEffect(() => {
     if (onModalStateChange) {
@@ -392,35 +407,36 @@ function Team({ onGetStarted, onModalStateChange }) {
       </AnimatePresence>
 
       {/* ==================== Scroll Indicator ==================== */}
-      <motion.div
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        onClick={scrollToNextSection}
-      >
-        <div className="flex flex-col items-center justify-center">
-          <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection == 0 ? 'Project Leadership' : ''}
-            {currentSection == 1 ? 'Technical Excellence' : ''}
-            {currentSection == 2 ? 'Development Team' : ''}
-            {currentSection < 3 ? ' ↓' : 'Scroll up ↑'}
-          </span>
-          <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
-            <motion.div
-              className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
-              animate={{
-                y: [0, 12, 0]
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: "loop"
-              }}
-            />
+      
+        <motion.div
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          onClick={scrollToNextSection}
+        >
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-dark-silver text-sm mb-2 font-medium">
+              {currentSection == 0 ? 'Project Leadership' : ''}
+              {currentSection == 1 ? 'Technical Excellence' : ''}
+              {currentSection == 2 ? 'Development Team' : ''}
+              {currentSection < 3 ? ' ↓' : 'Scroll up ↑'}
+            </span>
+            <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
+              <motion.div
+                className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
+                animate={{
+                  y: [0, 12, 0]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+              />
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
       {/* ==================== Hero Section ==================== */}
       <section 

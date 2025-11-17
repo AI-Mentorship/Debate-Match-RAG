@@ -2,16 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import debateTranscripts from "../../../debates_metadata.json"
 
-function Transcripts({ onGetStarted }) {
+function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
   const [transcripts, setTranscripts] = useState([])
-  const [selectedTranscript, setSelectedTranscript] = useState(null)
   const [filteredTranscripts, setFilteredTranscripts] = useState([])
   const [selectedSpeaker, setSelectedSpeaker] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [hoveredCard, setHoveredCard] = useState(null)
   const isScrolling = useRef(false)
   const transcriptRefs = useRef({})
 
@@ -49,11 +49,17 @@ function Transcripts({ onGetStarted }) {
         // Get date from the first item
         const date = items[0].debate_date || `${new Date().getFullYear()}-01-01`;
 
+        // Calculate total duration and speaker count
+        const totalSections = items.length;
+        const speakerCount = uniqueSpeakers.length;
+
         return {
           id: index + 1,
           title: debate_name,
           date: date,
           participants: uniqueSpeakers,
+          speakerCount: speakerCount,
+          totalSections: totalSections,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
             title: `${processSpeakerName(item.speaker)} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
@@ -240,6 +246,25 @@ function Transcripts({ onGetStarted }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (selectedTranscript) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    }
+    
+    else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'static';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'static';
+    };
+  }, [selectedTranscript]);
+
   /* ==================== Shooting star animation ==================== */
   useEffect(() => {
     const createStar = () => {
@@ -289,34 +314,157 @@ function Transcripts({ onGetStarted }) {
         ))}
       </div>
       
-      {/* ==================== Scroll Indicator ==================== */}
-      <motion.div
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        onClick={scrollToNextSection}
-      >
-        <div className="flex flex-col items-center justify-center">
-          <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection == 0 ? 'Browse Collection' : ''}
-            {currentSection < 1 ? ' ↓' : 'Scroll up ↑'}
-          </span>
-          <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
-            <motion.div
-              className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
-              animate={{
-                y: [0, 12, 0]
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                repeatType: "loop"
-              }}
+      {/* ==================== Transcript Modal ==================== */}
+      <AnimatePresence>
+        {selectedTranscript && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {/* Backdrop */}
+            <motion.div 
+              className="absolute inset-0 bg-black/80 z-50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setSelectedTranscript(null)}
             />
+            
+            {/* Modal Content */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", damping: 25 }}
+              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl w-full max-w-7xl max-h-[95vh] overflow-hidden z-50"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex flex-col h-full">
+                {/* Header */}
+                <div className="flex-shrink-0 p-8 border-b border-white/20">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h2 className="text-4xl font-bold text-white mb-2 text-left">
+                        {selectedTranscript.title}
+                      </h2>
+                      <div className="flex flex-wrap gap-4 text-dark-silver text-lg mb-4 text-left">
+                        <span>Date: {selectedTranscript.date}</span>
+                        <span>•</span>
+                        <span>{selectedTranscript.speakerCount} Speakers</span>
+                        <span>•</span>
+                        <span>{selectedTranscript.totalSections} Sections</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2 text-left">
+                        {selectedTranscript.tags.slice(0, 8).map(tag => (
+                          <span key={tag} className="px-3 py-1 bg-electric-purple/50 text-white rounded-full text-sm">
+                            {tag.replace(/_/g, ' ')}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <button
+                      onClick={() => setSelectedTranscript(null)}
+                      className="text-white/70 hover:text-white transition-colors duration-200 cursor-pointer ml-4"
+                    >
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Speakers Navigation */}
+                  <div className="mt-6 text-left">
+                    <h3 className="text-lg font-semibold mb-3 text-left text-white">Speakers</h3>
+                    <div className="flex flex-wrap gap-2 text-left">
+                      {selectedTranscript.participants.map(speaker => (
+                        <button
+                          key={speaker}
+                          onClick={() => setSelectedSpeaker(selectedSpeaker === speaker ? null : speaker)}
+                          className={`px-4 py-2 rounded-lg border text-sm transition-all duration-300 text-left ${
+                            selectedSpeaker === speaker
+                              ? 'bg-electric-purple/50 text-white border-electric-purple/50'
+                              : 'bg-white/10 text-dark-silver border-white/20 hover:bg-white/20 hover:text-white'
+                          }`}
+                        >
+                          {speaker}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Transcript Content */}
+                <div className="flex-1 overflow-y-auto p-8">
+                  <div className="space-y-6 max-w-6xl mx-auto">
+                    {filteredSections.map(section => (
+                      <div
+                        key={section.id}
+                        ref={el => transcriptRefs.current[section.id] = el}
+                        className="p-6 rounded-2xl border transition-all duration-300 text-left bg-white/5 border-white/10 hover:border-white/20"
+                      >
+                        <div className="flex justify-between items-start mb-4">
+                          <h4 className="text-xl font-semibold text-white text-left">{section.speaker}</h4>
+                          <span className="text-dark-silver text-sm bg-white/10 px-3 py-1 rounded-full">
+                            {section.startTime}
+                          </span>
+                        </div>
+                        <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-lg">
+                          {searchQuery ? highlightText(section.content, searchQuery) : section.content}
+                        </p>
+                        {section.topics && section.topics.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-4 text-left">
+                            {section.topics.map(topic => (
+                              <span key={topic} className="px-3 py-1 bg-white/10 rounded-full text-sm text-dark-silver">
+                                {topic.replace(/_/g, ' ')}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ==================== Scroll Indicator ==================== */}
+      {!selectedTranscript && (
+        <motion.div
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+          onClick={scrollToNextSection}
+        >
+          <div className="flex flex-col items-center justify-center">
+            <span className="text-dark-silver text-sm mb-2 font-medium">
+              {currentSection == 0 ? 'Browse Collection' : ''}
+              {currentSection < 1 ? ' ↓' : 'Scroll up ↑'}
+            </span>
+            <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
+              <motion.div
+                className="w-1.5 h-3 bg-dark-silver rounded-full mt-2"
+                animate={{
+                  y: [0, 12, 0]
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatType: "loop"
+                }}
+              />
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
 
       {/* ==================== Hero Section ==================== */}
       <section 
@@ -395,133 +543,105 @@ function Transcripts({ onGetStarted }) {
                 </div>
               </motion.div>
 
-              {/* Main Content */}
-              <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Transcript List */}
-                <motion.div
-                  initial={{ x: -100, opacity: 0 }}
-                  animate={visibleSections['browse'] ? { x: 0, opacity: 1 } : { x: -100, opacity: 0 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
-                  className="lg:col-span-1"
-                >
-                  <div className="bg-[#251f2e] backdrop-blur-lg rounded-2xl border border-white/20 p-6 text-left">
-                    <h2 className="text-2xl font-bold mb-6 text-white text-left">Transcripts ({filteredTranscripts.length})</h2>
-
-                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                      <AnimatePresence>
-                        {filteredTranscripts.map((transcript, index) => (
-                          <motion.div
-                            key={transcript.id}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.1 }}
-                            className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 text-left ${
-                              selectedTranscript?.id === transcript.id 
-                                ? 'bg-electric-purple/20 border-electric-purple shadow-lg' 
-                                : 'bg-white/5 border-white/10 hover:border-white/30 hover:bg-white/10'
-                            }`}
-                            onClick={() => {
-                              setSelectedTranscript(transcript)
-                              setSelectedSpeaker(null)
-                            }}
-                          >
-                            <h3 className="font-semibold text-white mb-2 text-left">{transcript.title}</h3>
-                            <div className="text-sm text-dark-silver space-y-1 text-left">
-                              <p className="text-left">{transcript.date}</p>
+              {/* Transcripts Grid */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={visibleSections['browse'] ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="w-full"
+              >
+                <div className="max-w-7xl mx-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnimatePresence>
+                      {filteredTranscripts.map((transcript, index) => (
+                        <motion.div
+                          key={transcript.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-80 flex flex-col ${
+                            hoveredCard === transcript.id 
+                              ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                              : 'border-white/10 shadow-lg hover:border-white/30'
+                          } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                          onMouseEnter={() => setHoveredCard(transcript.id)}
+                          onMouseLeave={() => setHoveredCard(null)}
+                        >
+                          {/* Main Content */}
+                          <div className="flex-1 p-6">
+                            {/* Title and Date */}
+                            <div className="text-center mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500 line-clamp-3">
+                                {transcript.title}
+                              </h3>
+                              <p className="text-dark-silver text-sm">
+                                {transcript.date}
+                              </p>
                             </div>
-                          </motion.div>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                  </div>
-                </motion.div>
 
-                {/* Transcript Viewer */}
-                <motion.div
-                  initial={{ x: 100, opacity: 0 }}
-                  animate={visibleSections['browse'] ? { x: 0, opacity: 1 } : { x: 100, opacity: 0 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                  className="lg:col-span-2"
-                >
-                  <div className="bg-[#251f2e] backdrop-blur-lg rounded-2xl border border-white/20 p-6 h-full text-left">
-                    {selectedTranscript ? (
-                      <div className="h-full flex flex-col text-left">
-                        {/* Transcript Header */}
-                        <div className="mb-6 text-left">
-                          <h2 className="text-3xl font-bold text-white mb-2 text-left">{selectedTranscript.title}</h2>
-                          <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
-                            <span>Date: {selectedTranscript.date}</span>
-                          </div>
-                          <div className="flex flex-wrap gap-2 text-left">
-                            {selectedTranscript.tags.slice(0, 6).map(tag => (
-                              <span key={tag} className="px-3 py-1 bg-electric-purple/50 text-white rounded-full text-sm">
-                                {tag.replace(/_/g, ' ')}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                            {/* Stats */}
+                            <div className="text-center mb-4 relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                              <div className="flex justify-center space-x-4 text-xs text-dark-silver">
+                                <span>{transcript.speakerCount} speakers</span>
+                                <span>•</span>
+                                <span>{transcript.totalSections} sections</span>
+                              </div>
+                            </div>
 
-                        {/* Speakers Navigation */}
-                        <div className="mb-6 text-left">
-                          <h3 className="text-lg font-semibold mb-3 text-left">Speakers</h3>
-                          <div className="flex flex-wrap gap-2 text-left">
-                            {selectedTranscript.participants.map(speaker => (
-                              <button
-                                key={speaker}
-                                onClick={() => setSelectedSpeaker(selectedSpeaker === speaker ? null : speaker)}
-                                className={`px-3 py-2 rounded-lg border border-white/20 text-sm transition-all duration-300 text-left ${
-                                  selectedSpeaker === speaker
-                                    ? 'bg-electric-purple/50 text-white'
-                                    : 'bg-white/10 text-dark-silver hover:bg-white/20 hover:text-white'
-                                }`}
-                              >
-                                {speaker}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        {/* Transcript Content */}
-                        <div className="flex-1 overflow-y-auto max-h-[500px]">
-                          <div className="space-y-6">
-                            {filteredSections.map(section => (
-                              <div
-                                key={section.id}
-                                ref={el => transcriptRefs.current[section.id] = el}
-                                className="p-4 rounded-xl border transition-all duration-300 text-left bg-white/5 border-white/10"
-                              >
-                                <h4 className="flex justify-between items-start mb-3 font-semibold text-white text-left">{section.speaker}</h4>
-                                <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line">
-                                  {searchQuery ? highlightText(section.content, searchQuery) : section.content}
-                                </p>
-                                {section.topics && section.topics.length > 0 && (
-                                  <div className="flex flex-wrap gap-1 mt-3 text-left">
-                                    {section.topics.map(topic => (
-                                      <span key={topic} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
-                                        {topic.replace(/_/g, ' ')}
-                                      </span>
-                                    ))}
-                                  </div>
+                            {/* Tags */}
+                            <div className="text-center relative z-10 transform transition-all duration-500 delay-150 group-hover:-translate-y-1">
+                              <div className="flex flex-wrap gap-1 justify-center">
+                                {transcript.tags.slice(0, 3).map(tag => (
+                                  <span key={tag} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                    {tag.replace(/_/g, ' ')}
+                                  </span>
+                                ))}
+                                {transcript.tags.length > 3 && (
+                                  <span className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                    +{transcript.tags.length - 3}
+                                  </span>
                                 )}
                               </div>
-                            ))}
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="h-full flex items-center justify-center text-dark-silver">
-                        <div className="text-center">
-                          <svg className="w-16 h-16 mx-auto mb-4 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          <p className="text-lg">Select a transcript to view its content</p>
-                          <p className="text-sm mt-2">Use the search bar to find specific topics or speakers</p>
-                        </div>
-                      </div>
-                    )}
+
+                          {/* View Transcript Button */}
+                          <div className="mt-auto h-16 flex-shrink-0">
+                            <button 
+                              onClick={() => setSelectedTranscript(transcript)}
+                              className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
+                            >
+                              <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                                View Transcript →
+                              </span>
+                            </button>
+                          </div>
+
+                          {/* Hover Glow Effect */}
+                          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   </div>
-                </motion.div>
-              </div>
+
+                  {/* Empty State */}
+                  {filteredTranscripts.length === 0 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center py-16"
+                    >
+                      <svg className="w-24 h-24 mx-auto mb-6 text-dark-silver" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <h3 className="text-2xl font-bold text-white mb-4">No transcripts found</h3>
+                      <p className="text-dark-silver text-lg max-w-md mx-auto">
+                        Try adjusting your search terms or browse all available transcripts.
+                      </p>
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -545,6 +665,12 @@ function Transcripts({ onGetStarted }) {
           }
           .animate-shooting-star {
             animation: shooting-star linear forwards;
+          }
+          .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
         `}
       </style>

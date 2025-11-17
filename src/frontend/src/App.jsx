@@ -12,9 +12,10 @@ function App() {
   const [trailingPosition, setTrailingPosition] = useState({ x: 0, y: 0 })
   const [currentPage, setCurrentPage] = useState('home')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedTranscript, setSelectedTranscript] = useState(null)
   const trailingRef = useRef({ x: 0, y: 0 })
 
-  // Mouse follower effect
+  /* ==================== Mouse follower effect ==================== */
   useEffect(() => {
     let animationFrameId
     
@@ -47,6 +48,25 @@ function App() {
     }
   }, [mousePosition])
 
+  /* ==================== Scroll ==================== */
+  useEffect(() => {
+    if (isModalOpen || selectedTranscript) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    }
+    
+    else {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'static';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.position = 'static';
+    };
+  }, [isModalOpen, selectedTranscript]);
+
   const handleGetStarted = () => {
     console.log('Navigating to analyzer interface')
     setCurrentPage('analyzer')
@@ -63,7 +83,7 @@ function App() {
       case 'analyzer':
         return <Analyzer />
       case 'transcripts':
-        return <Transcripts onGetStarted={handleGetStarted} />
+        return <Transcripts onGetStarted={handleGetStarted} selectedTranscript={selectedTranscript} setSelectedTranscript={setSelectedTranscript} />
       case 'missions':
         return <Missions />
       case 'team':
@@ -131,30 +151,32 @@ function App() {
       
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
-        <div className="fixed top-0 left-0 right-0 z-20">
-          <Header 
-            currentPage={currentPage} 
-            onPageChange={handlePageChange}
-            onGetStarted={handleGetStarted}
-            isModalOpen={isModalOpen}
-          />
-        </div>
+        {!(isModalOpen || selectedTranscript) && (
+          <div className="fixed top-0 left-0 right-0 z-20">
+            <Header 
+              currentPage={currentPage} 
+              onPageChange={handlePageChange}
+              onGetStarted={handleGetStarted}
+              isModalOpen={isModalOpen || selectedTranscript}
+            />
+          </div>
+        )}
 
         {/* Animated Page Content */}
-          <div className="flex-1 relative pt-20">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentPage}
-                variants={pageVariants}
-                initial="initial"
-                animate="in"
-                exit="out"
-                className="absolute inset-0"
-              >
-                {renderPage()}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        <div className={`flex-1 relative ${!(isModalOpen || selectedTranscript) ? 'pt-20' : 'pt-0'}`}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              variants={pageVariants}
+              initial="initial"
+              animate="in"
+              exit="out"
+              className="absolute inset-0"
+            >
+              {renderPage()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Custom glow and neon effects */}

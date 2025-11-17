@@ -172,56 +172,81 @@ def classify_topics_batch(texts, threshold=0.3):
     return all_topics
 
 def extract_speaker_turns(cleaned_text, source, date):
-    """
-    Split cleaned text into speaker turns.
-    Only matches 'First Last:' format after manual standardization.
-    """
     turns = []
     lines = cleaned_text.split('\n')
     
     current_speaker = None
+    current_timestamp = None
     current_text = []
     
-    # Pattern for speaker lines
-    speaker_pattern = r'^([A-Z][a-z]+(?: [A-Z][a-zA-Z]+)+):\s*(.*)$'
+    # Multiple patterns to handle different transcript formats
+    patterns = [
+        # Pattern 1: Speaker Name ([timestamp]): text
+        r'^([A-Za-z\s\.\']+)\s*\(\[?([\d:]+)\]?\):\s*(.*)$',
+        # Pattern 2: Speaker Name (timestamp): text (no brackets)
+        r'^([A-Za-z\s\.\']+)\s*\(([\d:]+)\):\s*(.*)$',
+        # Pattern 3: [timestamp] Speaker Name: text
+        r'^\[?([\d:]+)\]?\s+([A-Za-z\s\.\']+):\s*(.*)$',
+        # Pattern 4: Speaker Name: text (no timestamp)
+        r'^([A-Z][a-z]+(?: [A-Z][a-zA-Z]+)+):\s*(.*)$',
+    ]
     
     for line in lines:
         line = line.strip()
-        
-        # Check if this is a speaker line
-        match = re.match(speaker_pattern, line)
-        
-        if match:
-            # Save previous speaker's text if it exists
+        if not line:
             if current_speaker and current_text:
-                text = '\n'.join(current_text).strip()
-                if text:
-                    turns.append({
-                        'speaker': current_speaker,
-                        'timestamp': 'N/A',
-                        'text': text,
-                        'source': source,
-                        'date': date 
-                    })
-            
-            # Start new speaker
-            current_speaker = match.group(1).strip()
-            current_text = [match.group(2)] if match.group(2) else []
-            
-        elif current_speaker:
-            if not line and current_text:
                 current_text.append('')
+            continue
+        
+        matched = False
+        
+        # Try each pattern
+        for pattern_idx, pattern in enumerate(patterns):
+            match = re.match(pattern, line)
             
-            elif line:
-                current_text.append(line)
+            if match:
+                # Save previous speaker's text if it exists
+                if current_speaker and current_text:
+                    text = '\n'.join(current_text).strip()
+                    if text:
+                        turns.append({
+                            'speaker': current_speaker,
+                            'timestamp': current_timestamp if current_timestamp else 'N/A',
+                            'text': text,
+                            'source': source,
+                            'date': date 
+                        })
+                
+                # Extract based on which pattern matched
+                if pattern_idx == 0 or pattern_idx == 1:
+                    # Patterns with speaker, timestamp, text
+                    current_speaker = match.group(1).strip()
+                    current_timestamp = match.group(2).strip()
+                    current_text = [match.group(3)] if match.group(3) else []
+                elif pattern_idx == 2:
+                    # Pattern with timestamp first, then speaker
+                    current_timestamp = match.group(1).strip()
+                    current_speaker = match.group(2).strip()
+                    current_text = [match.group(3)] if match.group(3) else []
+                elif pattern_idx == 3:
+                    # Pattern with just speaker and text (no timestamp) - RESTRICTIVE
+                    current_speaker = match.group(1).strip()
+                    current_timestamp = 'N/A'
+                    current_text = [match.group(2)] if match.group(2) else []
+                
+                matched = True
+                break
+        
+        if not matched and current_speaker:
+            current_text.append(line)
     
-    # Last speaker
+    # Last speaker turn
     if current_speaker and current_text:
         text = '\n'.join(current_text).strip()
         if text:
             turns.append({
                 'speaker': current_speaker,
-                'timestamp': 'N/A',
+                'timestamp': current_timestamp if current_timestamp else 'N/A',
                 'text': text,
                 'source': source,
                 'date': date 
