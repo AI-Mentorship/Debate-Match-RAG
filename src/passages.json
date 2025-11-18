@@ -1,22 +1,91 @@
 [
     {
-        "debate_name": "ABC News Presidential Debate: Race for the White House",
-        "debate_date": null,
+        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
         "speaker": "Kamala Harris",
-        "timestamp": "20:26",
-        "text": "But understand, if Donald Trump were to be re-elected, he will sign a national abortion ban. Understand in his Project 2025 there would be a national abortion ban.",
-        "topics": null
-    },
-    {
-        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "debate_date": "2024-06-27",
-        "speaker": "Dana Bash",
-        "timestamp": "13:37",
-        "text": "This is the first presidential election since the Supreme Court overturned Roe v. Wade. Former President Trump, you take credit for the decision to overturn Roe v. Wade, which returned the issue of abortion to the states.",
+        "timestamp": "N/A",
+        "text": "to term? They don't want that. And I pledge to you when Congress passes a bill to put back in place the protections of Roe v. Wade as President of the United States, I will proudly sign it into law. But understand, if Donald Trump were to be re-elected, he will sign a national abortion ban. Understand, in his Project 2025 there would be a national abortion--a monitor that would be monitoring your pregnancies, your miscarriages. I think the American people believe that certain freedoms, in particular the freedom to make decisions about one's own body, should not be made by the government.",
         "topics": [
             "abortion",
-            "crime_justice",
-            "election_integrity"
+            "healthcare",
+            "crime_justice"
+        ]
+    },
+    {
+        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "Linsey Davis",
+        "timestamp": "N/A",
+        "text": "I want to turn to the issue of abortion. President Trump, you've often touted that you were able to kill Roe v. Wade. Last year, you said that you were proud to be the most pro-life president in American history. Then last month you said that your administration would be great for women and their reproductive rights. In your home state of Florida, you surprised many, uh, with regard to your six-week abortion ban because you initially had said that it was too short and you said, \"I'm going to be voting that we need more than six weeks.\" But then the very next day, you reversed course and said you would vote to support the six-week ban. Vice President Harris says that women shouldn't trust you on the issue of abortion because you've changed your position so many times. Therefore, why should they trust you?",
+        "topics": [
+            "abortion"
+        ]
+    },
+    {
+        "debate_name": "2024 Vice Presidential Debate in New York City, New York",
+        "debate_date": "2024-10-01",
+        "speaker": "Norah O'Donnell",
+        "timestamp": "N/A",
+        "text": "Thank you. Now to the issue of reproductive rights. Governor Walz, after Roe v. Wade was overturned, you signed a bill into law that made Minnesota one of the least restrictive states in the nation when it comes to abortion. Former President Trump said in the last debate that. You believe abortion, quote, in the 9th month is absolutely fine. Yes or no? Is that what you support? I'll give you two minutes.",
+        "topics": [
+            "abortion"
+        ]
+    },
+    {
+        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "Kamala Harris",
+        "timestamp": "N/A",
+        "text": "I absolutely support reinstating the protections of Roe v. Wade. And as you rightly mentioned, nowhere in America is a woman carrying a pregnancy to term and, and, and asking for an abortion. That is not happening. It's insulting to the women of America. And understand what has been happening under Donald Trump's abortion bans. Couples who pray and, and, and dream of having a family are being denied IVF treatments. What is happening in our country, working people, working women who are working one or two jobs, who can barely afford childcare as it is, have to travel to another state--to get on a plane sitting next to strangers--to go and get the health care she needs. Barely can afford to do it, and what you are putting her through is unconscionable. And the people of America have not--the, the majority of Americans believe in a woman's right to make decisions about her own body. And that is why in every state where this issue has been on the ballot, in red and blue states both, the people of America have voted for freedom.",
+        "topics": [
+            "abortion",
+            "healthcare",
+            "civil_rights"
+        ]
+    },
+    {
+        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "Kamala Harris",
+        "timestamp": "N/A",
+        "text": "Well, as I said, you're going to hear a bunch of lies. And that's not actually a surprising fact. Let's understand how we got here. Donald Trump hand-selected three members of the United States Supreme Court with the intention that they would undo the protections of Roe v. Wade. And they did exactly as he intended. And now in over 20 states there are Trump abortion bans which make it criminal for a doctor or nurse to provide health care. In one state it provides prison for life. Trump abortion bans that make no exception even for rape and incest. Which, understand what that means: A survivor of a crime of violation to their body, does not have the right to make a decision about what happens to their body next. That is immoral. And one does not have to abandon their faith or deeply held beliefs to agree the government, and Donald Trump certainly, should not be telling a woman what to do with her body. I have talked with women around our country. You wanna talk about this is what people wanted? Pregnant women who want to carry a pregnancy to term suffering from a miscarriage, being denied care in an emergency room because the health care providers are afraid they might go to jail and she's bleeding out in a car in the parking lot? She didn't want that. Her husband didn't want that. A 12 or 13-year-old survivor of incest being forced to carry a pregnancy",
+        "topics": [
+            "abortion",
+            "healthcare",
+            "crime_justice"
+        ]
+    },
+    {
+        "debate_name": "2024 Republican Candidates Debate in Des Moines, Iowa",
+        "debate_date": "2024-01-10",
+        "speaker": "Dana Bash",
+        "timestamp": "N/A",
+        "text": "I want to turn now to the topic abortion, which, of course, has been hotly debated in this Republican primary campaign. Governor Haley, last week Governor DeSantis said that former President Trump is not pro-life. Do you agree?",
+        "topics": [
+            "abortion"
+        ]
+    },
+    {
+        "debate_name": "2024 Vice Presidential Debate in New York City, New York",
+        "debate_date": "2024-10-01",
+        "speaker": "J.D. Vance",
+        "timestamp": "N/A",
+        "text": "No, Norah, certainly we won't. And I want to talk about this issue because I know a lot of Americans care about it, and I know a lot of Americans don't agree with everything that I've ever said on this topic. And, you know, I grew up in a working class family in a neighborhood where I knew a lot of young women who had unplanned pregnancies and decided to terminate those pregnancies because they feel like they didn't have any other options. And, you know, one of them is actually very dear to me. And I know she's watching tonight, and I love you. And she told me something a couple years ago that she felt like if she hadn't had that abortion, that it would have destroyed her life because she was in an abusive relationship. And I think that what I take from that, as a Republican who proudly wants to protect innocent life in this country, who proudly wants to protect the vulnerable is that my party, we've got to do so much better of a job at earning the American People's trust back on this issue where they frankly just don't trust us. And I think that's one of the things that Donald Trump and I are endeavoring to do. I want us, as a Republican Party, to be pro-family in the fullest sense of the word. I want us to support fertility treatments. I want us to make it easier for moms to afford",
+        "topics": [
+            "abortion",
+            "healthcare",
+            "crime_justice"
+        ]
+    },
+    {
+        "debate_name": "2024 Vice Presidential Debate in New York City, New York",
+        "debate_date": "2024-10-01",
+        "speaker": "J.D. Vance",
+        "timestamp": "N/A",
+        "text": "Well, Norah, first of all, I never supported a national ban. I did during, when I was running for Senate in 2022, talk about setting some minimum national standard. For example, we have a partial birth abortion ban in this, in place in this country at the federal level. I don't think anybody's trying to get rid of that, or at least I hope not, though I know that Democrats have taken a very radical pro-abortion stance. But, Norah, you know, one of the things that changed is in the state of Ohio, we had a referendum in 2023, and the people of Ohio voted overwhelmingly, by the way, against my position. And I think that what I learned from that, Norah, is that we've got to do a better job at winning back people's trust. So many young women would love to have families. So many young women also see an unplanned pregnancy as something that's going to destroy their livelihood, destroy their education, destroy their relationships. And we have got to earn people's trust back. And that's why Donald Trump and I are committed to pursuing pro-family policies. Making childcare more accessible, making fertility treatments more accessible, because we've got to do a better job at that. And that's what real leadership is.",
+        "topics": [
+            "abortion",
+            "general_politics"
         ]
     },
     {
@@ -41,16 +110,6 @@
             "abortion",
             "civil_rights",
             "crime_justice"
-        ]
-    },
-    {
-        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
-        "debate_date": "2024-06-27",
-        "speaker": "Donald Trump",
-        "timestamp": "01:00:50",
-        "text": "Well, let me just go back to what he said about the police, how close the police are to him. Almost every police group in the nation from every state is supporting Donald J. Trump.",
-        "topics": [
-            "general_political_commentary"
         ]
     }
 ]

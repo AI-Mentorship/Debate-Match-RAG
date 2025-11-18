@@ -17203,5 +17203,131 @@
     "topics": [
       "election_integrity"
     ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Dana Bash",
+    "role": "Candidate",
+    "text": "This debate is being produced by CNN and is coming to you live on CNN, CNN International, cnn.com, CNN Max and CNN Espanol. This is a pivotal moment between President Joe Biden and Former President Donald Trump in their rematch for the nation's highest office. Each will make his case to the American people with just over four months until election day. Good evening, I'm Dana Bash, anchor of CNN's Inside Politics and co-anchor of State of the Union.",
+    "timestamp": "00:57",
+    "topics": [
+      "election_integrity"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Jake Tapper",
+    "role": "Candidate",
+    "text": "I'm Jake Tapper, anchor of CNN's The Lead and co-anchor of State of the Union. Dana and I will co-moderate this evening. Our job is to facilitate a debate between the two candidates tonight. Before we introduce them, we want to share the rules of the debate with the audience at home. Former President Trump will be on the left side of the screen, President Biden will be appearing on the right, a coin toss determined their positions.",
+    "timestamp": "01:28",
+    "topics": [
+      "general_politics",
+      "economy_jobs",
+      "foreign_policy"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Dana Bash",
+    "role": "Candidate",
+    "text": "When it's time for a candidate to speak, his microphone will be turned on and his opponent's microphone will be turned off.",
+    "timestamp": "02:05",
+    "topics": [
+      "election_integrity",
+      "civil_rights",
+      "economy_jobs"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Jake Tapper",
+    "role": "Candidate",
+    "text": "Now, please welcome the 46th President of the United States, Joe Biden.",
+    "timestamp": "02:40",
+    "topics": [
+      "general_political_commentary"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Joe Biden",
+    "role": "Candidate",
+    "text": "Folks, how are you? Nice to be here, thanks.",
+    "timestamp": "02:47",
+    "topics": [
+      "general_political_commentary"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Jake Tapper",
+    "role": "Candidate",
+    "text": "And please welcome the 45th President of the United States, Donald Trump. Gentlemen, thanks so much for being here, let's begin the debate and let's start with the issue that voters consistently say is their top concern, the economy. President Biden, inflation has slowed, but prices remain high. Since you took office, the price of essentials has increased. For example, a basket of groceries that cost $100 then now costs more than $120, and typical home prices have jumped more than 30%. What do you say to voters who feel they are worse off under your presidency than they were under President Trump?",
+    "timestamp": "02:57",
+    "topics": [
+      "economy_jobs"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Joe Biden",
+    "role": "Candidate",
+    "text": "We got to take a look at what I was left when I became president and what Mr. Trump left me. We had an economy that was in free fall, the pandemic was so badly handled, many people were dying. All he said was, \"It's not that serious, just inject a little bleach into your arm. You'll be all right.\" The economy collapsed, there were no jobs. Unemployment rate rose to 15%, it was terrible. And so what we had to do is try to put things back together again.",
+    "timestamp": "03:45",
+    "topics": [
+      "economy_jobs"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Donald Trump",
+    "role": "Candidate",
+    "text": "We have the greatest economy in the history of our country, we have never done so well. Everybody was amazed by it and other countries were copying us. We got hit with COVID, and when we did, we spent the money necessary, so we wouldn't end up in a great depression, the likes of which we had in 1929.",
+    "timestamp": "05:40",
+    "topics": [
+      "economy_jobs"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Jake Tapper",
+    "role": "Candidate",
+    "text": "Thank you. President Biden?",
+    "timestamp": "06:40",
+    "topics": [
+      "general_political_commentary"
+    ]
+  },
+  {
+    "debate_id": "chunk_654d388f",
+    "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+    "debate_date": "2027-06-27",
+    "speaker": "Joe Biden",
+    "role": "Candidate",
+    "text": "Well, look, the greatest economy in the world. He's the only one that thinks that, I think. I don't know anybody else who thinks he had the greatest economy in the world.",
+    "timestamp": "06:42",
+    "topics": [
+      "economy_jobs",
+      "foreign_policy",
+      "general_politics"
+    ]
   }
 ]
