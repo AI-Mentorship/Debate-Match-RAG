@@ -188,7 +188,7 @@ def extract_speaker_turns(cleaned_text, source, date):
         # Pattern 3: [timestamp] Speaker Name: text
         r'^\[?([\d:]+)\]?\s+([A-Za-z\s\.\']+):\s*(.*)$',
         # Pattern 4: Speaker Name: text (no timestamp)
-        r'^([A-Z][a-z]+(?: [A-Z][a-zA-Z]+)+):\s*(.*)$',
+        r"^([A-Za-z][A-Za-z\.'\-]*(?: [A-Za-z][A-Za-z\.'\-]*)*):\s*(.*)$"
     ]
     
     for line in lines:
