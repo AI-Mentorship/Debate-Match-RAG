@@ -180,28 +180,28 @@ function AppContent() {
 
       {/* ==================== Styles ==================== */}
       <style> {`
-        ::-webkit-scrollbar {
-          display: none;
-        }
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-        
-        .shadow-glow {
-          box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
-        }
-        
-        .hover\\:shadow-glow:hover {
-          box-shadow: 
-            0 0 30px rgba(124, 58, 237, 0.7),
-            0 0 60px rgba(124, 58, 237, 0.4),
-            0 0 90px rgba(124, 58, 237, 0.2),
-            inset 0 0 20px rgba(124, 58, 237, 0.1);
-        }
-        
-        .hover\\:shadow-silver-glow {
-          transition: box-shadow 2s ease-in-out;
-        }
-      `} </style>
+          ::-webkit-scrollbar {
+            display: none;
+          }
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+          
+          .shadow-glow {
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
+          }
+          
+          .hover\\:shadow-glow:hover {
+            box-shadow: 
+              0 0 30px rgba(124, 58, 237, 0.7),
+              0 0 60px rgba(124, 58, 237, 0.4),
+              0 0 90px rgba(124, 58, 237, 0.2),
+              inset 0 0 20px rgba(124, 58, 237, 0.1);
+          }
+          
+          .hover\\:shadow-silver-glow {
+            transition: box-shadow 2s ease-in-out;
+          }
+        `} </style>
     </div>
   )
 }

@@ -291,19 +291,9 @@ function Analyzer({ onBackToHome }) {
   };
 
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="in"
-      exit="out"
-      transition={{
-        type: "tween",
-        ease: "easeInOut"
-      }}
-      className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden"
-    >
+    <div className="h-screen flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
       {/* ==================== Shooting stars animation ==================== */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      <div className="absolute inset-0 pointer-events-none z-0">
         {stars.map(star => (
           <div
             key={star.id}
@@ -323,20 +313,31 @@ function Analyzer({ onBackToHome }) {
       {/* ==================== Upload Transcript ==================== */}
       {currentStage === "upload" && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
-          className="min-h-screen w-full flex flex-col items-center justify-center relative z-10"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
+          className="h-screen w-full flex flex-col items-center justify-center relative z-10"
         >
           <div className="text-center max-w-2xl w-full">
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Upload Debate Transcript
-            </h2>
-            <p className="text-lg text-dark-silver mb-8">
-              Start by uploading a debate transcript (.txt file)
-            </p>
+            <motion.div
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+            >
+              <h2 className="text-4xl font-bold text-white mb-4">
+                Upload Debate Transcript
+              </h2>
+              <p className="text-lg text-dark-silver mb-8">
+                Start by uploading a debate transcript (.txt file)
+              </p>
+            </motion.div>
 
-            <div className="w-full max-w-xl mx-auto">
+            <motion.div
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
+              className="w-full max-w-xl mx-auto"
+            >
               <input
                 ref={transcriptInputRef}
                 type="file"
@@ -402,7 +403,7 @@ function Analyzer({ onBackToHome }) {
                   </p>
                 </div>
               </button>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       )}
@@ -630,7 +631,7 @@ function Analyzer({ onBackToHome }) {
           animation: shooting-star linear forwards;
         }
       `} </style>
-    </motion.div>
+    </div>
   );
 }
 

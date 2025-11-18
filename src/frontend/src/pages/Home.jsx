@@ -39,7 +39,7 @@ function Home({ onGetStarted }) {
   }, [])
 
   return (
-    <div className="min-h-screen flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
+    <div className="h-screen flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
       {/* ==================== Shooting star animation ==================== */}
       <div className="absolute inset-0 pointer-events-none">
         {stars.map(star => (
@@ -58,6 +58,7 @@ function Home({ onGetStarted }) {
         ))}
       </div>
 
+      {/* ==================== Main Content ==================== */}
       <motion.div 
         className="mt-30 relative z-10"
         initial={{ y: -50, opacity: 0 }}
