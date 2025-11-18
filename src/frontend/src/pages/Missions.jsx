@@ -26,9 +26,7 @@ function Missions({ onGetStarted }) {
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      }
-      
-      else {
+      } else {
         isScrolling.current = false
       }
     };
@@ -53,9 +51,7 @@ function Missions({ onGetStarted }) {
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      }
-      
-      else {
+      } else {
         isScrolling.current = false
       }
     };
@@ -79,16 +75,14 @@ function Missions({ onGetStarted }) {
         
         smoothScrollTo(section, 1200);
       }
-    }
-    
-    else {
+    } else {
       // If at last section, scroll back to top smoothly
       setCurrentSection(0);
       smoothScrollToTop(1200);
     }
   }
 
-  // Update current section based on scroll position
+  /* ==================== Update current section based on scroll position ==================== */
   useEffect(() => {
     const handleScroll = () => {
       if (isScrolling.current) return;
@@ -524,7 +518,7 @@ function Missions({ onGetStarted }) {
       </section>
 
       {/* ==================== Styles ==================== */}
-      <style>{`
+      <style> {`
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);
@@ -559,7 +553,7 @@ function Missions({ onGetStarted }) {
             transform: rotate(360deg);
           }
         }
-      `}</style>
+      `} </style>
     </div>
   )
 }

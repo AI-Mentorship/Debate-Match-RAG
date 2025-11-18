@@ -194,7 +194,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       name: "Yakina Azza",
       role: "Transcript Preprocessing",
       description: "B.S. in Computer Science. She is an ML/AI Researcher",
-      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
+      paragraph: "Yakina is a senior Computer Science student working at multiple labs across the intersection of machine learning, artificial intelligence and psychology. She has previously worked for CS outreach where she loved teaching local middle to high-schoolers coding. Before that, she also taught underprivileged children math and English at a non-profit in her hometown of Dhaka. In both these jobs and through her involvement in software engineering projects, Yakina enjoys empowering people with tech and solving problems creatively. While the idea of an AI doomsday is not lost on Yakina, she believes people have the power to utilize tech to do good for the many — not the few.",
       linkedin: "https://www.linkedin.com/in/yakina-azza/",
       instagram: "https://www.instagram.com/yakkk114/",
       image: "src/assets/img/Yakina_Azza.png"
@@ -749,26 +749,24 @@ function Team({ onGetStarted, onModalStateChange }) {
       </section>
 
       {/* ==================== Shooting star animation ==================== */}
-      <style>
-        {`
-          @keyframes shooting-star {
-            0% {
-              transform: translateY(0) translateX(0) rotate(45deg);
-              opacity: 1;
-            }
-            10% {
-              opacity: 1;
-            }
-            100% {
-              transform: translateY(100vh) translateX(100px) rotate(45deg);
-              opacity: 0;
-            }
+      <style> {`
+        @keyframes shooting-star {
+          0% {
+            transform: translateY(0) translateX(0) rotate(45deg);
+            opacity: 1;
           }
-          .animate-shooting-star {
-            animation: shooting-star linear forwards;
+          10% {
+            opacity: 1;
           }
-        `}
-      </style>
+          100% {
+            transform: translateY(100vh) translateX(100px) rotate(45deg);
+            opacity: 0;
+          }
+        }
+        .animate-shooting-star {
+          animation: shooting-star linear forwards;
+        }
+      `} </style>
     </div>
   )
 }

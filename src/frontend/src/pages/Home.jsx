@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 
 function Home({ onGetStarted }) {
   const [stars, setStars] = useState([])
+  const navigate = useNavigate()
+  const handleGetStarted = () => {
+    navigate('/analyzer')
+  }
 
   /* ==================== Shooting star animation ==================== */
   useEffect(() => {
@@ -32,20 +37,6 @@ function Home({ onGetStarted }) {
 
     return () => clearInterval(interval)
   }, [])
-
-  /* ==================== Animation variants ==================== */
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 12
-      }
-    }
-  }
 
   return (
     <div className="min-h-screen flex-1 flex flex-col items-center justify-center px-8 text-center relative overflow-hidden">
@@ -93,7 +84,7 @@ function Home({ onGetStarted }) {
       >
         {/* Button */}
         <button
-          onClick={onGetStarted}
+          onClick={handleGetStarted}
           className="mb-40 bg-transparent text-gray-200 px-20 py-3 rounded-full font-bold transition-all duration-700 shadow-2xl hover:shadow-silver-glow relative overflow-hidden group border-2 border-gray-300 hover:border-white cursor-pointer"
         >
           {/* Silver neon glow effect */}
@@ -113,7 +104,7 @@ function Home({ onGetStarted }) {
       </motion.div>
 
       {/* ==================== Shooting star animation ==================== */}
-      <style>{`
+      <style> {`
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);
@@ -130,7 +121,7 @@ function Home({ onGetStarted }) {
         .animate-shooting-star {
           animation: shooting-star linear forwards;
         }
-      `}</style>
+      `} </style>
     </div>
   )
 }

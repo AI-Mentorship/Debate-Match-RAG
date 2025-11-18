@@ -34,33 +34,7 @@ function Analyzer({ onBackToHome }) {
   const transcriptInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
-  // Shooting star animation
-  useEffect(() => {
-    const createStar = () => {
-      const newStar = {
-        id: Math.random(),
-        left: Math.random() * 100,
-        delay: Math.random() * 5,
-        duration: 2 + Math.random() * 3,
-        size: 1 + Math.random() * 2
-      }
-      setStars(prev => [...prev, newStar])
-
-      setTimeout(() => {
-        setStars(prev => prev.filter(star => star.id !== newStar.id))
-      }, (newStar.duration + newStar.delay) * 1000)
-    }
-
-    for (let i = 0; i < 8; i++) {
-      setTimeout(createStar, i * 300)
-    }
-
-    const interval = setInterval(createStar, 50)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  // Typing animation
+  {/* ==================== Typing animation ==================== */}
   const typeText = async (text, onComplete) => {
     setIsTyping(true);
     setTypingMessage("");
@@ -72,7 +46,7 @@ function Analyzer({ onBackToHome }) {
     onComplete();
   };
 
-  // Handle transcript upload
+  {/* ==================== Handle transcript upload ==================== */}
   const handleTranscriptUpload = (e) => {
     const f = e.target.files[0];
     if (!f) return;
@@ -88,12 +62,12 @@ function Analyzer({ onBackToHome }) {
     setCurrentStage("metadata");
   };
 
-  // Trigger file input click
+  {/* ==================== Trigger file input click ==================== */}
   const handleUploadBoxClick = () => {
     transcriptInputRef.current?.click();
   };
 
-  // Handle metadata submission
+  {/* ==================== Handle metadata submission ==================== */}
   const handleMetadataSubmit = async () => {
     if (!debateName.trim() || !debateDate.trim()) {
       alert("Please provide both debate name and date.");
@@ -153,7 +127,7 @@ function Analyzer({ onBackToHome }) {
     }
   };
 
-  // Send message
+  {/* ==================== Send message ==================== */}
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -215,7 +189,7 @@ function Analyzer({ onBackToHome }) {
     }
   };
 
-  // Switch to Fact Checker mode
+  {/* ==================== Switch to Fact Checker mode ==================== */}
   const switchToFactChecker = () => {
     setCurrentMode("factcheck");
     setAiMode("Fact Checker");
@@ -229,7 +203,7 @@ function Analyzer({ onBackToHome }) {
     ]);
   };
 
-  // Switch back to Q&A mode
+  {/* ==================== Switch back to Q&A mode ==================== */}
   const switchToQA = () => {
     setCurrentMode("qa");
     setAiMode("Retriever + QA");
@@ -252,7 +226,7 @@ function Analyzer({ onBackToHome }) {
     }
   };
 
-  // Scroll to bottom when new messages appear
+  {/* ==================== // Scroll to bottom when new messages appear ==================== */}
   useEffect(() => {
     messagesContainerRef.current?.scrollTo({
       top: 0,
@@ -260,59 +234,99 @@ function Analyzer({ onBackToHome }) {
     });
   }, [messages, typingMessage]);
 
-  return (
-    <div className="relative flex flex-col h-screen text-white overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/assets/img/background.png')" }}
-      ></div>
+  /* ==================== Shooting star animation ==================== */
+  useEffect(() => {
+    const createStar = () => {
+      const newStar = {
+        id: Math.random(),
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        duration: 2 + Math.random() * 3,
+        size: 1 + Math.random() * 2
+      }
+      setStars(prev => [...prev, newStar])
 
-      {/* Stars - Using Home's animation style */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-        {stars.map((s) => (
+      // Animation completes
+      setTimeout(() => {
+        setStars(prev => prev.filter(star => star.id !== newStar.id))
+      }, (newStar.duration + newStar.delay) * 1000)
+    }
+
+    // Create stars
+    for (let i = 0; i < 8; i++) {
+      setTimeout(createStar, i * 300)
+    }
+
+    // Continue creating stars
+    const interval = setInterval(createStar, 50)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  /* ==================== Page transition variants ==================== */
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      scale: 0.98,
+      filter: "blur(20px)"
+    },
+    in: {
+      opacity: 1,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        duration: 1,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }
+    },
+    out: {
+      opacity: 0,
+      scale: 1.02,
+      filter: "blur(20px)",
+      transition: {
+        duration: 0.4,
+        ease: [0.55, 0.085, 0.68, 0.53]
+      }
+    }
+  };
+
+  return (
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="in"
+      exit="out"
+      transition={{
+        type: "tween",
+        ease: "easeInOut"
+      }}
+      className="flex flex-col items-center justify-center px-8 text-center relative overflow-hidden"
+    >
+      {/* ==================== Shooting stars animation ==================== */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        {stars.map(star => (
           <div
-            key={s.id}
+            key={star.id}
             className="absolute w-1 h-1 bg-white rounded-full shadow-lg animate-shooting-star"
             style={{
-              left: `${s.left}%`,
+              left: `${star.left}%`,
               top: '-10px',
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-              width: `${s.size}px`,
-              height: `${s.size}px`
+              animationDelay: `${star.delay}s`,
+              animationDuration: `${star.duration}s`,
+              width: `${star.size}px`,
+              height: `${star.size}px`
             }}
           ></div>
         ))}
       </div>
 
-      {/* Shooting star keyframe animation */}
-      <style jsx global>{`
-        @keyframes shooting-star {
-          0% {
-            transform: translateY(0) translateX(0) rotate(45deg);
-            opacity: 1;
-          }
-          10% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(100vh) translateX(100px) rotate(45deg);
-            opacity: 0;
-          }
-        }
-        .animate-shooting-star {
-          animation: shooting-star linear forwards;
-        }
-      `}</style>
-
-      {/* Upload Transcript */}
+      {/* ==================== Upload Transcript ==================== */}
       {currentStage === "upload" && (
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="flex-1 flex items-center justify-center px-6 relative z-10"
+          className="min-h-screen w-full flex flex-col items-center justify-center relative z-10"
         >
           <div className="text-center max-w-2xl w-full">
             <h2 className="text-4xl font-bold text-white mb-4">
@@ -393,12 +407,12 @@ function Analyzer({ onBackToHome }) {
         </motion.div>
       )}
 
-      {/* Enter Metadata */}
+      {/* ==================== Enter Metadata ==================== */}
       {currentStage === "metadata" && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex-1 flex items-center justify-center px-6 relative z-20"
+          className="min-h-screen w-full flex flex-col items-center justify-center relative z-20"
         >
           <div className="text-center max-w-2xl w-full">
             <div className="mb-6 flex items-center justify-center gap-2">
@@ -468,9 +482,9 @@ function Analyzer({ onBackToHome }) {
         </motion.div>
       )}
 
-      {/* Q&A Mode */}
+      {/* ==================== Q&A Mode ==================== */}
       {currentStage === "qa" && (
-        <>
+        <div className="w-full relative">
           {/* Messages Container */}
           <div
             ref={messagesContainerRef}
@@ -525,7 +539,7 @@ function Analyzer({ onBackToHome }) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Bar */}
+          {/* ==================== Input Bar ==================== */}
           <motion.div
             initial={{ y: -70, opacity: 1 }}
             animate={{ y: -70, opacity: 1 }}
@@ -594,10 +608,30 @@ function Analyzer({ onBackToHome }) {
               </div>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </div>
+
+      {/* ==================== Shooting star animation ==================== */}
+      <style> {`
+        @keyframes shooting-star {
+          0% {
+            transform: translateY(0) translateX(0) rotate(45deg);
+            opacity: 1;
+          }
+          10% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(100vh) translateX(100px) rotate(45deg);
+            opacity: 0;
+          }
+        }
+        .animate-shooting-star {
+          animation: shooting-star linear forwards;
+        }
+      `} </style>
+    </motion.div>
   );
 }
 
-export default Analyzer;
+export default Analyzer

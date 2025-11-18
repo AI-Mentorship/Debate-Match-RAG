@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Analyzer from './pages/Analyzer'
@@ -7,13 +8,14 @@ import Transcripts from './pages/Transcripts'
 import Missions from './pages/Missions'
 import Team from './pages/Team'
 
-function App() {
+function AppContent() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [trailingPosition, setTrailingPosition] = useState({ x: 0, y: 0 })
-  const [currentPage, setCurrentPage] = useState('home')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTranscript, setSelectedTranscript] = useState(null)
   const trailingRef = useRef({ x: 0, y: 0 })
+  const location = useLocation()
+  const animationControlsRef = useRef()
 
   /* ==================== Mouse follower effect ==================== */
   useEffect(() => {
@@ -69,32 +71,14 @@ function App() {
   }, [isModalOpen, selectedTranscript]);
 
   const handleGetStarted = () => {
-    console.log('Navigating to analyzer interface')
-    setCurrentPage('analyzer')
+    window.location.href = '/analyzer'
   }
 
   const handlePageChange = (page) => {
-    setCurrentPage(page)
+    window.location.href = `/${page}`
   }
 
-  const renderPage = () => {
-    switch(currentPage) {
-      case 'home':
-        return <Home onGetStarted={handleGetStarted} />
-      case 'analyzer':
-        return <Analyzer />
-      case 'transcripts':
-        return <Transcripts onGetStarted={handleGetStarted} selectedTranscript={selectedTranscript} setSelectedTranscript={setSelectedTranscript} />
-      case 'missions':
-        return <Missions />
-      case 'team':
-        return <Team onModalStateChange={setIsModalOpen} />
-      default:
-        return <Home onGetStarted={handleGetStarted} />
-    }
-  }
-
-  // Page transition variants
+  /* ==================== Page transition variants ==================== */
   const pageVariants = {
     initial: {
       opacity: 0,
@@ -121,9 +105,12 @@ function App() {
     }
   }
 
+  /* ==================== Get current page ==================== */
+  const currentPage = location.pathname.substring(1) || 'home'
+
   return (
     <div className="min-h-screen font-noto-sans">
-      {/* Mouse Follower */}
+      {/* ==================== Mouse Follower ==================== */}
       <div 
         className="fixed pointer-events-none z-50"
         style={{
@@ -150,7 +137,7 @@ function App() {
       >
       </div>
       
-      {/* Content */}
+      {/* ==================== Content ==================== */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {!(isModalOpen || selectedTranscript) && (
           <div className="fixed top-0 left-0 right-0 z-20">
@@ -165,23 +152,34 @@ function App() {
 
         {/* Animated Page Content */}
         <div className={`flex-1 relative ${!(isModalOpen || selectedTranscript) ? 'pt-20' : 'pt-0'}`}>
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={currentPage}
-              variants={pageVariants}
+              key={location.pathname}
               initial="initial"
               animate="in"
               exit="out"
-              className="absolute inset-0"
+              variants={pageVariants}
+              className="absolute inset-0 w-full h-full"
+              transition={{
+                type: "tween",
+                ease: "easeInOut"
+              }}
             >
-              {renderPage()}
+              <Routes location={location}>
+                <Route path="/" element={<Home onGetStarted={handleGetStarted} />} />
+                <Route path="/home" element={<Home onGetStarted={handleGetStarted} />} />
+                <Route path="/analyzer" element={<Analyzer />} />
+                <Route path="/transcripts" element={<Transcripts onGetStarted={handleGetStarted} selectedTranscript={selectedTranscript} setSelectedTranscript={setSelectedTranscript} />} />
+                <Route path="/missions" element={<Missions />} />
+                <Route path="/team" element={<Team onModalStateChange={setIsModalOpen} />} />
+              </Routes>
             </motion.div>
           </AnimatePresence>
         </div>
       </div>
 
-      {/* Custom glow and neon effects */}
-      <style>{`
+      {/* ==================== Styles ==================== */}
+      <style> {`
         ::-webkit-scrollbar {
           display: none;
         }
@@ -203,8 +201,16 @@ function App() {
         .hover\\:shadow-silver-glow {
           transition: box-shadow 2s ease-in-out;
         }
-      `}</style>
+      `} </style>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   )
 }
 

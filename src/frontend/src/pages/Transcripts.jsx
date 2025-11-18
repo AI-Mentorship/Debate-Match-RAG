@@ -76,9 +76,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
       setTranscripts(transcriptObjects);
       setFilteredTranscripts(transcriptObjects);
       setIsLoading(false);
-    }
-    
-    else {
+    } else {
       console.error('No transcript data found');
       setIsLoading(false);
     }
@@ -154,9 +152,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      }
-      
-      else {
+      } else {
         isScrolling.current = false
       }
     };
@@ -181,9 +177,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
       
       if (progress < 1) {
         requestAnimationFrame(animateScroll);
-      }
-      
-      else {
+      } else {
         isScrolling.current = false
       }
     };
@@ -207,16 +201,14 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
         
         smoothScrollTo(section, 1200);
       }
-    }
-    
-    else {
+    } else {
       // If at last section, scroll back to top smoothly
       setCurrentSection(0);
       smoothScrollToTop(1200);
     }
   };
 
-  // Update current section based on scroll position
+  /* ==================== Update current section based on scroll position ==================== */
   useEffect(() => {
     const handleScroll = () => {
       if (isScrolling.current) return;
@@ -629,50 +621,48 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
       </section>
 
       {/* ==================== Shooting star animation ==================== */}
-      <style>
-        {`
-          @keyframes shooting-star {
-            0% {
-              transform: translateY(0) translateX(0) rotate(45deg);
-              opacity: 1;
-            }
-            10% {
-              opacity: 1;
-            }
-            100% {
-              transform: translateY(100vh) translateX(100px) rotate(45deg);
-              opacity: 0;
-            }
+      <style> {`
+        @keyframes shooting-star {
+          0% {
+            transform: translateY(0) translateX(0) rotate(45deg);
+            opacity: 1;
           }
-          .animate-shooting-star {
-            animation: shooting-star linear forwards;
+          10% {
+            opacity: 1;
           }
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+          100% {
+            transform: translateY(100vh) translateX(100px) rotate(45deg);
+            opacity: 0;
           }
-          
-          .modal-content::-webkit-scrollbar {
-            width: 6px;
-          }
+        }
+        .animate-shooting-star {
+          animation: shooting-star linear forwards;
+        }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .modal-content::-webkit-scrollbar {
+          width: 6px;
+        }
 
-          .modal-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-          }
+        .modal-content::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
 
-          .modal-content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 3px;
-          }
+        .modal-content::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 3px;
+        }
 
-          .modal-content::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-          }
-        `}
-      </style>
+        .modal-content::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.5);
+        }
+      `} </style>
     </div>
   )
 }
