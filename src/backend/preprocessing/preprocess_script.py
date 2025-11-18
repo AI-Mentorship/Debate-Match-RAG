@@ -12,9 +12,9 @@ import json
 import sys
 from pathlib import Path
 from datetime import datetime
-from transformers import pipeline
+from transformers import pipeline # type: ignore
 import warnings
-import torch
+import torch # type: ignore
 import hashlib
 import pickle
 
@@ -188,7 +188,7 @@ def extract_speaker_turns(cleaned_text, source, date):
         # Pattern 3: [timestamp] Speaker Name: text
         r'^\[?([\d:]+)\]?\s+([A-Za-z\s\.\']+):\s*(.*)$',
         # Pattern 4: Speaker Name: text (no timestamp)
-        r"^([A-Za-z][A-Za-z\.'\-]*(?: [A-Za-z][A-Za-z\.'\-]*)*):\s*(.*)$"
+        r"^([A-Z][A-Za-z\.'\-]+(?: [A-Z][A-Za-z\.'\-']+)*):\s*(.*)$"
     ]
     
     for line in lines:
@@ -205,6 +205,23 @@ def extract_speaker_turns(cleaned_text, source, date):
             match = re.match(pattern, line)
             
             if match:
+                # Based on pattern
+                if pattern_idx == 0 or pattern_idx == 1:
+                    potential_speaker = match.group(1).strip()
+                elif pattern_idx == 2:
+                    potential_speaker = match.group(2).strip()
+                elif pattern_idx == 3:
+                    potential_speaker = match.group(1).strip()
+                
+                # First and Last name
+                words = potential_speaker.split()
+                non_speaker_prefixes = ['Video', 'Clip', 'Audio', 'Recording', 'Transcript', 'Voice']
+                
+                if (len(words) < 2 or # Must have at least 2 words
+                    any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes) or # Not a video or audio
+                    potential_speaker.isupper()): # Not all caps
+                    continue
+
                 # Save previous speaker's text if it exists
                 if current_speaker and current_text:
                     text = '\n'.join(current_text).strip()
