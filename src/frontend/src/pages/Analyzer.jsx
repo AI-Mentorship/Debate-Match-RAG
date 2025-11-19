@@ -22,12 +22,28 @@ function Analyzer({ onBackToHome }) {
   );
 
   // Multi-stage state
-  const [currentStage, setCurrentStage] = useState("upload");
+  const [currentStage, setCurrentStage] = useState(() => {
+    // Check sessionStorage
+    const storedTranscript = sessionStorage.getItem('selectedTranscript');
+    if (storedTranscript) {
+      return "qa";
+    }
+    const transcript = window.history.state?.usr?.transcript;
+    return transcript ? "qa" : "choice";
+  });
+
   const [currentMode, setCurrentMode] = useState("qa");
   const [uploadedTranscript, setUploadedTranscript] = useState(null);
   const [debateName, setDebateName] = useState("");
   const [debateDate, setDebateDate] = useState("");
-  const [isProcessingUpload, setIsProcessingUpload] = useState(false);
+  const [preSelectedTranscript, setPreSelectedTranscript] = useState(() => {
+    // Check sessionStorage
+    const storedTranscript = sessionStorage.getItem('selectedTranscript');
+    if (storedTranscript) {
+      return JSON.parse(storedTranscript);
+    }
+    return window.history.state?.usr?.transcript || null;
+  });
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -66,6 +82,22 @@ function Analyzer({ onBackToHome }) {
   const handleUploadBoxClick = () => {
     transcriptInputRef.current?.click();
   };
+
+  {/* ==================== Transcript was passed via location state ==================== */}
+  useEffect(() => {
+    if (preSelectedTranscript) {
+      setDebateName(preSelectedTranscript.title);
+      setDebateDate(preSelectedTranscript.date);
+      setMessages([
+        {
+          role: "assistant",
+          content: `Loaded "${preSelectedTranscript.title}"\n\nYou can now ask questions about this debate!`,
+        },
+      ]);
+      // Clear sessionStorage after using it
+      sessionStorage.removeItem('selectedTranscript');
+    }
+  }, [preSelectedTranscript]);
 
   {/* ==================== Handle metadata submission ==================== */}
   const handleMetadataSubmit = async () => {
@@ -309,6 +341,78 @@ function Analyzer({ onBackToHome }) {
           ></div>
         ))}
       </div>
+
+      {/* ==================== Choice ==================== */}
+      {currentStage === "choice" && (
+        <motion.div
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
+          className="h-screen w-full flex flex-col items-center justify-center relative z-10"
+        >
+          <div className="text-center max-w-4xl w-full">
+            <motion.div
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+            >
+              <h2 className="text-5xl font-bold text-white mb-4">
+                Choose Your Path
+              </h2>
+              <p className="text-lg text-dark-silver mb-12">
+                Upload your own transcript or explore our curated collection
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+            >
+              {/* Upload Option */}
+              <button
+                onClick={() => setCurrentStage("upload")}
+                className="group relative bg-[#2c2c30] backdrop-blur-lg rounded-2xl border-2 border-white/20 p-12 hover:border-electric-purple transition-all duration-300 hover:scale-105"
+              >
+                <Upload 
+                  className="mx-auto mb-6 text-electric-purple group-hover:scale-110 transition-transform duration-300" 
+                  size={64} 
+                />
+                <h3 className="text-2xl font-bold text-white mb-3">
+                  Upload Your Own
+                </h3>
+                <p className="text-dark-silver">
+                  Upload a custom debate transcript and analyze it with our AI tools
+                </p>
+              </button>
+
+              {/* Browse Collection Option */}
+              <button
+                onClick={() => window.location.href = '/transcripts'}
+                className="group relative bg-[#2c2c30] backdrop-blur-lg rounded-2xl border-2 border-white/20 p-12 hover:border-electric-purple transition-all duration-300 hover:scale-105"
+              >
+                <svg 
+                  className="mx-auto mb-6 text-electric-purple group-hover:scale-110 transition-transform duration-300" 
+                  width="64" 
+                  height="64" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <h3 className="text-2xl font-bold text-white mb-3">
+                  Browse Collection
+                </h3>
+                <p className="text-dark-silver">
+                  Explore our curated collection of debate transcripts
+                </p>
+              </button>
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
 
       {/* ==================== Upload Transcript ==================== */}
       {currentStage === "upload" && (

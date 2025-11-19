@@ -766,6 +766,10 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
+                              // Store transcript in sessionStorage before navigation
+                              sessionStorage.setItem('selectedTranscript', JSON.stringify(transcript));
+                              // Navigate to analyzer
+                              window.location.href = '/analyzer';
                             }}
                             className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
                           >
