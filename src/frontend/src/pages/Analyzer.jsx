@@ -36,6 +36,7 @@ function Analyzer({ onBackToHome }) {
   const [uploadedTranscript, setUploadedTranscript] = useState(null);
   const [debateName, setDebateName] = useState("");
   const [debateDate, setDebateDate] = useState("");
+  const [hasUserSent, setHasUserSent] = useState(false);
   const [preSelectedTranscript, setPreSelectedTranscript] = useState(() => {
     // Check sessionStorage
     const storedTranscript = sessionStorage.getItem('selectedTranscript');
@@ -94,7 +95,7 @@ function Analyzer({ onBackToHome }) {
           content: `Loaded "${preSelectedTranscript.title}"\n\nYou can now ask questions about this debate!`,
         },
       ]);
-      // Clear sessionStorage after using it
+      // Clear sessionStorage after
       sessionStorage.removeItem('selectedTranscript');
     }
   }, [preSelectedTranscript]);
@@ -162,6 +163,10 @@ function Analyzer({ onBackToHome }) {
   {/* ==================== Send message ==================== */}
   const sendMessage = async () => {
     if (!input.trim()) return;
+
+    if (!hasUserSent) {
+      setHasUserSent(true);
+    }
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -258,13 +263,15 @@ function Analyzer({ onBackToHome }) {
     }
   };
 
-  {/* ==================== // Scroll to bottom when new messages appear ==================== */}
+  {/* ==================== Scroll to bottom when new messages appear ==================== */}
   useEffect(() => {
-    messagesContainerRef.current?.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [messages, typingMessage]);
+    if (hasUserSent && messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messages, typingMessage, hasUserSent]);
 
   /* ==================== Shooting star animation ==================== */
   useEffect(() => {
@@ -589,31 +596,35 @@ function Analyzer({ onBackToHome }) {
 
       {/* ==================== Q&A Mode ==================== */}
       {currentStage === "qa" && (
-        <div className="w-full relative">
+        <div className="h-screen w-full flex flex-col relative">
           {/* Messages Container */}
           <div
             ref={messagesContainerRef}
-            className="flex-1 flex flex-col-reverse overflow-y-auto px-6 pt-6 pb-28 space-y-6 space-y-reverse relative z-20"
+            className="flex-1 overflow-y-auto px-6 pt-6 space-y-6 relative z-20"
+            style={{ 
+              height: hasUserSent ? 'calc(100vh - 140px)' : 'calc(100vh - 200px)',
+              maxHeight: hasUserSent ? 'calc(100vh - 140px)' : 'calc(100vh - 200px)'
+            }}
           >
             {/* Messages */}
-            <div className="flex flex-col space-y-6">
+            <div className="flex flex-col space-y-6 mt-40">
               {messages.map((m, i) => (
                 <div key={i} className="flex justify-center">
                   <div
-                    className={`max-w-5xl w-full rounded-2xl p-6 text-base leading-relaxed border backdrop-blur-md ${
+                    className={`w-full max-w-5xl rounded-2xl p-6 text-base leading-relaxed border ${
                       m.role === "user"
                         ? "bg-electric-purple/10 border-electric-purple/30 text-white"
                         : "bg-white/10 border-white/20 text-white"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap">{m.content}</p>
+                    <p className="whitespace-pre-wrap text-center">{m.content}</p>
                   </div>
                 </div>
               ))}
               {isTyping && (
                 <div className="flex justify-center">
-                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
-                    <p className="whitespace-pre-wrap">
+                  <div className="w-full max-w-5xl rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md">
+                    <p className="whitespace-pre-wrap text-center">
                       {typingMessage}
                       <span className="animate-pulse">▊</span>
                     </p>
@@ -622,7 +633,7 @@ function Analyzer({ onBackToHome }) {
               )}
               {loading && !isTyping && (
                 <div className="flex justify-center">
-                  <div className="max-w-5xl w-full rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center space-x-4">
+                  <div className="w-full max-w-5xl rounded-2xl p-6 bg-white/10 border border-white/20 text-white backdrop-blur-md flex items-center justify-center space-x-4">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 bg-white rounded-full animate-bounce"></div>
                       <div
@@ -646,10 +657,23 @@ function Analyzer({ onBackToHome }) {
 
           {/* ==================== Input Bar ==================== */}
           <motion.div
-            initial={{ y: -70, opacity: 1 }}
-            animate={{ y: -70, opacity: 1 }}
-            transition={{ duration: 1.0, type: "spring" }}
-            className="px-6 py-6 relative z-30"
+            initial={!hasUserSent ? { y: -300, opacity: 1 } : false}
+            animate={hasUserSent ? { 
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              y: 0,
+              opacity: 1 
+            } : { y: -300, opacity: 1 }}
+            transition={{ duration: 0.8, type: "spring", damping: 20 }}
+            className="px-6 py-6 z-30"
+            style={hasUserSent ? { 
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+            } : {}}
           >
             <div className="max-w-5xl mx-auto space-y-2">
               <div className="flex items-center bg-[#2c2c30] rounded-2xl px-2 py-1 shadow-xl border border-[#47475b]">

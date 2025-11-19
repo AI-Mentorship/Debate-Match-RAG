@@ -233,16 +233,17 @@ function Team({ onGetStarted, onModalStateChange }) {
     {
       id: 6,
       name: "Khang Doan",
-      role: "Full Stack Developer",
+      role: "Full-stack Developer",
       description: "B.S. in Computer Science with focus on AI & Machine Learning",
       paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
+      linkedin: "https://www.linkedin.com/in/khangdoan514/",
       instagram: "https://www.instagram.com/itsmekhangdoan/",
       image: "src/assets/img/Khang_Doan.png"
     },
     {
       id: 7,
       name: "Pavan Arani",
-      role: "Full Stack Developer",
+      role: "Full-stack Developer",
       description: "B.S. in Computer Science with focus on Cybersecurity and AI/ML",
       paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
@@ -252,7 +253,7 @@ function Team({ onGetStarted, onModalStateChange }) {
     {
       id: 8,
       name: "Satyank Nadimpalli",
-      role: "Full Stack Developer",
+      role: "Full-stack Developer",
       description: "M.S. in Computer Science studying AI & Intelligent Systems",
       paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
       linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
