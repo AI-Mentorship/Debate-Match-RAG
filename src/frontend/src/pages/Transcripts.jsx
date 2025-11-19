@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import debateTranscripts from "../../../debates_metadata.json"
 
 function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }) {
@@ -10,6 +11,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
   const [hoveredCard, setHoveredCard] = useState(null)
   const isScrolling = useRef(false)
   const transcriptRefs = useRef({})
+  const navigate = useNavigate()
   
   /* ==================== Transcripts ==================== */
   const [transcripts, setTranscripts] = useState([])
@@ -488,7 +490,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
-          <div className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
+          <div className="mb-10 text-md md:text-md text-dark-silver max-w-4xl mx-auto leading-relaxed">
             Search through our comprehensive collection of debate transcripts. Find specific arguments, 
             track speaker positions, and uncover valuable insights with our advanced browsing tools.
           </div>
@@ -509,7 +511,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Browser</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
             Explore our curated collection of debate transcripts. Each transcript is carefully processed 
             for optimal search and analysis with topic categorization and speaker tracking.
           </div>
@@ -766,10 +768,8 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              // Store transcript in sessionStorage before navigation
                               sessionStorage.setItem('selectedTranscript', JSON.stringify(transcript));
-                              // Navigate to analyzer
-                              window.location.href = '/analyzer';
+                              navigate('/analyzer');
                             }}
                             className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
                           >

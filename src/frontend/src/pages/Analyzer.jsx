@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from 'react-router-dom'
 import { Paperclip, Upload, CheckCircle } from "lucide-react";
 
 const SYSTEM_PROMPTS = {
@@ -13,6 +14,7 @@ function Analyzer({ onBackToHome }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [visibleSections, setVisibleSections] = useState({})
   const [typingMessage, setTypingMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [file, setFile] = useState(null);
@@ -50,6 +52,7 @@ function Analyzer({ onBackToHome }) {
   const fileInputRef = useRef(null);
   const transcriptInputRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  const navigate = useNavigate()
 
   {/* ==================== Typing animation ==================== */}
   const typeText = async (text, onComplete) => {
@@ -148,7 +151,7 @@ function Analyzer({ onBackToHome }) {
       setMessages([
         {
           role: "assistant",
-          content: `✅ ${response.data.message}\n\nYou can now ask questions about this debate!`,
+          content: `${response.data.message}\n\nYou can now ask questions about this debate!`,
         },
       ]);
     } catch (err) {
@@ -263,7 +266,8 @@ function Analyzer({ onBackToHome }) {
     }
   };
 
-  {/* ==================== Scroll to bottom when new messages appear ==================== */}
+  {/* ==================== Scroll ==================== */}
+  // Scroll to bottom when new messages appear
   useEffect(() => {
     if (hasUserSent && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -272,6 +276,29 @@ function Analyzer({ onBackToHome }) {
       });
     }
   }, [messages, typingMessage, hasUserSent]);
+
+  // Fade-in effect for "Upload Your Own" button
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = document.querySelectorAll('div[id]');
+      
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionMiddle = sectionTop + section.offsetHeight / 3;
+        
+        // Check if section is in viewport for fade-in effect
+        if (window.scrollY + window.innerHeight > sectionMiddle) {
+          setVisibleSections(prev => ({ ...prev, [section.id]: true }));
+        }
+      });
+    };
+
+    // Initial check on mount
+    handleScroll();
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   /* ==================== Shooting star animation ==================== */
   useEffect(() => {
@@ -351,22 +378,22 @@ function Analyzer({ onBackToHome }) {
 
       {/* ==================== Choice ==================== */}
       {currentStage === "choice" && (
-        <motion.div
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
-          className="h-screen w-full flex flex-col items-center justify-center relative z-10"
+        <div
+          id="choice-section"
+          className={`min-h-screen w-full flex flex-col items-center justify-center relative z-10 transition-all duration-1000 ${
+            visibleSections['choice-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
         >
           <div className="text-center max-w-4xl w-full">
             <motion.div
-              initial={{ y: -30, opacity: 0 }}
+              initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
             >
               <h2 className="text-5xl font-bold text-white mb-4">
                 Choose Your Path
               </h2>
-              <p className="text-lg text-dark-silver mb-12">
+              <p className="text-md md:text-md text-dark-silver mb-12">
                 Upload your own transcript or explore our curated collection
               </p>
             </motion.div>
@@ -374,7 +401,7 @@ function Analyzer({ onBackToHome }) {
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
+              transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
             >
               {/* Upload Option */}
@@ -396,7 +423,7 @@ function Analyzer({ onBackToHome }) {
 
               {/* Browse Collection Option */}
               <button
-                onClick={() => window.location.href = '/transcripts'}
+                onClick={() => navigate('/transcripts')}
                 className="group relative bg-[#2c2c30] backdrop-blur-lg rounded-2xl border-2 border-white/20 p-12 hover:border-electric-purple transition-all duration-300 hover:scale-105"
               >
                 <svg 
@@ -418,7 +445,7 @@ function Analyzer({ onBackToHome }) {
               </button>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* ==================== Upload Transcript ==================== */}
@@ -438,7 +465,7 @@ function Analyzer({ onBackToHome }) {
               <h2 className="text-4xl font-bold text-white mb-4">
                 Upload Debate Transcript
               </h2>
-              <p className="text-lg text-dark-silver mb-8">
+              <p className="text-md md:text-md text-dark-silver mb-8">
                 Start by uploading a debate transcript (.txt file)
               </p>
             </motion.div>

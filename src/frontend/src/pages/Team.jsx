@@ -232,6 +232,16 @@ function Team({ onGetStarted, onModalStateChange }) {
     },
     {
       id: 6,
+      name: "Satyank Nadimpalli",
+      role: "Full-stack Developer",
+      description: "M.S. in Computer Science studying AI & Intelligent Systems",
+      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
+      linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
+      instagram: "https://www.instagram.com/satyank.varma/",
+      image: "src/assets/img/Satyank_Nadimpalli.jpg"
+    },
+    {
+      id: 7,
       name: "Khang Doan",
       role: "Full-stack Developer",
       description: "B.S. in Computer Science with focus on AI & Machine Learning",
@@ -241,7 +251,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       image: "src/assets/img/Khang_Doan.png"
     },
     {
-      id: 7,
+      id: 8,
       name: "Pavan Arani",
       role: "Full-stack Developer",
       description: "B.S. in Computer Science with focus on Cybersecurity and AI/ML",
@@ -249,16 +259,6 @@ function Team({ onGetStarted, onModalStateChange }) {
       linkedin: "https://www.linkedin.com/in/pavan-arani-15954426a/",
       instagram: "https://www.instagram.com/botiq00/",
       image: "src/assets/img/Pavan_Arani.jpeg"
-    },
-    {
-      id: 8,
-      name: "Satyank Nadimpalli",
-      role: "Full-stack Developer",
-      description: "M.S. in Computer Science studying AI & Intelligent Systems",
-      paragraph: "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis deserunt distinctio modi omnis dignissimos, quidem consequatur saepe quam, delectus pariatur aperiam perspiciatis laboriosam dolorem et exercitationem! Cum totam beatae repellendus. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquid, et, sequi veniam quas nesciunt dignissimos excepturi tempora cupiditate, unde sed ipsa ducimus. Tenetur corrupti illo ea laborum dolorum consequuntur! Tempore!",
-      linkedin: "https://www.linkedin.com/in/satyank-nadimpalli/",
-      instagram: "https://www.instagram.com/satyank.varma/",
-      image: "src/assets/img/Satyank_Nadimpalli.jpg"
     }
   ]
 
@@ -470,7 +470,7 @@ function Team({ onGetStarted, onModalStateChange }) {
           animate={{ y: 0, opacity: 1 }}
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
-          <div className="mb-10 text-md md:text-md text-dark-silver max-w-2xl mx-auto leading-relaxed">
+          <div className="mb-10 text-md md:text-md text-dark-silver max-w-4xl mx-auto leading-relaxed">
             Meet the passionate team behind DebateMatch.RAG project. We combine expertise in AI research, 
             engineering, and design to create the future of debate analysis.
           </div>
@@ -491,7 +491,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Leadership</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
             Guiding our vision with strategic direction and technical expertise, our project leads 
             ensure we deliver innovative solutions that transform political discourse through AI-powered analysis.
           </div>
@@ -582,7 +582,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Excellence</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
             Driving quality and innovation across design, backend infrastructure, and testing pipelines.
             Our technical specialists ensure every aspect of DebateMatch.RAG meets the highest standards of excellence.
           </div>
@@ -673,7 +673,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
             Building the core technology behind DebateMatch.RAG, our development team combines 
             cutting-edge AI research with robust engineering to deliver reliable, scalable solutions.
           </div>

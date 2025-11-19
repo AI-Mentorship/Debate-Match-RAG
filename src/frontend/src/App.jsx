@@ -15,7 +15,6 @@ function AppContent() {
   const [selectedTranscript, setSelectedTranscript] = useState(null)
   const trailingRef = useRef({ x: 0, y: 0 })
   const location = useLocation()
-  const animationControlsRef = useRef()
 
   /* ==================== Mouse follower effect ==================== */
   useEffect(() => {
@@ -152,7 +151,7 @@ function AppContent() {
 
         {/* Animated Page Content */}
         <div className={`flex-1 relative ${!(isModalOpen || selectedTranscript) ? 'pt-20' : 'pt-0'}`}>
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
               initial="initial"
@@ -160,10 +159,6 @@ function AppContent() {
               exit="out"
               variants={pageVariants}
               className="absolute inset-0 w-full h-full"
-              transition={{
-                type: "tween",
-                ease: "easeInOut"
-              }}
             >
               <Routes location={location}>
                 <Route path="/" element={<Home onGetStarted={handleGetStarted} />} />
