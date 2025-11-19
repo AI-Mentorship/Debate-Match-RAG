@@ -3,18 +3,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import debateTranscripts from "../../../debates_metadata.json"
 
 function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }) {
+  /* ==================== Page ==================== */
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
+  const [hoveredCard, setHoveredCard] = useState(null)
+  const isScrolling = useRef(false)
+  const transcriptRefs = useRef({})
+  
+  /* ==================== Transcripts ==================== */
   const [transcripts, setTranscripts] = useState([])
   const [filteredTranscripts, setFilteredTranscripts] = useState([])
   const [selectedSpeaker, setSelectedSpeaker] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isLoading, setIsLoading] = useState(true)
-  const [hoveredCard, setHoveredCard] = useState(null)
-  const scrollPositionRef = useRef(0);
-  const isScrolling = useRef(false)
-  const transcriptRefs = useRef({})
+  const [sortBy, setSortBy] = useState('date-desc')
+  const [filterTypes, setFilterTypes] = useState([])
+  const [showFilters, setShowFilters] = useState(false)
 
   /* ==================== Data from JSON ==================== */
   useEffect(() => {
@@ -91,23 +96,52 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
   /* ==================== Search and filter ==================== */
   useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredTranscripts(transcripts)
-      return
+    let filtered = [...transcripts]
+
+    // Search filter
+    if (searchQuery.trim()) {
+    const query = searchQuery.toLowerCase()
+    filtered = filtered.filter(transcript => 
+      transcript.title.toLowerCase().includes(query) ||
+      transcript.date.toLowerCase().includes(query) ||
+      transcript.participants.some(p => p.toLowerCase().includes(query))
+    )
+  }
+
+    // Type filter
+    if (filterTypes.length > 0) {
+      filtered = filtered.filter(transcript => {
+        const title = transcript.title.toLowerCase()
+        return filterTypes.some(filterType => {
+          if (filterType === 'presidential') return title.includes('presidential') && !title.includes('vice')
+          if (filterType === 'vice-presidential') return title.includes('vice')
+          if (filterType === 'republican') return title.includes('republican') || title.includes('gop')
+          if (filterType === 'democratic') return title.includes('democratic') || title.includes('democrat')
+          return false
+        })
+      })
     }
 
-    const query = searchQuery.toLowerCase()
-    const filtered = transcripts.filter(transcript => 
-      transcript.title.toLowerCase().includes(query) ||
-      transcript.participants.some(p => p.toLowerCase().includes(query)) ||
-      transcript.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      transcript.sections.some(section => 
-        section.content.toLowerCase().includes(query) ||
-        section.speaker.toLowerCase().includes(query)
-      )
-    )
+    // Sort
+    filtered.sort((a, b) => {
+      if (sortBy === 'date-desc') return new Date(b.date) - new Date(a.date)
+      if (sortBy === 'date-asc') return new Date(a.date) - new Date(b.date)
+      if (sortBy === 'title-asc') return a.title.localeCompare(b.title)
+      if (sortBy === 'title-desc') return b.title.localeCompare(a.title)
+      return 0
+    })
+
     setFilteredTranscripts(filtered)
-  }, [searchQuery, transcripts])
+  }, [searchQuery, transcripts, sortBy, filterTypes])
+
+  // Toggle filter type
+    const toggleFilterType = (type) => {
+      setFilterTypes(prev => 
+        prev.includes(type) 
+          ? prev.filter(t => t !== type)
+          : [...prev, type]
+      )
+    }
 
   // Highlight text
   const highlightText = (text, highlight) => {
@@ -119,18 +153,6 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
         <mark key={index} className="bg-yellow-200 text-gray-900 px-1 rounded">{part}</mark> : 
         part
     )
-  }
-
-  // Scroll to section
-  const scrollToSection = (sectionId) => {
-    const element = transcriptRefs.current[sectionId]
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      element.classList.add('ring-2', 'ring-blue-500')
-      setTimeout(() => {
-        element.classList.remove('ring-2', 'ring-blue-500')
-      }, 2000)
-    }
   }
 
   /* ==================== Scroll ==================== */
@@ -321,10 +343,10 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                 <div className="flex-shrink-0 p-8 border-b border-white/20">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <h2 className="text-4xl font-bold text-white mb-2 text-left">
+                      <h2 className="text-3xl font-bold text-white mb-2 text-left">
                         {selectedTranscript.title}
                       </h2>
-                      <div className="flex flex-wrap gap-4 text-dark-silver text-lg mb-4 text-left">
+                      <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
                         <span>Date: {selectedTranscript.date}</span>
                         <span>•</span>
                         <span>{selectedTranscript.speakerCount} Speakers</span>
@@ -353,7 +375,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
                   {/* Speakers Navigation */}
                   <div className="mt-6 text-left">
-                    <h3 className="text-lg font-semibold mb-3 text-left text-white">Speakers</h3>
+                    <h3 className="text-md font-semibold mb-3 text-left text-white">Speakers</h3>
                     <div className="flex flex-wrap gap-2 text-left">
                       {selectedTranscript.participants.map(speaker => (
                         <button
@@ -381,8 +403,15 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         ref={el => transcriptRefs.current[section.id] = el}
                         className="p-6 rounded-2xl border transition-all duration-300 text-left bg-white/5 border-white/10 hover:border-white/20"
                       >
-                        <h4 className="flex justify-between items-start text-xl font-semibold text-white text-left mb-4">{section.speaker}</h4>
-                        <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-lg">
+                        <div className="flex justify-between items-start mb-3 text-left">
+                          <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
+                          {section.startTime !== "N/A" && (
+                            <span className="text-dark-silver text-sm bg-white/10 px-2 py-1 rounded">
+                              {section.startTime}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-sm">
                           {searchQuery ? highlightText(section.content, searchQuery) : section.content}
                         </p>
                         {section.topics && section.topics.length > 0 && (
@@ -480,122 +509,278 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Browser</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Explore our curated collection of debate transcripts. Each transcript is carefully processed 
             for optimal search and analysis with topic categorization and speaker tracking.
           </div>
         </div>
         
         <div className="flex-1 w-full">
-          <div className="min-h-screen text-white w-full">
+          <div className="min-h-175 text-white w-full">
             <div className="container mx-auto px-8">
-              {/* Search Bar */}
+              {/* Search Bar and Filters */}
               <motion.div
                 initial={{ y: -100, opacity: 0 }}
                 animate={visibleSections['browse'] ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="max-w-4xl mb-12 justify-center mx-auto"
+                className="mb-7 justify-center mx-auto"
               >
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search transcripts by title, participant, tags, or content..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-6 py-4 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
-                  />
-                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                <div className="flex gap-4 items-center">
+                  {/* Search Bar */}
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      placeholder="Search transcripts by title, date, or participant..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
+                    />
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {/* Filter Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowFilters(!showFilters)}
+                      className={`px-6 py-3 bg-[#251f2e] backdrop-blur-lg border rounded-2xl text-white transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${
+                        showFilters || filterTypes.length > 0
+                          ? 'border-electric-purple bg-electric-purple/10'
+                          : 'border-white/20 hover:border-electric-purple hover:bg-white/5'
+                      }`}
+                    >
+                      <span>Filter</span>
+                      {filterTypes.length > 0 && (
+                        <span className="ml-1 px-2 py-0.5 bg-electric-purple rounded-full text-xs font-bold">
+                          {filterTypes.length}
+                        </span>
+                      )}
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                      </svg>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {showFilters && (
+                      <>
+                        {/* Backdrop */}
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setShowFilters(false)}
+                        />
+                        
+                        {/* Dropdown Panel */}
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute right-0 mt-3 w-80 bg-gradient-to-br from-[#1a1029] to-[#0B0219] backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-50 overflow-hidden"
+                        >
+                          {/* Header */}
+                          <div className="p-4 border-b border-white/10 bg-white/5">
+                            <div className="flex items-center justify-between">
+                              <h3 className="text-white font-bold text-base flex items-center gap-2">
+                                <svg className="w-5 h-5 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                </svg>
+                                Filters & Sorting
+                              </h3>
+                              {filterTypes.length > 0 && (
+                                <button
+                                  onClick={() => setFilterTypes([])}
+                                  className="text-xs text-electric-purple hover:text-white transition-colors duration-200"
+                                >
+                                  Clear All
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="p-4 space-y-6 max-h-[70vh] overflow-y-auto">
+                            {/* Sort By Section */}
+                            <div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <svg className="w-4 h-4 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                                </svg>
+                                <h4 className="text-white font-semibold text-sm text-left">Sort By</h4>
+                              </div>
+                              <div className="space-y-2">
+                                {[
+                                  { value: 'date-desc', label: 'Newest First', icon: '↓' },
+                                  { value: 'date-asc', label: 'Oldest First', icon: '↑' },
+                                  { value: 'title-asc', label: 'Title (A-Z)', icon: 'A' },
+                                  { value: 'title-desc', label: 'Title (Z-A)', icon: 'Z' },
+                                ].map(option => (
+                                  <button
+                                    key={option.value}
+                                    onClick={() => setSortBy(option.value)}
+                                    className={`w-full px-4 py-1 rounded-xl text-sm text-left flex items-center justify-between group ${
+                                      sortBy === option.value
+                                        ? 'bg-gradient-to-r from-electric-purple/30 to-electric-purple/20 text-white border border-electric-purple/50 shadow-lg shadow-electric-purple/20'
+                                        : 'bg-white/5 text-dark-silver border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                                    }`}
+                                  >
+                                    <span>{option.label}</span>
+                                    <span className={`text-lg transition-transform ${
+                                      sortBy === option.value ? 'scale-110' : 'group-hover:scale-110'
+                                    }`}>
+                                      {option.icon}
+                                    </span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Filter By Type Section */}
+                            <div>
+                              <div className="flex items-center gap-2 mb-3">
+                                <svg className="w-4 h-4 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                                </svg>
+                                <h4 className="text-white font-semibold text-sm text-left">Filter By Type</h4>
+                                <span className="text-xs text-dark-silver ml-auto">(Multi-select)</span>
+                              </div>
+                              <div className="space-y-2">
+                                {[
+                                  { value: 'presidential', label: 'Presidential' },
+                                  { value: 'vice-presidential', label: 'Vice Presidential' },
+                                  { value: 'republican', label: 'Republican' },
+                                  { value: 'democratic', label: 'Democratic' }
+                                ].map(option => (
+                                  <button
+                                    key={option.value}
+                                    onClick={() => toggleFilterType(option.value)}
+                                    className={`w-full px-4 py-2.5 rounded-xl text-sm text-left flex items-center justify-between group ${
+                                      filterTypes.includes(option.value)
+                                        ? `bg-gradient-to-r from-electric-purple/30 to-electric-purple/20 text-white border border-electric-purple/50 shadow-lg shadow-electric-purple/20`
+                                        : 'bg-white/5 text-dark-silver border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <span>{option.label}</span>
+                                    </div>
+                                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-300 ${
+                                      filterTypes.includes(option.value)
+                                        ? `border-purple-500/50 bg-white/20`
+                                        : 'border-white/30 group-hover:border-white/50'
+                                    }`}>
+                                      {filterTypes.includes(option.value) && (
+                                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                      )}
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footer */}
+                          <div className="p-4 border-t border-white/10 bg-white/5">
+                            <div className="text-xs text-dark-silver text-center">
+                              {filteredTranscripts.length} {filteredTranscripts.length === 1 ? 'debate' : 'debates'} found
+                            </div>
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
                   </div>
                 </div>
               </motion.div>
 
               {/* Transcripts Grid */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={visibleSections['browse'] ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="w-full"
-              >
+              <div className="w-full">
                 <div className="max-w-7xl mx-auto">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <AnimatePresence>
-                      {filteredTranscripts.map((transcript, index) => (
-                        <motion.div
-                          key={transcript.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-80 flex flex-col ${
-                            hoveredCard === transcript.id 
-                              ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
-                              : 'border-white/10 shadow-lg hover:border-white/30'
-                          } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
-                          onMouseEnter={() => setHoveredCard(transcript.id)}
-                          onMouseLeave={() => setHoveredCard(null)}
-                        >
-                          {/* Main Content */}
-                          <div className="flex-1 p-6">
-                            {/* Title and Date */}
-                            <div className="text-center mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                              <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500 line-clamp-3">
-                                {transcript.title}
-                              </h3>
-                              <p className="text-dark-silver text-sm">
-                                {transcript.date}
-                              </p>
-                            </div>
+                  <div className="pt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-2">
+                    {filteredTranscripts.map((transcript, index) => (
+                      <motion.div
+                        key={transcript.id}
+                        className={`relative bg-[#251f2e] backdrop-blur-lg rounded-xl border transition-all duration-500 group min-h-65 flex flex-col ${
+                          hoveredCard === transcript.id 
+                            ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                            : 'border-white/10 shadow-lg hover:border-white/30'
+                        } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                        onMouseEnter={() => setHoveredCard(transcript.id)}
+                        onMouseLeave={() => setHoveredCard(null)}
+                      >
+                        {/* Main Content */}
+                        <div className="flex-1 p-6">
+                          {/* Title and Date */}
+                          <div className="text-center mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                            <h3 className="text-md font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500 line-clamp-3">
+                              {transcript.title}
+                            </h3>
+                            <p className="text-dark-silver text-sm">
+                              {transcript.date}
+                            </p>
+                          </div>
 
-                            {/* Stats */}
-                            <div className="text-center mb-4 relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
-                              <div className="flex justify-center space-x-4 text-xs text-dark-silver">
-                                <span>{transcript.speakerCount} speakers</span>
-                                <span>•</span>
-                                <span>{transcript.totalSections} sections</span>
-                              </div>
-                            </div>
-
-                            {/* Tags */}
-                            <div className="text-center relative z-10 transform transition-all duration-500 delay-150 group-hover:-translate-y-1">
-                              <div className="flex flex-wrap gap-1 justify-center">
-                                {transcript.tags.slice(0, 3).map(tag => (
-                                  <span key={tag} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
-                                    {tag.replace(/_/g, ' ')}
-                                  </span>
-                                ))}
-                                {transcript.tags.length > 3 && (
-                                  <span className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
-                                    +{transcript.tags.length - 3}
-                                  </span>
-                                )}
-                              </div>
+                          {/* Stats */}
+                          <div className="text-center mb-4 relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                            <div className="flex justify-center space-x-4 text-xs text-dark-silver">
+                              <span>{transcript.speakerCount} speakers</span>
+                              <span>•</span>
+                              <span>{transcript.totalSections} sections</span>
                             </div>
                           </div>
 
-                          {/* View Transcript Button */}
-                          <div className="mt-auto h-16 flex-shrink-0">
-                            <button 
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setSelectedTranscript(transcript);
-                              }}
-                              className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
-                            >
-                              <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
-                                View Transcript →
-                              </span>
-                            </button>
+                          {/* Tags */}
+                          <div className="text-center relative z-10 transform transition-all duration-500 delay-150 group-hover:-translate-y-1">
+                            <div className="flex flex-wrap gap-1 justify-center">
+                              {transcript.tags.slice(0, 3).map(tag => (
+                                <span key={tag} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                  {tag.replace(/_/g, ' ')}
+                                </span>
+                              ))}
+                              {transcript.tags.length > 3 && (
+                                <span className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
+                                  +{transcript.tags.length - 3}
+                                </span>
+                              )}
+                            </div>
                           </div>
+                        </div>
 
-                          {/* Hover Glow Effect */}
-                          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
+                        <div className="mt-auto h-12 flex-shrink-0 flex border-t border-white/20">
+                          {/* View Button */}
+                          <button 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedTranscript(transcript);
+                            }}
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-bl-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
+                          >
+                            <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                              View
+                            </span>
+                          </button>
+                          
+                          {/* Analyze Button */}
+                          <button 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
+                          >
+                            <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
+                              Analyze
+                            </span>
+                          </button>
+                        </div>
+
+                        {/* Hover Glow Effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                      </motion.div>
+                    ))}
                   </div>
+                </div>
 
                   {/* Empty State */}
                   {filteredTranscripts.length === 0 && (
@@ -613,8 +798,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                       </p>
                     </motion.div>
                   )}
-                </div>
-              </motion.div>
+              </div>
             </div>
           </div>
         </div>

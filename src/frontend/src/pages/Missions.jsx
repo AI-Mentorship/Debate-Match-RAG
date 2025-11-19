@@ -82,7 +82,7 @@ function Missions({ onGetStarted }) {
     }
   }
 
-  /* ==================== Update current section based on scroll position ==================== */
+  // Update current section based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       if (isScrolling.current) return;
@@ -244,7 +244,7 @@ function Missions({ onGetStarted }) {
             <span className="text-white">.RAG</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Change this
           </div>
         </div>
@@ -372,7 +372,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Change this
           </div>
         </div>
@@ -412,7 +412,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Creating a future where political discourse is transparent, accessible, 
             and grounded in factual information for all citizens.
           </div>
@@ -444,7 +444,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Core Values</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+          <p className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             The principles that guide our mission and shape every aspect of our platform's development.
           </p>
         </div>
@@ -486,7 +486,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
           </h2>
           {/* Description */}
-          <p className="text-lg text-dark-silver max-w-3xl mx-auto mb-16">
+          <p className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Empowering diverse stakeholders with actionable political intelligence and verified information.
           </p>
         </div>

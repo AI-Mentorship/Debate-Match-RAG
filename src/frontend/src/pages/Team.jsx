@@ -125,6 +125,7 @@ function Team({ onGetStarted, onModalStateChange }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* ==================== Modal ==================== */
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (selectedMember) {
@@ -142,7 +143,7 @@ function Team({ onGetStarted, onModalStateChange }) {
     };
   }, [selectedMember]);
 
-  /* ==================== Modal state change ==================== */
+  // Modal state change
   useEffect(() => {
     if (onModalStateChange) {
       onModalStateChange(selectedMember !== null);
@@ -489,7 +490,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Leadership</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Guiding our vision with strategic direction and technical expertise, our project leads 
             ensure we deliver innovative solutions that transform political discourse through AI-powered analysis.
           </div>
@@ -580,7 +581,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Excellence</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Driving quality and innovation across design, backend infrastructure, and testing pipelines.
             Our technical specialists ensure every aspect of DebateMatch.RAG meets the highest standards of excellence.
           </div>
@@ -671,7 +672,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
           </h2>
           {/* Description */}
-          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-16">
+          <div className="text-lg text-dark-silver max-w-4xl mx-auto mb-12">
             Building the core technology behind DebateMatch.RAG, our development team combines 
             cutting-edge AI research with robust engineering to deliver reliable, scalable solutions.
           </div>
