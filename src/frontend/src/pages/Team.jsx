@@ -195,8 +195,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       name: "Yakina Azza",
       role: "Transcript Preprocessing",
       description: "B.S. in Computer Science. She is an ML/AI Researcher",
-      paragraph: "Yakina is a senior Computer Science student working at multiple labs across the intersection of machine learning, artificial intelligence and psychology. She has previously worked for CS outreach where she loved teaching local middle to high-schoolers coding. Before that, she also taught underprivileged children math and English at a non-profit in her hometown of Dhaka. In both these jobs and through her involvement in software engineering projects, Yakina enjoys empowering people with tech and solving problems creatively. While the idea of an AI doomsday is not lost on Yakina, she believes people have the power to utilize tech to do good for the many — not the few.",
-      linkedin: "https://www.linkedin.com/in/yakina-azza/",
+      paragraph: "Yakina is a senior majoring in Computer Science and works in labs that blend machine learning, AI, and psychology. She has taught coding through CS outreach and previously taught math and English to underserved students in Dhaka. She enjoys using technology to help people and likes approaching problems creatively.",
       instagram: "https://www.instagram.com/yakkk114/",
       image: "src/assets/img/Yakina_Azza.png"
     },

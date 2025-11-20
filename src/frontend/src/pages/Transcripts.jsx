@@ -366,7 +366,10 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
                     {/* Close Button */}
                     <button
-                      onClick={() => setSelectedTranscript(null)}
+                      onClick={() => {
+                        setSelectedTranscript(null)
+                        setSelectedSpeaker(null)
+                      }}
                       className="text-white/70 hover:text-white transition-colors duration-200 cursor-pointer ml-4"
                     >
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -520,14 +523,15 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
         <div className="flex-1 w-full">
           <div className="min-h-175 text-white w-full">
             <div className="container mx-auto px-8">
-              {/* Search Bar and Filters */}
-              <motion.div
-                initial={{ y: -100, opacity: 0 }}
-                animate={visibleSections['browse'] ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="mb-7 justify-center mx-auto"
-              >
+              <div className="mb-7 justify-center mx-auto">
                 <div className="flex gap-4 items-center">
+                  {/* Transcript Count */}
+                  <div className="px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white transition-all duration-300 whitespace-nowrap">
+                    <span className="font-medium">
+                      ({filteredTranscripts.length}) {filteredTranscripts.length === 1 ? 'Transcript' : 'Transcripts'}
+                    </span>
+                  </div>
+
                   {/* Search Bar */}
                   <div className="relative flex-1">
                     <input
@@ -535,7 +539,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                       placeholder="Search transcripts by title, date, or participant..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:ring-2 focus:ring-electric-purple/20 transition-all duration-300"
+                      className="w-full px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:bg-white/5 focus:ring-2 focus:ring-electric-purple/20 border-white/20 hover:border-electric-purple hover:bg-white/5 transition-all duration-300"
                     />
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -693,7 +697,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Transcripts Grid */}
               <div className="w-full">

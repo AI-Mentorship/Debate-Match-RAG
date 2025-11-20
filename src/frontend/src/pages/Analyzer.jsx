@@ -234,6 +234,11 @@ function Analyzer({ onBackToHome }) {
     setCurrentMode("factcheck");
     setAiMode("Fact Checker");
     setSystemPrompt(SYSTEM_PROMPTS["Fact Checker"]);
+
+    if (!hasUserSent) {
+      setHasUserSent(true);
+    }
+
     setMessages((prev) => [
       ...prev,
       {
@@ -248,6 +253,10 @@ function Analyzer({ onBackToHome }) {
     setCurrentMode("qa");
     setAiMode("Retriever + QA");
     setSystemPrompt(SYSTEM_PROMPTS["Retriever + QA"]);
+
+    if (!hasUserSent) {
+      setHasUserSent(true);
+    }
     setMessages((prev) => [
       ...prev,
       {
