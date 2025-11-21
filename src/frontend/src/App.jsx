@@ -10,57 +10,49 @@ import Team from './pages/Team'
 
 function AppContent() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [trailingPosition, setTrailingPosition] = useState({ x: 0, y: 0 })
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedTranscript, setSelectedTranscript] = useState(null)
-  const trailingRef = useRef({ x: 0, y: 0 })
+  const [isHitting, setIsHitting] = useState(false)
   const location = useLocation()
 
-  /* ==================== Mouse follower effect ==================== */
+  /* ==================== Mouse tracking ==================== */
   useEffect(() => {
-    let animationFrameId
-    
     const handleMouseMove = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY })
     }
 
-    // Smooth follow effect
-    const updateTrailingPosition = () => {
-      setTrailingPosition(prev => {
-        // New position
-        const newX = prev.x + (mousePosition.x - prev.x) * 0.1 // Slow follow-through
-        const newY = prev.y + (mousePosition.y - prev.y) * 0.1
-        trailingRef.current = { x: newX, y: newY }
-        
-        return { x: newX, y: newY }
-      })
-      animationFrameId = requestAnimationFrame(updateTrailingPosition)
-    }
-
-    // Start animation immediately
-    animationFrameId = requestAnimationFrame(updateTrailingPosition)
     window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId)
-      }
+  /* ==================== Click handler for gavel animation ==================== */
+  useEffect(() => {
+    const handleClick = () => {
+      setIsHitting(true)
+      setTimeout(() => setIsHitting(false), 200)
     }
-  }, [mousePosition])
+
+    window.addEventListener('click', handleClick)
+    return () => window.removeEventListener('click', handleClick)
+  }, [])
+
+  /* ==================== Hide default cursor ==================== */
+  useEffect(() => {
+    document.body.style.cursor = 'none'
+    return () => {
+      document.body.style.cursor = 'default'
+    }
+  }, [])
 
   /* ==================== Scroll ==================== */
   useEffect(() => {
     const scrollPositionRef = { current: window.scrollY };
     
     if (isModalOpen || selectedTranscript) {
-      // Store scroll position and prevent scrolling
       scrollPositionRef.current = window.scrollY;
       document.body.style.overflow = 'hidden';
     } else {
-      // Restore scrolling
       document.body.style.overflow = 'unset';
-      // Restore scroll position
       window.scrollTo(0, scrollPositionRef.current);
     }
     
@@ -104,25 +96,52 @@ function AppContent() {
     }
   }
 
-  /* ==================== Get current page ==================== */
+  /* ==================== Gavel animation variants ==================== */
+  const gavelVariants = {
+    normal: {
+      rotate: -45,
+      scale: 1,
+      transition: { type: "spring", stiffness: 400, damping: 25 }
+    },
+    hitting: {
+      rotate: -90,
+      scale: 1.1,
+      y: 10,
+      transition: { 
+        type: "spring", 
+        stiffness: 600, 
+        damping: 15,
+        duration: 0.1
+      }
+    }
+  }
+
   const currentPage = location.pathname.substring(1) || 'home'
 
   return (
     <div className="min-h-screen font-noto-sans">
-      {/* ==================== Mouse Follower ==================== */}
-      <div 
+      {/* ==================== Gavel Cursor ==================== */}
+      <motion.div 
         className="fixed pointer-events-none z-50"
         style={{
-          left: `${trailingPosition.x}px`,
-          top: `${trailingPosition.y}px`,
+          left: `${mousePosition.x}px`,
+          top: `${mousePosition.y}px`,
           transform: 'translate(-50%, -50%)',
-          transition: 'none'
         }}
+        variants={gavelVariants}
+        animate={isHitting ? "hitting" : "normal"}
       >
-        {/* Outer Circle and Dot */}
-        <div className="w-14 h-14 border-1 border-white/30 rounded-full"></div>
-        <div className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-      </div>
+        {/* White Gavel Icon */}
+        <div className="relative">
+          {/* Gavel head */}
+          <div className="w-6 h-4 bg-white rounded-sm shadow-lg mb-1"></div>
+          {/* Gavel handle */}
+          <div className="w-2 h-8 bg-white rounded-full mx-auto shadow-lg"></div>
+          
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 w-8 h-12 bg-white/20 rounded-full blur-sm -z-10"></div>
+        </div>
+      </motion.div>
 
       {/* Background */}
       <div 
@@ -175,6 +194,15 @@ function AppContent() {
 
       {/* ==================== Styles ==================== */}
       <style> {`
+          /* Hide default cursor */
+          * {
+            cursor: none !important;
+          }
+
+          button, a, input, textarea, select {
+            cursor: none !important;
+          }
+          
           ::-webkit-scrollbar {
             display: none;
           }

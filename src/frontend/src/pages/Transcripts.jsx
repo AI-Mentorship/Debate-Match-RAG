@@ -370,7 +370,8 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         setSelectedTranscript(null)
                         setSelectedSpeaker(null)
                       }}
-                      className="text-white/70 hover:text-white transition-colors duration-200 cursor-pointer ml-4"
+                      className="text-white/70 hover:text-white transition-colors duration-200 ml-4"
+                      style={{ cursor: 'none' }}
                     >
                       <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -441,7 +442,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
       {/* ==================== Scroll Indicator ==================== */}
       {!selectedTranscript && (
         <motion.div
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -760,7 +761,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               e.stopPropagation();
                               setSelectedTranscript(transcript);
                             }}
-                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-bl-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-bl-xl flex items-center justify-center group/btn border-r border-white/10"
                           >
                             <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                               View
@@ -775,7 +776,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               sessionStorage.setItem('selectedTranscript', JSON.stringify(transcript));
                               navigate('/analyzer');
                             }}
-                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl cursor-pointer flex items-center justify-center group/btn border-r border-white/10"
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl flex items-center justify-center group/btn border-r border-white/10"
                           >
                             <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                               Analyze
@@ -814,6 +815,14 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
       {/* ==================== Shooting star animation ==================== */}
       <style> {`
+        * {
+          cursor: none !important;
+        }
+
+        button, a, input, textarea {
+          cursor: none !important;
+        }
+
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);

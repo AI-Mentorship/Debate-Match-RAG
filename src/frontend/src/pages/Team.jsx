@@ -315,7 +315,8 @@ function Team({ onGetStarted, onModalStateChange }) {
                   {/* Close Button */}
                   <button
                     onClick={() => setSelectedMember(null)}
-                    className="absolute top-4 left-4 text-white/70 hover:text-white transition-colors duration-200 cursor-pointer z-10"
+                    className="absolute top-4 left-4 text-white/70 hover:text-white transition-colors duration-200 z-10"
+                    style={{ cursor: 'none' }}
                   >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -413,7 +414,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       {/* ==================== Scroll Indicator ==================== */}
       {!selectedMember && (
         <motion.div
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -550,7 +551,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                         e.stopPropagation();
                         setSelectedMember(member);
                       }}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -641,7 +642,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -732,7 +733,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl cursor-pointer flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -751,6 +752,14 @@ function Team({ onGetStarted, onModalStateChange }) {
 
       {/* ==================== Shooting star animation ==================== */}
       <style> {`
+        * {
+          cursor: none !important;
+        }
+
+        button, a, input, textarea {
+          cursor: none !important;
+        }
+          
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);

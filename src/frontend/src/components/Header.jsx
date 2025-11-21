@@ -18,7 +18,8 @@ function Header({ onGetStarted, isModalOpen, className = '' }) {
       <div className="flex items-center space-x-3 flex-1">
         <Link
           to="/"
-          className="text-xl font-bold hover:opacity-80 transition-opacity cursor-pointer"
+          className="text-xl font-bold hover:opacity-80 transition-opacity cursor-none"
+          style={{ cursor: 'none' }}
         >
           <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
           <span className="text-white">.RAG</span>
@@ -43,7 +44,8 @@ function Header({ onGetStarted, isModalOpen, className = '' }) {
                 className={`${isActive
                   ? 'text-white'
                   : 'text-dark-silver'
-                  } hover:text-white transition-colors duration-200 font-medium text-base relative group px-1 py-2 cursor-pointer`}
+                  } hover:text-white transition-colors duration-200 font-medium text-base relative group px-1 py-2 cursor-none`}
+                style={{ cursor: 'none' }}
               >
                 {item.label}
 

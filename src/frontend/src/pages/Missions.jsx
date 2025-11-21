@@ -164,7 +164,7 @@ function Missions({ onGetStarted }) {
 
       {/* ==================== Scroll Indicator ==================== */}
       <motion.div
-        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 cursor-pointer"
+        className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
@@ -245,7 +245,11 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            Change this
+            We built DebateMatchRAG to solve a critical problem in political discourse: 
+            AI tools like ChatGPT can't reliably tell you what candidates actually said in debates. 
+            They synthesize answers from across the internet, mixing facts with commentary, 
+            and often hallucinate quotes that were never spoken. Our system grounds every 
+            answer directly in verified debate transcripts.
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
@@ -373,17 +377,19 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            Change this
+            Unlike general AI that guesses based on patterns, our system performs precise 
+            retrieval from actual debate transcripts, then verifies claims against trusted 
+            sources. Every answer is traceable back to the exact moment it was spoken.
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
-                { number: '1', title: 'Question Input', description: 'Users submit political questions about candidate positions or debate topics' },
-                { number: '2', title: 'Transcript Retrieval', description: 'AI searches through comprehensive debate transcripts to find relevant statements' },
-                { number: '3', title: 'Fact Verification', description: 'Retrieved statements are cross-referenced with trusted fact-checking databases' },
-                { number: '4', title: 'Synthesized Response', description: 'System generates clear, cited answers with context and accuracy ratings' }
+                { number: '1', title: 'Question Input', description: 'Users ask specific questions about candidate positions or debate moments' },
+                { number: '2', title: 'Transcript Retrieval', description: 'AI searches through actual debate transcripts to find exact quotes and timestamps' },
+                { number: '3', title: 'Source Verification', description: 'Retrieved statements are cross-referenced with fact-checking databases and primary sources' },
+                { number: '4', title: 'Verifiable Response', description: 'System generates answers with direct citations to debate transcripts you can check yourself' }
               ].map((item, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
                   <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
@@ -413,8 +419,9 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            Creating a future where political discourse is transparent, accessible, 
-            and grounded in factual information for all citizens.
+            Creating a future where every voter can access what candidates actually said, 
+            not what AI models think they might have said. We're building tools that make 
+            political discourse transparent, verifiable, and free from AI hallucinations.
           </div>
         </div>
 

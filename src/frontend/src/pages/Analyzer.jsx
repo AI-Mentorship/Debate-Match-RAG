@@ -515,7 +515,6 @@ function Analyzer({ onBackToHome }) {
               >
                 <div
                   style={{
-                    cursor: 'pointer',
                     backgroundColor: '#2c2c30',
                     border: '2px dashed rgba(139, 92, 246, 0.5)',
                     borderRadius: '16px',
@@ -778,6 +777,18 @@ function Analyzer({ onBackToHome }) {
 
       {/* ==================== Shooting star animation ==================== */}
       <style> {`
+        * {
+          cursor: none !important;
+        }
+
+        body, html {
+          cursor: none !important;
+        }
+
+        button, a, input, textarea, select {
+          cursor: none !important;
+        }
+          
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);
