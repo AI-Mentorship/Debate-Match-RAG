@@ -27,20 +27,29 @@ function AppContent() {
 
   /* ==================== Click handler for gavel animation ==================== */
   useEffect(() => {
-    const handleClick = () => {
+    const handleClick = (e) => {
       setIsHitting(true)
       setTimeout(() => setIsHitting(false), 200)
     }
 
-    window.addEventListener('click', handleClick)
-    return () => window.removeEventListener('click', handleClick)
+    window.addEventListener('click', handleClick, true)
+    return () => window.removeEventListener('click', handleClick, true)
   }, [])
 
   /* ==================== Hide default cursor ==================== */
   useEffect(() => {
     document.body.style.cursor = 'none'
+    
+    // Also hide cursor on mousedown (click start)
+    const handleMouseDown = () => {
+      document.body.style.cursor = 'none'
+    }
+    
+    window.addEventListener('mousedown', handleMouseDown)
+    
     return () => {
       document.body.style.cursor = 'default'
+      window.removeEventListener('mousedown', handleMouseDown)
     }
   }, [])
 
@@ -116,31 +125,31 @@ function AppContent() {
     }
   }
 
+  /* ==================== Get current page ==================== */
   const currentPage = location.pathname.substring(1) || 'home'
 
   return (
     <div className="min-h-screen font-noto-sans">
       {/* ==================== Gavel Cursor ==================== */}
       <motion.div 
-        className="fixed pointer-events-none z-50"
+        className="fixed pointer-events-none z-[9999]"
         style={{
           left: `${mousePosition.x}px`,
           top: `${mousePosition.y}px`,
-          transform: 'translate(-50%, -50%)',
+          transform: 'translate(-50%, -25%)',
         }}
-        variants={gavelVariants}
-        animate={isHitting ? "hitting" : "normal"}
       >
-        {/* White Gavel Icon */}
-        <div className="relative">
-          {/* Gavel head */}
-          <div className="w-6 h-4 bg-white rounded-sm shadow-lg mb-1"></div>
-          {/* Gavel handle */}
-          <div className="w-2 h-8 bg-white rounded-full mx-auto shadow-lg"></div>
-          
-          {/* Subtle glow effect */}
-          <div className="absolute inset-0 w-8 h-12 bg-white/20 rounded-full blur-sm -z-10"></div>
-        </div>
+        <motion.div
+          variants={gavelVariants}
+          animate={isHitting ? "hitting" : "normal"}
+        >
+          <div className="relative">
+            {/* Gavel head */}
+            <div className="w-6 h-4 bg-white rounded-sm shadow-lg mb-1"></div>
+            {/* Gavel handle */}
+            <div className="w-2 h-8 bg-white rounded-full mx-auto shadow-lg"></div>            
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Background */}
@@ -194,37 +203,32 @@ function AppContent() {
 
       {/* ==================== Styles ==================== */}
       <style> {`
-          /* Hide default cursor */
-          * {
-            cursor: none !important;
-          }
-
-          button, a, input, textarea, select {
-            cursor: none !important;
-          }
-          
-          ::-webkit-scrollbar {
-            display: none;
-          }
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-          
-          .shadow-glow {
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
-          }
-          
-          .hover\\:shadow-glow:hover {
-            box-shadow: 
-              0 0 30px rgba(124, 58, 237, 0.7),
-              0 0 60px rgba(124, 58, 237, 0.4),
-              0 0 90px rgba(124, 58, 237, 0.2),
-              inset 0 0 20px rgba(124, 58, 237, 0.1);
-          }
-          
-          .hover\\:shadow-silver-glow {
-            transition: box-shadow 2s ease-in-out;
-          }
-        `} </style>
+        html, body, * {
+          cursor: none !important;
+        }
+        
+        ::-webkit-scrollbar {
+          display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        
+        .shadow-glow {
+          box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
+        }
+        
+        .hover\\:shadow-glow:hover {
+          box-shadow: 
+            0 0 30px rgba(124, 58, 237, 0.7),
+            0 0 60px rgba(124, 58, 237, 0.4),
+            0 0 90px rgba(124, 58, 237, 0.2),
+            inset 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+        
+        .hover\\:shadow-silver-glow {
+          transition: box-shadow 2s ease-in-out;
+        }
+      `} </style>
     </div>
   )
 }

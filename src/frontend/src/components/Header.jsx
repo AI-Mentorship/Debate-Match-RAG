@@ -6,9 +6,6 @@ function Header({ onGetStarted, isModalOpen, className = '' }) {
   const handlePageChange = (page) => {
     if (isModalOpen) return;
   };
-  
-  /* ==================== Get current page ==================== */
-  const currentPage = location.pathname.substring(1) || 'home'
 
   return (
     <nav className={`bg-[#010102] px-20 py-8 flex items-center justify-between transition-all duration-300 ${

@@ -106,6 +106,14 @@ function Home({ onGetStarted }) {
 
       {/* ==================== Shooting star animation ==================== */}
       <style> {`
+        * {
+          cursor: none !important;
+        }
+
+        button, a {
+          cursor: none !important;
+        }
+
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);

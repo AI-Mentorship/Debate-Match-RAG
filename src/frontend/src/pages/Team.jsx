@@ -196,6 +196,7 @@ function Team({ onGetStarted, onModalStateChange }) {
       role: "Transcript Preprocessing",
       description: "B.S. in Computer Science. She is an ML/AI Researcher",
       paragraph: "Yakina is a senior majoring in Computer Science and works in labs that blend machine learning, AI, and psychology. She has taught coding through CS outreach and previously taught math and English to underserved students in Dhaka. She enjoys using technology to help people and likes approaching problems creatively.",
+      linkedin: "https://www.linkedin.com/in/yakina-azza/",
       instagram: "https://www.instagram.com/yakkk114/",
       image: "src/assets/img/Yakina_Azza.png"
     },
@@ -306,7 +307,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-50"
+              className="relative bg-gradient-to-br from-[#251f2e] via-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col md:flex-row h-full">
@@ -491,7 +492,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Leadership</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-18">
             Guiding our vision with strategic direction and technical expertise, our project leads 
             ensure we deliver innovative solutions that transform political discourse through AI-powered analysis.
           </div>
@@ -503,10 +504,10 @@ function Team({ onGetStarted, onModalStateChange }) {
               {members.filter(member => member.role.includes("Project Lead")).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
-                      : 'border-white/10 shadow-lg hover:border-white/30'
+                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      : 'border-white/10 shadow-lg'
                   } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -582,7 +583,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Excellence</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-18">
             Driving quality and innovation across design, backend infrastructure, and testing pipelines.
             Our technical specialists ensure every aspect of DebateMatch.RAG meets the highest standards of excellence.
           </div>
@@ -598,10 +599,10 @@ function Team({ onGetStarted, onModalStateChange }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
-                      : 'border-white/10 shadow-lg hover:border-white/30'
+                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      : 'border-white/10 shadow-lg'
                   } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -673,7 +674,7 @@ function Team({ onGetStarted, onModalStateChange }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-18">
             Building the core technology behind DebateMatch.RAG, our development team combines 
             cutting-edge AI research with robust engineering to deliver reliable, scalable solutions.
           </div>
@@ -689,9 +690,9 @@ function Team({ onGetStarted, onModalStateChange }) {
               ).map((member) => (
                 <motion.div
                   key={member.id}
-                  className={`relative bg-[#251f2e] backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
+                  className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg hover:border-white/30'
                   } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
                   onMouseEnter={() => setHoveredCard(member.id)}

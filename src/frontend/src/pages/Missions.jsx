@@ -244,17 +244,14 @@ function Missions({ onGetStarted }) {
             <span className="text-white">.RAG</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            We built DebateMatchRAG to solve a critical problem in political discourse: 
-            AI tools like ChatGPT can't reliably tell you what candidates actually said in debates. 
-            They synthesize answers from across the internet, mixing facts with commentary, 
-            and often hallucinate quotes that were never spoken. Our system grounds every 
-            answer directly in verified debate transcripts.
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
+            While general AI synthesizes from millions of sources, DebateMatch.RAG retrieves exclusively
+            from verified debate transcripts, transforming AI from encyclopedia to forensic analyst.
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-start justify-center">
           <div className="max-w-6xl mx-auto w-full">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-50 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-30 items-center">
               {/* Left Side */}
               <motion.div 
                 className="relative"
@@ -267,17 +264,25 @@ function Missions({ onGetStarted }) {
                 <div className="relative h-96">
                   {/* Orbiting Elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-electric-purple/30 rounded-full"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-57.5 h-57.5 border border-electric-purple/30 rounded-full"></div>
                     
+                    {/* Center Text */}
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <div className="text-center text-md font-bold">
+                        <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
+                        <span className="text-white">.RAG</span>
+                      </div>
+                    </div>
+
                     {/* Outer Ring - Data Points */}
-                    <div className="relative w-60 h-60">
+                    <div className="relative w-72 h-72 animate-spin-slow">
                       {[...Array(8)].map((_, i) => (
                         <div
                           key={i}
                           className="absolute w-3 h-3 bg-white rounded-full opacity-60"
                           style={{
-                            top: `${47 + 40 * Math.sin((i * Math.PI) / 4)}%`,
-                            left: `${47 + 40 * Math.cos((i * Math.PI) / 4)}%`,
+                            top: `${47.5 + 40 * Math.sin((i * Math.PI) / 4)}%`,
+                            left: `${47.5 + 40 * Math.cos((i * Math.PI) / 4)}%`,
                           }}
                         ></div>
                       ))}
@@ -285,29 +290,33 @@ function Missions({ onGetStarted }) {
                   </div>
                   
                   {/* Floating Text Elements */}
-                  <div className="absolute top-1/5 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-electric-purple font-mono opacity-70">RAG</div>
-                  </div>
-                  <div className="absolute top-1/5 left-4/5 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-blue-400 font-mono opacity-70">ANALYSIS</div>
-                  </div>
-                  <div className="absolute top-4/5 left-1/5 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-green-400 font-mono opacity-70">FACTS</div>
-                  </div>
-                  <div className="absolute top-4/5 left-4/5 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-gray-400 font-mono opacity-70">TRUTH</div>
-                  </div>
-                  <div className="absolute top-1/2 left-1/10 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-yellow-400 font-mono opacity-70">CONTEXT</div>
-                  </div>
-                  <div className="absolute top-1/2 left-9/10 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-purple-400 font-mono opacity-70">INSIGHT</div>
-                  </div>
-                  <div className="absolute top-1/10 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-red-400 font-mono opacity-70">VERIFY</div>
-                  </div>
-                  <div className="absolute top-9/10 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="text-xs text-cyan-400 font-mono opacity-70">CLARITY</div>
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="relative w-96 h-96 animate-spin-slow">
+                      <div className="absolute top-0 left-50 transform -translate-x-1/2 -translate-y-full animate-spin-slow-reverse">
+                        <div className="text-xs text-red-400 font-mono opacity-70 whitespace-nowrap">VERIFY</div>
+                      </div>
+                      <div className="absolute top-full left-50 transform -translate-x-1/2 translate-y-0 animate-spin-slow-reverse">
+                        <div className="text-xs text-cyan-400 font-mono opacity-70 whitespace-nowrap">CLARITY</div>
+                      </div>
+                      <div className="absolute top-1/2 left-5 transform -translate-x-full -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-yellow-400 font-mono opacity-70 whitespace-nowrap">CONTEXT</div>
+                      </div>
+                      <div className="absolute top-1/2 left-90 transform translate-x-0 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-purple-400 font-mono opacity-70 whitespace-nowrap">INSIGHT</div>
+                      </div>                      
+                      <div className="absolute top-[15%] left-[15%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-electric-purple font-mono opacity-70 whitespace-nowrap">RAG</div>
+                      </div>
+                      <div className="absolute top-[15%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-blue-400 font-mono opacity-70 whitespace-nowrap">ANALYSIS</div>
+                      </div>
+                      <div className="absolute top-[85%] left-[15%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-green-400 font-mono opacity-70 whitespace-nowrap">FACTS</div>
+                      </div>
+                      <div className="absolute top-[85%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-xs text-gray-400 font-mono opacity-70 whitespace-nowrap">TRUTH</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
@@ -376,27 +385,56 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            Unlike general AI that guesses based on patterns, our system performs precise 
-            retrieval from actual debate transcripts, then verifies claims against trusted 
-            sources. Every answer is traceable back to the exact moment it was spoken.
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
+            Our system implements a four-stage retrieval-augmented generation pipeline, ensuring 
+            every response is grounded in verified transcript data with complete source attribution.
           </div>
         </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="max-w-6xl mx-auto text-center w-full">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="flex-1 flex items-start justify-center px-8">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
-                { number: '1', title: 'Question Input', description: 'Users ask specific questions about candidate positions or debate moments' },
-                { number: '2', title: 'Transcript Retrieval', description: 'AI searches through actual debate transcripts to find exact quotes and timestamps' },
-                { number: '3', title: 'Source Verification', description: 'Retrieved statements are cross-referenced with fact-checking databases and primary sources' },
-                { number: '4', title: 'Verifiable Response', description: 'System generates answers with direct citations to debate transcripts you can check yourself' }
+                { 
+                  number: '01', 
+                  title: 'Query Processing', 
+                  description: 'User queries are parsed and semantically analyzed to identify key political concepts, candidate names, policy areas, and temporal references, enabling precise retrieval from debate transcripts.',
+                  technical: 'Natural language processing extracts entities and intent before database queries are constructed.'
+                },
+                { 
+                  number: '02', 
+                  title: 'Semantic Retrieval', 
+                  description: 'Our vector database performs semantic search across indexed debate transcripts, retrieving passages with contextual relevance to the query rather than simple keyword matching.',
+                  technical: 'Embedding models encode both query and transcript passages into high-dimensional space for similarity matching.'
+                },
+                { 
+                  number: '03', 
+                  title: 'Source Verification', 
+                  description: 'Retrieved passages are cross-referenced with metadata—timestamps, speaker identification, debate context—ensuring complete provenance and enabling independent verification.',
+                  technical: 'Each retrieved segment includes debate name, speaker, timestamp, and surrounding context for validation.'
+                },
+                { 
+                  number: '04', 
+                  title: 'Response Generation', 
+                  description: 'AI models synthesize answers using only the retrieved transcript passages, maintaining strict grounding in source material. All claims are directly attributed to specific debate moments.',
+                  technical: 'Generation is constrained to retrieved context, preventing hallucination while maintaining coherent, informative responses.'
+                }
               ].map((item, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
-                  <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
-                    {item.number}
+                <div 
+                  key={index} 
+                  className="backdrop-blur-sm rounded-xl p-4 border border-dark-silver hover:border-electric-purple hover:bg-white/5 transition-all duration-500 group"
+                >
+                  <div className="flex items-start gap-6 mb-4">
+                    <div className="text-4xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">
+                      {item.number}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
+                      <p className="text-dark-silver leading-relaxed text-sm mb-4">{item.description}</p>
+                      <div className="pl-4 border-l-3 border-electric-purple/50">
+                        <p className="text-dark-silver/80 text-xs leading-relaxed italic">{item.technical}</p>
+                      </div>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-dark-silver text-sm">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -418,20 +456,100 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
-            Creating a future where every voter can access what candidates actually said, 
-            not what AI models think they might have said. We're building tools that make 
-            political discourse transparent, verifiable, and free from AI hallucinations.
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
+            Reimagining political discourse through verifiable intelligence—where every claim is grounded in primary sources, 
+            not probabilistic generation.
           </div>
         </div>
 
         <div className="flex-1 flex items-center justify-center">
           <div className="max-w-6xl mx-auto text-center w-full">
-            <div className="max-w-4xl mx-auto">
-              <p className="text-lg text-dark-silver leading-relaxed">
-                We envision a world where every voter can easily access factual information from political debates, 
-                enabling more informed democratic participation and holding public figures accountable for their statements.
-              </p>
+            {/* Interactive Comparison Matrix */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+              {/* General AI */}
+              <div className="group perspective-1000">
+                <div className="relative bg-gradient-to-br from-red-500/5 to-red-600/10 backdrop-blur-xl rounded-2xl p-8 border border-red-400/20 hover:border-red-400/40 transition-all duration-500 transform-style-3d group-hover:rotate-x-2 group-hover:rotate-y-2 h-full">
+                  <h3 className="text-2xl font-bold text-white mb-6 text-center relative z-10 group-hover:scale-105 transition-transform duration-300">
+                    Other AI Tools
+                  </h3>
+                  
+                  <div className="space-y-4 text-left relative z-10">
+                    {[
+                      {
+                        title: "Pattern-Based Generation",
+                        description: "Synthesizes answers from statistical correlations across training data"
+                      },
+                      {
+                        title: "Unconstrained Fabrication", 
+                        description: "Generates plausible statements with no relation to actual spoken words"
+                      },
+                      {
+                        title: "Opaque Provenance",
+                        description: "No mechanism for source attribution or independent verification"
+                      }
+                    ].map((item, index) => (
+                      <div
+                        key={index}
+                        className="p-4 rounded-lg border border-red-400/10 hover:border-red-400/30 bg-red-500/5 backdrop-blur-sm transition-all duration-300 group/item hover:translate-x-2 hover:bg-red-500/10"
+                      >
+                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center">
+                          <span className="w-2 h-2 bg-red-400 rounded-full mr-3 group-hover/item:scale-150 transition-transform duration-300"></span>
+                          {item.title}
+                        </h4>
+                        <p className="text-dark-silver text-sm leading-relaxed pl-5">
+                          {item.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Bar */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+              </div>
+
+              {/* DebateMatch.RAG */}
+              <div className="group perspective-1000">
+                <div className="relative bg-gradient-to-br from-electric-purple/10 to-purple-600/15 backdrop-blur-xl rounded-2xl p-8 border border-electric-purple/30 hover:border-electric-purple/60 transition-all duration-500 transform-style-3d group-hover:rotate-x-2 group-hover:rotate-y-2 h-full">
+                  <div className="text-2xl font-bold text-white mb-6 text-center relative z-10 group-hover:scale-105 transition-transform duration-300">
+                    <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
+                    <span className="text-white">.RAG</span>
+                  </div>
+                  
+                  <div className="space-y-4 text-left relative z-10">
+                    {[
+                      {
+                        title: "Retrieval-Constrained Generation",
+                        description: "Every response derives from specific, timestamped debate transcripts"
+                      },
+                      {
+                        title: "Anti-Hallucination Framework", 
+                        description: "Technical safeguards prevent fabrication, outputs tethered to evidence"
+                      },
+                      {
+                        title: "Transparent Audit Trail",
+                        description: "Complete source attribution for independent verification"
+                      }
+                    ].map((item, index) => (
+                      <div
+                        key={index}
+                        className="p-4 rounded-lg border border-electric-purple/20 hover:border-electric-purple/50 bg-electric-purple/10 backdrop-blur-sm transition-all duration-300 group/item hover:translate-x-2 hover:bg-electric-purple/15"
+                      >
+                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center">
+                          <span className="w-2 h-2 bg-electric-purple rounded-full mr-3 group-hover/item:scale-150 transition-transform duration-300"></span>
+                          {item.title}
+                        </h4>
+                        <p className="text-dark-silver text-sm leading-relaxed pl-5">
+                          {item.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Bottom Bar */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-electric-purple to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -451,7 +569,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Core Values</span>
           </h2>
           {/* Description */}
-          <p className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <p className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
             The principles that guide our mission and shape every aspect of our platform's development.
           </p>
         </div>
@@ -493,7 +611,7 @@ function Missions({ onGetStarted }) {
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Benefits</span>
           </h2>
           {/* Description */}
-          <p className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <p className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
             Empowering diverse stakeholders with actionable political intelligence and verified information.
           </p>
         </div>
@@ -503,15 +621,15 @@ function Missions({ onGetStarted }) {
               {[
                 { 
                   title: 'Voters & Citizens', 
-                  description: 'Make informed decisions based on verified candidate statements and track records across multiple debates and elections.' 
+                  description: 'Get verifiable answers about what candidates actually said, with direct quotes and timestamps you can check—no more AI guesswork or hallucinations.' 
                 },
                 { 
                   title: 'Journalists & Researchers', 
-                  description: 'Quickly verify political claims and access comprehensive analysis of candidate positions with proper source attribution.' 
+                  description: 'Quickly verify political claims with primary source evidence from debates. Cite exact moments instead of relying on AI summaries that may be inaccurate.' 
                 },
                 { 
                   title: 'Educators & Students', 
-                  description: 'Provide students with primary source analysis tools for civics education and critical thinking development.' 
+                  description: 'Teach critical thinking using actual debate transcripts. Show students how to distinguish between AI-generated summaries and verifiable primary sources.' 
                 }
               ].map((item, index) => (
                 <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl hover:border-electric-purple/30 transition-all duration-300">
@@ -526,6 +644,14 @@ function Missions({ onGetStarted }) {
 
       {/* ==================== Styles ==================== */}
       <style> {`
+        * {
+          cursor: none !important;
+        }
+
+        button, a {
+          cursor: none !important;
+        }
+
         @keyframes shooting-star {
           0% {
             transform: translateY(0) translateX(0) rotate(45deg);
@@ -559,6 +685,44 @@ function Missions({ onGetStarted }) {
           100% {
             transform: rotate(360deg);
           }
+        }
+
+        @keyframes spin-slow {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes spin-slow-reverse {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(-360deg);
+          }
+        }
+
+        .animate-spin-slow {
+          animation: spin-slow 25s linear infinite;
+        }
+
+        .animate-spin-slow-reverse {
+          animation: spin-slow-reverse 25s linear infinite;
+        }
+
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+
+        .group-hover\:rotate-x-2:hover {
+          transform: rotateX(2deg);
+        }
+
+        .group-hover\:rotate-y-2:hover {
+          transform: rotateY(2deg);
         }
       `} </style>
     </div>

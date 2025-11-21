@@ -515,7 +515,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
             <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Browser</span>
           </h2>
           {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-4xl mx-auto mb-12">
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
             Explore our curated collection of debate transcripts. Each transcript is carefully processed 
             for optimal search and analysis with topic categorization and speaker tracking.
           </div>
@@ -702,8 +702,8 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
               {/* Transcripts Grid */}
               <div className="w-full">
-                <div className="max-w-7xl mx-auto">
-                  <div className="pt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-2">
+                <div className="mx-auto">
+                  <div className="pt-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-h-[600px] overflow-y-auto pr-2">
                     {filteredTranscripts.map((transcript, index) => (
                       <motion.div
                         key={transcript.id}
