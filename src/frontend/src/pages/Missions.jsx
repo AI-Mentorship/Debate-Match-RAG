@@ -5,6 +5,7 @@ function Missions({ onGetStarted }) {
   const [stars, setStars] = useState([])
   const [currentSection, setCurrentSection] = useState(0)
   const [visibleSections, setVisibleSections] = useState({})
+  const [currentVisionStep, setCurrentVisionStep] = useState(0)
   const isScrolling = useRef(false)
 
   /* ==================== Scroll ==================== */
@@ -222,8 +223,8 @@ function Missions({ onGetStarted }) {
           transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
         >
           <div className="mb-10 text-md md:text-md text-dark-silver max-w-4xl mx-auto leading-relaxed">
-            To assist voters, we offer thoughtful, AI-powered analysis of debate transcripts,
-            helping the public discern factual statements from political rhetoric.
+            We provide intelligent analysis of political debates, helping voters understand what candidates 
+            actually said and separating verifiable facts from political messaging.
           </div>
         </motion.div>
       </section>
@@ -245,8 +246,8 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            While general AI synthesizes from millions of sources, DebateMatch.RAG retrieves exclusively
-            from verified debate transcripts, transforming AI from encyclopedia to forensic analyst.
+            Unlike general AI that generates answers from broad training data, DebateMatch.RAG retrieves 
+            exact quotes from verified debate transcripts with timestamps you can verify yourself.
           </div>
         </div>
         <div className="flex-1 flex items-start justify-center">
@@ -261,10 +262,10 @@ function Missions({ onGetStarted }) {
                 viewport={{ once: true }}
               >
                 {/* Data Visualization */}
-                <div className="relative h-96">
+                <div className="relative h-90">
                   {/* Orbiting Elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-57.5 h-57.5 border border-electric-purple/30 rounded-full"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-electric-purple/30 rounded-full"></div>
                     
                     {/* Center Text */}
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -274,12 +275,12 @@ function Missions({ onGetStarted }) {
                       </div>
                     </div>
 
-                    {/* Outer Ring - Data Points */}
-                    <div className="relative w-72 h-72 animate-spin-slow">
+                    {/* Data Points */}
+                    <div className="relative w-60 h-60 animate-spin-slow">
                       {[...Array(8)].map((_, i) => (
                         <div
                           key={i}
-                          className="absolute w-3 h-3 bg-white rounded-full opacity-60"
+                          className="absolute w-3 h-3 bg-white rounded-full opacity-80"
                           style={{
                             top: `${47.5 + 40 * Math.sin((i * Math.PI) / 4)}%`,
                             left: `${47.5 + 40 * Math.cos((i * Math.PI) / 4)}%`,
@@ -289,40 +290,40 @@ function Missions({ onGetStarted }) {
                     </div>                                    
                   </div>
                   
-                  {/* Floating Text Elements */}
+                  {/* Text Elements */}
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="relative w-96 h-96 animate-spin-slow">
-                      <div className="absolute top-0 left-50 transform -translate-x-1/2 -translate-y-full animate-spin-slow-reverse">
-                        <div className="text-xs text-red-400 font-mono opacity-70 whitespace-nowrap">VERIFY</div>
+                    <div className="relative text-xs w-96 h-96 animate-spin-slow">
+                      <div className="absolute top-10 left-50 transform -translate-x-1/2 -translate-y-full animate-spin-slow-reverse">
+                        <div className="text-red-400 font-mono opacity-70 whitespace-nowrap">VERIFY</div>
                       </div>
-                      <div className="absolute top-full left-50 transform -translate-x-1/2 translate-y-0 animate-spin-slow-reverse">
-                        <div className="text-xs text-cyan-400 font-mono opacity-70 whitespace-nowrap">CLARITY</div>
+                      <div className="absolute top-85 left-50 transform -translate-x-1/2 translate-y-0 animate-spin-slow-reverse">
+                        <div className="text-cyan-400 font-mono opacity-70 whitespace-nowrap">CLARITY</div>
                       </div>
-                      <div className="absolute top-1/2 left-5 transform -translate-x-full -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-yellow-400 font-mono opacity-70 whitespace-nowrap">CONTEXT</div>
+                      <div className="absolute top-50 left-15 transform -translate-x-full -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-yellow-400 font-mono opacity-70 whitespace-nowrap">CONTEXT</div>
                       </div>
-                      <div className="absolute top-1/2 left-90 transform translate-x-0 -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-purple-400 font-mono opacity-70 whitespace-nowrap">INSIGHT</div>
+                      <div className="absolute top-50 left-80 transform translate-x-0 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-purple-400 font-mono opacity-70 whitespace-nowrap">INSIGHT</div>
                       </div>                      
-                      <div className="absolute top-[15%] left-[15%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-electric-purple font-mono opacity-70 whitespace-nowrap">RAG</div>
+                      <div className="absolute top-[20%] left-[20%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-electric-purple font-mono opacity-70 whitespace-nowrap">RAG</div>
                       </div>
-                      <div className="absolute top-[15%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-blue-400 font-mono opacity-70 whitespace-nowrap">ANALYSIS</div>
+                      <div className="absolute top-[20%] left-[80%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-blue-400 font-mono opacity-70 whitespace-nowrap">ANALYSIS</div>
                       </div>
-                      <div className="absolute top-[85%] left-[15%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-green-400 font-mono opacity-70 whitespace-nowrap">FACTS</div>
+                      <div className="absolute top-[80%] left-[20%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-green-400 font-mono opacity-70 whitespace-nowrap">FACTS</div>
                       </div>
-                      <div className="absolute top-[85%] left-[85%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
-                        <div className="text-xs text-gray-400 font-mono opacity-70 whitespace-nowrap">TRUTH</div>
+                      <div className="absolute top-[80%] left-[80%] transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow-reverse">
+                        <div className="text-white font-mono whitespace-nowrap">TRUTH</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
-                {/* Description Text */}
+                {/* Description */}
                 <div className="text-center mt-8">
-                  <h3 className="text-xl font-semibold text-white mb-2">Advanced Political Intelligence</h3>
+                  <h3 className="text-lg font-semibold text-white mb-2">Advanced Political Intelligence</h3>
                   <p className="text-dark-silver text-sm leading-relaxed">
                     Our system processes political discourse through multiple layers of analysis, 
                     connecting debate transcripts with verified factual data to deliver accurate insights.
@@ -339,8 +340,8 @@ function Missions({ onGetStarted }) {
                 viewport={{ once: true }}
               >
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">The Information Crisis in Politics</h3>
-                  <p className="text-dark-silver leading-relaxed">
+                  <h3 className="text-lg font-semibold text-white mb-2">The Information Crisis in Politics</h3>
+                  <p className="text-dark-silver text-sm leading-relaxed">
                     In today's political landscape, voters face an overwhelming flood of information, 
                     misinformation, and complex rhetoric. Traditional debate formats often leave citizens 
                     confused about what candidates actually stand for and which claims hold factual merit.
@@ -348,8 +349,8 @@ function Missions({ onGetStarted }) {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Our Solution</h3>
-                  <p className="text-dark-silver leading-relaxed">
+                  <h3 className="text-lg font-semibold text-white mb-2">Our Solution</h3>
+                  <p className="text-dark-silver text-sm leading-relaxed">
                     DebateMatch.RAG addresses this challenge by leveraging cutting-edge AI technology 
                     to analyze debate transcripts, verify factual accuracy, and present clear, accessible 
                     insights. We transform hours of political discourse into actionable information that 
@@ -358,14 +359,176 @@ function Missions({ onGetStarted }) {
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">The Impact</h3>
-                  <p className="text-dark-silver leading-relaxed">
+                  <h3 className="text-lg font-semibold text-white mb-2">The Impact</h3>
+                  <p className="text-dark-silver text-sm leading-relaxed">
                     By making political analysis accessible to everyone, we're working toward a more 
                     informed electorate, greater political accountability, and ultimately, a stronger 
                     democracy where decisions are based on facts rather than rhetoric.
                   </p>
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== Our Vision Section ==================== */}
+      <section
+        id="our-vision"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['our-vision'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Our&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
+          </h2>
+          {/* Description */}
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-16">
+            Moving beyond traditional AI limitations through architectural innovation: from statistical synthesis to
+            precise retrieval, from approximation to verification, building verifiable political intelligence.
+          </div>
+        </div>
+
+        <div className="flex-1 flex items-start justify-center px-8 pb-20">
+          <div className="max-w-6xl mx-auto w-full relative">
+            <div className="space-y-12">
+              {[
+                {
+                  title: "Primary Source Attribution",
+                  limitation: "General AI synthesizes from training patterns",
+                  limitationDetail: "Based on my training data, candidates likely discussed healthcare policy in general terms",
+                  capability: "DebateMatch.RAG retrieves exact verified quotes",
+                  capabilityDetail: "At 23:45 in the September 2024 Presidential Debate, Kamala Harris stated: [verbatim quote with full context]",
+                },
+                {
+                  title: "Architectural Hallucination Prevention",
+                  limitation: "Statistical models fabricate plausible content",
+                  limitationDetail: "Models confidently generate quotes that were never spoken, with no built-in verification to catch fabrications",
+                  capability: "Retrieval constrained architecture eliminates hallucination",
+                  capabilityDetail: "System architecturally cannot generate content beyond retrieved transcripts, making fabrication structurally impossible",
+                },
+                {
+                  title: "Complete Source Provenance",
+                  limitation: "General AI offers no source provenance",
+                  limitationDetail: "Users cannot verify claims or trace information back to original sources when asked for proof",
+                  capability: "Complete citation chain from query to source",
+                  capabilityDetail: "Every response includes debate name, timestamp, speaker identification, surrounding context, and direct transcript link",
+                },
+                {
+                  title: "Maintain Domain Expertise",
+                  limitation: "Universal AI achieves mediocrity everywhere",
+                  limitationDetail: "Spreading computational resources across infinite domains results in shallow political analysis and missed nuances",
+                  capability: "Specialized architecture delivers domain mastery",
+                  capabilityDetail: "Exclusive focus on political discourse enables optimized retrieval, contextual understanding, and expert-level analysis",
+                },
+                {
+                  title: "Truth You Can Verify Yourself",
+                  limitation: "AI generated content mimics authentic reporting",
+                  limitationDetail: "Sophisticated disinformation spreads unchecked because AI output appears authoritative with no verification mechanism",
+                  capability: "Transparency architecture enables universal verification",
+                  capabilityDetail: "Anyone can verify any claim by checking primary sources, enabling journalists, fact checkers, and voters to confirm authenticity",
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ x: -100, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: index * 0.15,
+                    type: "spring",
+                    stiffness: 50
+                  }}
+                  viewport={{ once: true, margin: "-300px" }}
+                  className="group relative"
+                >
+
+                  {/* Arrow Line */}
+                  {index >= 1 && (
+                    <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-full flex flex-col items-center z-10 w-full">
+                      <div className="w-px h-12 bg-gradient-to-b from-indigo-400/40 via-indigo-400/20 to-indigo-400/40"></div>
+                      <div className="absolute top-1/2 -translate-y-1/2 text-indigo-400/60 bg-gray-900/80 rounded-full p-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M12 5v14m0 0l-7-7m7 7l7-7"/>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Card */}
+                  <div className="relative">
+                    <div className={`relative backdrop-blur-2xl rounded-3xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden`}>
+                      <div className={`absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
+                      <div className="relative z-10 p-8">
+                        {/* Header */}
+                        <div className="flex items-start gap-8 mb-4">
+                          <div className="flex-1 text-left">
+                            <h3 className="text-2xl font-bold text-white mb-2 relative inline-block">
+                              <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
+                                {item.title}
+                              </span>
+                              <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                                {item.title}
+                              </span>
+                            </h3>
+                            <div className="h-0.5 w-10 bg-gradient-to-r from-indigo-500 to-electric-purple group-hover:w-full transition-all duration-700 mb-3"></div>
+                          </div>
+                        </div>
+
+                        {/* Grid */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                          {/* Limitation */}
+                          <div className="relative group/limit">                            
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-2 mb-3">
+                                <div className="w-6 h-6 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/50">
+                                  <span className="text-red-400 text-xs font-bold">✕</span>
+                                </div>
+                                <span className="text-red-400 text-sm font-bold tracking-wider">Limitation</span>
+                              </div>
+                              
+                              <h4 className="text-lg font-semibold text-white/90">
+                                {item.limitation}
+                              </h4>
+                              
+                              <div className="pl-4 border-l-2 border-red-500">
+                                <p className="text-dark-silver/80 text-sm leading-relaxed italic">
+                                  {item.limitationDetail}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Capability */}
+                          <div className="relative group/cap">                            
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-2 mb-3">
+                                <div className="w-6 h-6 rounded-full bg-green-400/20 flex items-center justify-center border border-green-400/50">
+                                  <span className="text-green-400 text-xs font-bold">✓</span>
+                                </div>
+                                <span className="text-green-400 text-sm font-bold tracking-wider">Capability</span>
+                              </div>
+                              
+                              <h4 className="text-lg font-semibold text-white">
+                                {item.capability}
+                              </h4>
+                              
+                              <div className="pl-4 border-l-2 border-green-400">
+                                <p className="text-white/80 text-sm leading-relaxed italic">
+                                  {item.capabilityDetail}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -386,8 +549,8 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            Our system implements a four-stage retrieval-augmented generation pipeline, ensuring 
-            every response is grounded in verified transcript data with complete source attribution.
+            Our retrieval-augmented generation pipeline processes your questions through four stages, 
+            ensuring every answer traces back to actual debate transcripts with complete source verification.
           </div>
         </div>
         <div className="flex-1 flex items-start justify-center px-8">
@@ -395,161 +558,63 @@ function Missions({ onGetStarted }) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
                 { 
-                  number: '01', 
-                  title: 'Query Processing', 
+                  number: '1', 
+                  title: 'User Query', 
                   description: 'User queries are parsed and semantically analyzed to identify key political concepts, candidate names, policy areas, and temporal references, enabling precise retrieval from debate transcripts.',
                   technical: 'Natural language processing extracts entities and intent before database queries are constructed.'
                 },
                 { 
-                  number: '02', 
+                  number: '2', 
                   title: 'Semantic Retrieval', 
                   description: 'Our vector database performs semantic search across indexed debate transcripts, retrieving passages with contextual relevance to the query rather than simple keyword matching.',
                   technical: 'Embedding models encode both query and transcript passages into high-dimensional space for similarity matching.'
                 },
                 { 
-                  number: '03', 
+                  number: '3', 
                   title: 'Source Verification', 
                   description: 'Retrieved passages are cross-referenced with metadata—timestamps, speaker identification, debate context—ensuring complete provenance and enabling independent verification.',
                   technical: 'Each retrieved segment includes debate name, speaker, timestamp, and surrounding context for validation.'
                 },
                 { 
-                  number: '04', 
+                  number: '4', 
                   title: 'Response Generation', 
                   description: 'AI models synthesize answers using only the retrieved transcript passages, maintaining strict grounding in source material. All claims are directly attributed to specific debate moments.',
                   technical: 'Generation is constrained to retrieved context, preventing hallucination while maintaining coherent, informative responses.'
                 }
               ].map((item, index) => (
-                <div 
-                  key={index} 
-                  className="backdrop-blur-sm rounded-xl p-4 border border-dark-silver hover:border-electric-purple hover:bg-white/5 transition-all duration-500 group"
-                >
-                  <div className="flex items-start gap-6 mb-4">
-                    <div className="text-4xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">
-                      {item.number}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
-                      <p className="text-dark-silver leading-relaxed text-sm mb-4">{item.description}</p>
-                      <div className="pl-4 border-l-3 border-electric-purple/50">
-                        <p className="text-dark-silver/80 text-xs leading-relaxed italic">{item.technical}</p>
+                <div key={index} className="perspective-1000">
+                  <div className="relative backdrop-blur-2xl rounded-3xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden group transform-style-3d hover:rotate-y-5 hover:translate-z-10">
+                    {/* Animated Background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-700"></div>
+                    {/* Content */}
+                    <div className="relative text-left z-10 p-6">
+                      <div className="flex items-start gap-6 mb-4">
+                        <div className="text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent group-hover:scale-115 transition-transform duration-500">
+                          {item.number}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-white mb-2 relative inline-block">
+                            <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
+                              {item.title}
+                            </span>
+                            <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                              {item.title}
+                            </span>
+                          </h3>
+                          <p className="text-white/70 text-left leading-relaxed text-sm mb-4 group-hover:text-white transition-colors duration-500">
+                            {item.description}
+                          </p>
+                          <div className="pl-4 text-center border-l-3 border-electric-purple/30 group-hover:border-electric-purple/80 transition-all duration-500">
+                            <p className="text-dark-silver/80 text-xs leading-relaxed italic">
+                              {item.technical}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================== Our Vision Section ==================== */}
-      <section
-        id="our-vision"
-        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
-          visibleSections['our-vision'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      >
-        <div className="w-full pt-30">
-          {/* Title */}
-          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Our&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
-          </h2>
-          {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            Reimagining political discourse through verifiable intelligence—where every claim is grounded in primary sources, 
-            not probabilistic generation.
-          </div>
-        </div>
-
-        <div className="flex-1 flex items-center justify-center">
-          <div className="max-w-6xl mx-auto text-center w-full">
-            {/* Interactive Comparison Matrix */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-              {/* General AI */}
-              <div className="group perspective-1000">
-                <div className="relative bg-gradient-to-br from-red-500/5 to-red-600/10 backdrop-blur-xl rounded-2xl p-8 border border-red-400/20 hover:border-red-400/40 transition-all duration-500 transform-style-3d group-hover:rotate-x-2 group-hover:rotate-y-2 h-full">
-                  <h3 className="text-2xl font-bold text-white mb-6 text-center relative z-10 group-hover:scale-105 transition-transform duration-300">
-                    Other AI Tools
-                  </h3>
-                  
-                  <div className="space-y-4 text-left relative z-10">
-                    {[
-                      {
-                        title: "Pattern-Based Generation",
-                        description: "Synthesizes answers from statistical correlations across training data"
-                      },
-                      {
-                        title: "Unconstrained Fabrication", 
-                        description: "Generates plausible statements with no relation to actual spoken words"
-                      },
-                      {
-                        title: "Opaque Provenance",
-                        description: "No mechanism for source attribution or independent verification"
-                      }
-                    ].map((item, index) => (
-                      <div
-                        key={index}
-                        className="p-4 rounded-lg border border-red-400/10 hover:border-red-400/30 bg-red-500/5 backdrop-blur-sm transition-all duration-300 group/item hover:translate-x-2 hover:bg-red-500/10"
-                      >
-                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center">
-                          <span className="w-2 h-2 bg-red-400 rounded-full mr-3 group-hover/item:scale-150 transition-transform duration-300"></span>
-                          {item.title}
-                        </h4>
-                        <p className="text-dark-silver text-sm leading-relaxed pl-5">
-                          {item.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bottom Bar */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-              </div>
-
-              {/* DebateMatch.RAG */}
-              <div className="group perspective-1000">
-                <div className="relative bg-gradient-to-br from-electric-purple/10 to-purple-600/15 backdrop-blur-xl rounded-2xl p-8 border border-electric-purple/30 hover:border-electric-purple/60 transition-all duration-500 transform-style-3d group-hover:rotate-x-2 group-hover:rotate-y-2 h-full">
-                  <div className="text-2xl font-bold text-white mb-6 text-center relative z-10 group-hover:scale-105 transition-transform duration-300">
-                    <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">DebateMatch</span>
-                    <span className="text-white">.RAG</span>
-                  </div>
-                  
-                  <div className="space-y-4 text-left relative z-10">
-                    {[
-                      {
-                        title: "Retrieval-Constrained Generation",
-                        description: "Every response derives from specific, timestamped debate transcripts"
-                      },
-                      {
-                        title: "Anti-Hallucination Framework", 
-                        description: "Technical safeguards prevent fabrication, outputs tethered to evidence"
-                      },
-                      {
-                        title: "Transparent Audit Trail",
-                        description: "Complete source attribution for independent verification"
-                      }
-                    ].map((item, index) => (
-                      <div
-                        key={index}
-                        className="p-4 rounded-lg border border-electric-purple/20 hover:border-electric-purple/50 bg-electric-purple/10 backdrop-blur-sm transition-all duration-300 group/item hover:translate-x-2 hover:bg-electric-purple/15"
-                      >
-                        <h4 className="text-lg font-semibold text-white mb-2 flex items-center">
-                          <span className="w-2 h-2 bg-electric-purple rounded-full mr-3 group-hover/item:scale-150 transition-transform duration-300"></span>
-                          {item.title}
-                        </h4>
-                        <p className="text-dark-silver text-sm leading-relaxed pl-5">
-                          {item.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Bottom Bar */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-electric-purple to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -570,27 +635,77 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <p className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            The principles that guide our mission and shape every aspect of our platform's development.
+            Six foundational principles that define our mission and guide every decision in building transparent, verifiable
+            political analysis tools. These values ensure our architecture democracy through factual accuracy and complete accountability.
           </p>
         </div>
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center px-8 pb-20">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { number: '1', title: 'Factual Accuracy', description: 'Grounding responses in actual debate transcripts and verified sources' },
-                { number: '2', title: 'Transparency', description: 'Making political discourse more accessible and understandable for all' },
-                { number: '3', title: 'Voter Empowerment', description: 'Helping citizens make informed decisions based on verified information' },
-                { number: '4', title: 'Combatting Misinformation', description: 'Providing verified context against misleading claims and rhetoric' },
-                { number: '5', title: 'Democratizing Information', description: 'Making political analysis accessible to all voters regardless of background' },
+                { number: '2', title: 'Citation Integrity', description: 'Making political discourse more accessible and understandable for all' },
+                { number: '3', title: 'Source Verification', description: 'Helping citizens make informed decisions based on verified information' },
+                { number: '4', title: 'Zero Hallucination', description: 'Providing verified context against misleading claims and rhetoric' },
+                { number: '5', title: 'Primary Source Access', description: 'Making political analysis accessible to all voters regardless of background' },
                 { number: '6', title: 'Accountability', description: 'Tracking candidate statements against factual records and past positions' }
               ].map((item, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl">
-                  <div className="text-5xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent mb-3">
-                    {item.number}
+                <motion.div 
+                  key={index}
+                  initial={{ y: 50, opacity: 0 }}
+                  whileInView={{ y: 0, opacity: 1 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: index * 0.1,
+                    type: "spring",
+                    stiffness: 100
+                  }}
+                  viewport={{ once: true }}
+                  className="group relative perspective-1000"
+                >
+                  <div className="relative backdrop-blur-2xl rounded-2xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden transform-style-3d hover:scale-105">
+                    {/* Animated Background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-violet-500/10 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                    {/* Border */}
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-400/20 via-violet-400/20 to-indigo-500/20 blur-xl"></div>
+                    </div>
+
+                    <div className="relative z-10 p-6">
+                      {/* Number */}
+                      <div className="relative mb-4 flex justify-center">
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center border border-indigo-400/30 group-hover:border-indigo-400/60 transition-all duration-500 group-hover:scale-110">
+                          <span className="text-3xl text-white/80 group-hover:text-white transition-colors duration-500">{item.number}</span>
+                          
+                          {/* Glow effect */}
+                          <div className="absolute inset-0 rounded-full bg-indigo-400/20 blur-md opacity-0 group-hover:opacity-100 group-hover:animate-pulse"></div>
+                        </div>
+                      </div>
+                      
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-white mb-3 relative inline-block">
+                        <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
+                          {item.title}
+                        </span>
+                        <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                          {item.title}
+                        </span>
+                      </h3>
+
+                      {/* Divider line */}
+                      <div className="h-px w-12 mx-auto bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent mb-3 group-hover:w-24 transition-all duration-500"></div>
+                      
+                      {/* Description */}
+                      <p className="text-dark-silver text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-500">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    {/* Bottom line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-400/0 to-transparent group-hover:via-indigo-400/60 transition-all duration-700"></div>
                   </div>
-                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-dark-silver text-sm">{item.description}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -612,30 +727,102 @@ function Missions({ onGetStarted }) {
           </h2>
           {/* Description */}
           <p className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            Empowering diverse stakeholders with actionable political intelligence and verified information.
+            Three communities we serve with verified political intelligence: voters seeking truth, professionals
+            requiring primary source evidence, and educators teaching critical analysis of political discourse.
           </p>
         </div>
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center px-8 pb-20">
           <div className="max-w-6xl mx-auto text-center w-full">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { 
-                  title: 'Voters & Citizens', 
-                  description: 'Get verifiable answers about what candidates actually said, with direct quotes and timestamps you can check—no more AI guesswork or hallucinations.' 
+                  title: 'Voters & Citizens',
+                  gradient: 'from-blue-500 to-cyan-500',
+                  description: 'Get verifiable answers about what candidates actually said, with direct quotes and timestamps you can check—no more AI guesswork or hallucinations.',
+                  features: ['Direct transcript access', 'Timestamp verification', 'Zero AI hallucination']
                 },
                 { 
-                  title: 'Journalists & Researchers', 
-                  description: 'Quickly verify political claims with primary source evidence from debates. Cite exact moments instead of relying on AI summaries that may be inaccurate.' 
+                  title: 'Journalists & Researchers',
+                  gradient: 'from-violet-500 to-purple-500',
+                  description: 'Quickly verify political claims with primary source evidence from debates. Cite exact moments instead of relying on AI summaries that may be inaccurate.',
+                  features: ['Primary source citations', 'Fact-checking tools', 'Complete attribution chain']
                 },
                 { 
-                  title: 'Educators & Students', 
-                  description: 'Teach critical thinking using actual debate transcripts. Show students how to distinguish between AI-generated summaries and verifiable primary sources.' 
+                  title: 'Educators & Students',
+                  gradient: 'from-indigo-500 to-blue-500',
+                  description: 'Teach critical thinking using actual debate transcripts. Show students how to distinguish between AI-generated summaries and verifiable primary sources.',
+                  features: ['Original transcripts', 'Critical analysis', 'Media literacy']
                 }
               ].map((item, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-lg rounded-lg p-6 border border-white/20 shadow-xl hover:border-electric-purple/30 transition-all duration-300">
-                  <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
-                  <p className="text-dark-silver">{item.description}</p>
-                </div>
+                <motion.div 
+                  key={index}
+                  initial={{ y: 60, opacity: 0, scale: 0.9 }}
+                  whileInView={{ y: 0, opacity: 1, scale: 1 }}
+                  transition={{ 
+                    duration: 0.7, 
+                    delay: index * 0.15,
+                    type: "spring",
+                    stiffness: 80
+                  }}
+                  viewport={{ once: true }}
+                  className="group relative"
+                >
+                  <div className="relative backdrop-blur-2xl rounded-3xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden h-full">
+                    {/* Animated background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-700`}></div>
+                    
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br ${item.gradient} blur-3xl opacity-20`}></div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative z-10 p-8 h-full flex flex-col">
+                      {/* Title */}
+                      <h3 className="text-2xl font-bold text-white mb-4 relative inline-block mx-auto">
+                        <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
+                          {item.title}
+                        </span>
+                        <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                          {item.title}
+                        </span>
+                      </h3>
+
+                      {/* Divider line */}
+                      <div className={`h-px w-16 mx-auto bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent mb-4 group-hover:w-32 transition-all duration-500`}></div>
+                      
+                      {/* Description */}
+                      <p className="text-dark-silver text-sm leading-relaxed mb-6 group-hover:text-white/90 transition-colors duration-500 flex-grow">
+                        {item.description}
+                      </p>
+
+                      {/* Feature list */}
+                      <div className="space-y-2 mt-auto">
+                        {item.features.map((feature, idx) => (
+                          <motion.div
+                            key={idx}
+                            initial={{ x: -20, opacity: 0 }}
+                            whileInView={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.3 + idx * 0.1, duration: 0.5 }}
+                            viewport={{ once: true }}
+                            className="flex items-center gap-2 text-left"
+                          >
+                            <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-br ${item.gradient} group-hover:scale-150 transition-transform duration-300`}></div>
+                            <span className="text-xs text-dark-silver/80 group-hover:text-white/70 transition-colors duration-500">{feature}</span>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Bottom line */}
+                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-400/0 to-transparent group-hover:via-indigo-400/60 transition-all duration-700`}></div>
+                    
+                    {/* Corner accent */}
+                    <div className="absolute top-0 right-0 w-20 h-20 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                      <div className={`absolute top-0 right-0 w-full h-full bg-gradient-to-bl ${item.gradient} opacity-10 rounded-bl-3xl`}></div>
+                    </div>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -723,6 +910,27 @@ function Missions({ onGetStarted }) {
 
         .group-hover\:rotate-y-2:hover {
           transform: rotateY(2deg);
+        }
+
+        .perspective-1000 {
+          perspective: 1000px;
+        }
+
+        .transform-style-3d {
+          transform-style: preserve-3d;
+          transition: all 0.5s ease;
+        }
+
+        .hover\:rotate-y-5:hover {
+          transform: rotateY(5deg);
+        }
+
+        .hover\:translate-z-10:hover {
+          transform: translateZ(10px);
+        }
+
+        .group {
+          transform-style: preserve-3d;
         }
       `} </style>
     </div>

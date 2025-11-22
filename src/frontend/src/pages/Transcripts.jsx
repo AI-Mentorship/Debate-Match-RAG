@@ -337,7 +337,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden z-50"
+              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-bright-pink/70 shadow-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col h-full">
@@ -527,9 +527,9 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
               <div className="mb-7 justify-center mx-auto">
                 <div className="flex gap-4 items-center">
                   {/* Transcript Count */}
-                  <div className="px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white transition-all duration-300 whitespace-nowrap">
-                    <span className="font-medium">
-                      ({filteredTranscripts.length}) {filteredTranscripts.length === 1 ? 'Transcript' : 'Transcripts'}
+                  <div className="px-6 py-3 bg-[#2B2139] backdrop-blur-lg border border-white/20 rounded-2xl text-dark-silver transition-all duration-300 whitespace-nowrap">
+                    <span className="font-small">
+                      {filteredTranscripts.length} {filteredTranscripts.length == 1 ? 'transcript found' : 'transcripts found'}
                     </span>
                   </div>
 
@@ -540,7 +540,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                       placeholder="Search transcripts by title, date, or participant..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full px-6 py-3 bg-[#251f2e] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-electric-purple focus:bg-white/5 focus:ring-2 focus:ring-electric-purple/20 border-white/20 hover:border-electric-purple hover:bg-white/5 transition-all duration-300"
+                      className="w-full px-6 py-3 bg-[#2B2139] backdrop-blur-lg border border-white/20 rounded-2xl text-white placeholder-dark-silver focus:outline-none focus:border-bright-pink focus:bg-white/5 focus:ring-2 focus:ring-bright-pink/20 border-white/20 hover:border-bright-pink hover:bg-white/5 transition-all duration-300"
                     />
                     <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-dark-silver">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -553,15 +553,15 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                   <div className="relative">
                     <button
                       onClick={() => setShowFilters(!showFilters)}
-                      className={`px-6 py-3 bg-[#251f2e] backdrop-blur-lg border rounded-2xl text-white transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${
+                      className={`px-6 py-3 bg-[#2B2139] backdrop-blur-lg border rounded-2xl text-white transition-all duration-300 flex items-center gap-2 whitespace-nowrap ${
                         showFilters || filterTypes.length > 0
-                          ? 'border-electric-purple bg-electric-purple/10'
-                          : 'border-white/20 hover:border-electric-purple hover:bg-white/5'
+                          ? 'border-bright-pink bg-electric-purple/10'
+                          : 'border-white/20 hover:border-bright-pink hover:bg-white/5'
                       }`}
                     >
                       <span>Filter</span>
                       {filterTypes.length > 0 && (
-                        <span className="ml-1 px-2 py-0.5 bg-electric-purple rounded-full text-xs font-bold">
+                        <span className="ml-1 px-2 py-0.5 bg-bright-pink rounded-full text-xs font-bold">
                           {filterTypes.length}
                         </span>
                       )}
@@ -590,7 +590,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                           <div className="p-4 border-b border-white/10 bg-white/5">
                             <div className="flex items-center justify-between">
                               <h3 className="text-white font-bold text-base flex items-center gap-2">
-                                <svg className="w-5 h-5 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                                 </svg>
                                 Filters & Sorting
@@ -598,7 +598,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               {filterTypes.length > 0 && (
                                 <button
                                   onClick={() => setFilterTypes([])}
-                                  className="text-xs text-electric-purple hover:text-white transition-colors duration-200"
+                                  className="text-xs text-bright-pink hover:text-white transition-colors duration-200"
                                 >
                                   Clear All
                                 </button>
@@ -610,7 +610,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             {/* Sort By Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3">
-                                <svg className="w-4 h-4 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
                                 </svg>
                                 <h4 className="text-white font-semibold text-sm text-left">Sort By</h4>
@@ -627,7 +627,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                                     onClick={() => setSortBy(option.value)}
                                     className={`w-full px-4 py-1 rounded-xl text-sm text-left flex items-center justify-between group ${
                                       sortBy === option.value
-                                        ? 'bg-gradient-to-r from-electric-purple/30 to-electric-purple/20 text-white border border-electric-purple/50 shadow-lg shadow-electric-purple/20'
+                                        ? 'bg-gradient-to-r from-bright-pink/30 to-bright-pink/20 text-white border border-bright-pink/50'
                                         : 'bg-white/5 text-dark-silver border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
                                     }`}
                                   >
@@ -645,7 +645,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             {/* Filter By Type Section */}
                             <div>
                               <div className="flex items-center gap-2 mb-3">
-                                <svg className="w-4 h-4 text-electric-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                                 </svg>
                                 <h4 className="text-white font-semibold text-sm text-left">Filter By Type</h4>
@@ -663,7 +663,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                                     onClick={() => toggleFilterType(option.value)}
                                     className={`w-full px-4 py-2.5 rounded-xl text-sm text-left flex items-center justify-between group ${
                                       filterTypes.includes(option.value)
-                                        ? `bg-gradient-to-r from-electric-purple/30 to-electric-purple/20 text-white border border-electric-purple/50 shadow-lg shadow-electric-purple/20`
+                                        ? `bg-gradient-to-r from-bright-pink/30 to-bright-pink/20 text-white border border-bright-pink/50`
                                         : 'bg-white/5 text-dark-silver border border-white/10 hover:bg-white/10 hover:text-white hover:border-white/20'
                                     }`}
                                   >
@@ -686,13 +686,6 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               </div>
                             </div>
                           </div>
-
-                          {/* Footer */}
-                          <div className="p-4 border-t border-white/10 bg-white/5">
-                            <div className="text-xs text-dark-silver text-center">
-                              {filteredTranscripts.length} {filteredTranscripts.length === 1 ? 'debate' : 'debates'} found
-                            </div>
-                          </div>
                         </motion.div>
                       </>
                     )}
@@ -703,15 +696,15 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
               {/* Transcripts Grid */}
               <div className="w-full">
                 <div className="mx-auto">
-                  <div className="pt-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 max-h-[600px] overflow-y-auto pr-2">
+                  <div className="pt-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-2">
                     {filteredTranscripts.map((transcript, index) => (
                       <motion.div
                         key={transcript.id}
-                        className={`relative bg-[#251f2e] backdrop-blur-lg rounded-xl border transition-all duration-500 group min-h-65 flex flex-col ${
+                        className={`relative backdrop-blur-lg rounded-xl border transition-all duration-500 group min-h-65 flex flex-col ${
                           hoveredCard === transcript.id 
-                            ? 'border-white/40 shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                            ? 'border-bright-pink shadow-2xl shadow-electric-purple/20 translate-y-[-8px]'
                             : 'border-white/10 shadow-lg hover:border-white/30'
-                        } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                        } bg-gradient-to-br from-[#2B2139] to-[#0B0219]`}
                         onMouseEnter={() => setHoveredCard(transcript.id)}
                         onMouseLeave={() => setHoveredCard(null)}
                       >
@@ -719,7 +712,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         <div className="flex-1 p-6">
                           {/* Title and Date */}
                           <div className="text-center mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                            <h3 className="text-md font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500 line-clamp-3">
+                            <h3 className="text-md font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500 line-clamp-3">
                               {transcript.title}
                             </h3>
                             <p className="text-dark-silver text-sm">
@@ -761,7 +754,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               e.stopPropagation();
                               setSelectedTranscript(transcript);
                             }}
-                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-bl-xl flex items-center justify-center group/btn border-r border-white/10"
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-bright-pink/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-bright-pink/50 transition-all duration-300 rounded-bl-xl flex items-center justify-center group/btn border-r border-white/10"
                           >
                             <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                               View
@@ -776,7 +769,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               sessionStorage.setItem('selectedTranscript', JSON.stringify(transcript));
                               navigate('/analyzer');
                             }}
-                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-[#F786C7]/50 transition-all duration-300 rounded-br-xl flex items-center justify-center group/btn border-r border-white/10"
+                            className="flex-1 bg-gradient-to-r from-transparent to-transparent hover:from-bright-pink/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold hover:border-bright-pink/50 transition-all duration-300 rounded-br-xl flex items-center justify-center group/btn border-r border-white/10"
                           >
                             <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                               Analyze
@@ -785,7 +778,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         </div>
 
                         {/* Hover Glow Effect */}
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-bright-pink/0 to-[#FFCAE4]/0 group-hover:from-bright-pink/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                       </motion.div>
                     ))}
                   </div>
@@ -813,7 +806,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
         </div>
       </section>
 
-      {/* ==================== Shooting star animation ==================== */}
+      {/* ==================== Styles ==================== */}
       <style> {`
         * {
           cursor: none !important;

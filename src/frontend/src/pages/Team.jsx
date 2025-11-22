@@ -307,7 +307,7 @@ function Team({ onGetStarted, onModalStateChange }) {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", damping: 25 }}
-              className="relative bg-gradient-to-br from-[#251f2e] via-[#1a1029] to-[#0B0219] rounded-2xl border border-white/20 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-50"
+              className="relative bg-gradient-to-br from-[#1a1029] to-[#0B0219] rounded-2xl border border-bright-pink/70 shadow-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden z-50"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex flex-col md:flex-row h-full">
@@ -326,7 +326,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   
                   <div className="relative w-80 h-80">                  
                     {/* Profile Image */}
-                    <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl">
+                    <div className="relative w-full h-full rounded-2xl overflow-hidden">
                       <img 
                         src={selectedMember.image} 
                         alt={selectedMember.name}
@@ -347,7 +347,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                         <h2 className="text-4xl font-bold text-white mb-2 text-left">
                           {selectedMember.name}
                         </h2>
-                        <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-xl mb-4 text-left">
+                        <p className="text-transparent bg-clip-text bg-gradient-to-b from-bright-pink to-[#FFCAE4] font-semibold text-xl mb-4 text-left">
                           {selectedMember.role}
                         </p>
                       </div>
@@ -359,7 +359,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                           href={selectedMember.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
+                          className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/50 transition-all duration-300 hover:scale-110"
                         >
                           <svg 
                             className="w-4 h-4 text-white" 
@@ -376,7 +376,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                             href={selectedMember.instagram}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/40 transition-all duration-300 hover:scale-110"
+                            className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/20 hover:border-white/50 transition-all duration-300 hover:scale-110"
                           >
                             <svg 
                               className="w-4 h-4 text-white" 
@@ -506,9 +506,9 @@ function Team({ onGetStarted, onModalStateChange }) {
                   key={member.id}
                   className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      ? 'border-bright-pink shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg'
-                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                  } bg-gradient-to-br from-[#2B2139] to-[#0B0219]`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
@@ -516,7 +516,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
                     <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-bright-pink to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -530,10 +530,10 @@ function Team({ onGetStarted, onModalStateChange }) {
 
                     {/* Name and Role */}
                     <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500">
                         {member.name}
                       </h3>
-                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-bright-pink to-[#FFCAE4] font-semibold text-sm">
                         {member.role}
                       </p>
                     </div>
@@ -552,7 +552,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                         e.stopPropagation();
                         setSelectedMember(member);
                       }}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-bright-pink/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-bright-pink/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -561,7 +561,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   </div>
 
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-bright-pink/0 to-[#FFCAE4]/0 group-hover:from-bright-pink/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </div>
@@ -601,9 +601,9 @@ function Team({ onGetStarted, onModalStateChange }) {
                   key={member.id}
                   className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      ? 'border-bright-pink shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg'
-                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                  } bg-gradient-to-br from-[#2B2139] to-[#0B0219]`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
@@ -611,7 +611,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
                     <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-bright-pink to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -625,10 +625,10 @@ function Team({ onGetStarted, onModalStateChange }) {
 
                     {/* Name and Role */}
                     <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500">
                         {member.name}
                       </h3>
-                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-bright-pink to-[#FFCAE4] font-semibold text-sm">
                         {member.role}
                       </p>
                     </div>
@@ -643,7 +643,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-bright-pink/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-bright-pink/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -652,7 +652,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   </div>
 
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-bright-pink/0 to-[#FFCAE4]/0 group-hover:from-bright-pink/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </div>
@@ -692,9 +692,9 @@ function Team({ onGetStarted, onModalStateChange }) {
                   key={member.id}
                   className={`relative backdrop-blur-lg rounded-2xl border transition-all duration-500 group min-h-96 flex flex-col ${
                     hoveredCard === member.id 
-                      ? 'border-[#F786C7] shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
+                      ? 'border-bright-pink shadow-2xl shadow-electric-purple/20 translate-y-[-8px]' 
                       : 'border-white/10 shadow-lg hover:border-white/30'
-                  } bg-gradient-to-br from-[#2B2139]/30 to-[#0B0219]/30`}
+                  } bg-gradient-to-br from-[#2B2139] to-[#0B0219]`}
                   onMouseEnter={() => setHoveredCard(member.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
@@ -702,7 +702,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="flex-1 p-8">
                     {/* Profile Image */}
                     <div className="relative z-10 w-32 h-32 mx-auto mb-6 transition-all duration-500 group-hover:scale-105">
-                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-[#F786C7] to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
+                      <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-bright-pink to-[#FFCAE4] opacity-0 group-hover:opacity-50 transition-all duration-500 blur-sm"></div>
                       <div className="relative w-full h-full rounded-2xl bg-transparent overflow-hidden border-2 border-white/10 group-hover:border-white/20 transition-all duration-500">
                         <div className="w-full h-full rounded-2xl">
                           <img 
@@ -716,10 +716,10 @@ function Team({ onGetStarted, onModalStateChange }) {
 
                     {/* Name and Role */}
                     <div className="text-center mb-2 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-[#F786C7] transition-colors duration-500">
+                      <h3 className="text-xl font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500">
                         {member.name}
                       </h3>
-                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-[#F786C7] to-[#FFCAE4] font-semibold text-sm">
+                      <p className="text-transparent bg-clip-text bg-gradient-to-b from-bright-pink to-[#FFCAE4] font-semibold text-sm">
                         {member.role}
                       </p>
                     </div>
@@ -734,7 +734,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   <div className="mt-auto h-16 flex-shrink-0">
                     <button 
                       onClick={() => setSelectedMember(member)}
-                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-[#F786C7]/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-[#F786C7]/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
+                      className="w-full h-full bg-gradient-to-r from-transparent to-transparent hover:from-bright-pink/10 hover:to-[#FFCAE4]/10 text-white text-sm font-semibold border-t border-white/20 hover:border-bright-pink/50 transition-all duration-300 rounded-b-2xl flex items-center justify-center group/btn"
                     >
                       <span className="group-hover/btn:tracking-wider transition-all duration-300 inline-block">
                         View Profile →
@@ -743,7 +743,7 @@ function Team({ onGetStarted, onModalStateChange }) {
                   </div>
 
                   {/* Hover Glow Effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#F786C7]/0 to-[#FFCAE4]/0 group-hover:from-[#F786C7]/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-bright-pink/0 to-[#FFCAE4]/0 group-hover:from-bright-pink/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                 </motion.div>
               ))}
             </div>

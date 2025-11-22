@@ -15,6 +15,11 @@ function AppContent() {
   const [isHitting, setIsHitting] = useState(false)
   const location = useLocation()
 
+  /* ==================== Scroll to top ==================== */
+  const handleExitComplete = () => {
+    window.scrollTo(0, 0);
+  }
+
   /* ==================== Mouse tracking ==================== */
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -179,7 +184,7 @@ function AppContent() {
 
         {/* Animated Page Content */}
         <div className={`flex-1 relative ${!(isModalOpen || selectedTranscript) ? 'pt-20' : 'pt-0'}`}>
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" onExitComplete={handleExitComplete}>
             <motion.div
               key={location.pathname}
               initial="initial"
