@@ -40,12 +40,15 @@ def clean_transcript(raw_text):
     # Now remove everything else between square brackets (stage directions, technical notes)
     text = re.sub(r'\[.*?\]', '', text)
     
-    # Remove commercial break markers
+    # Remove commercial break markers only match standalone lines
     text = re.sub(r'\*\*PAID FOR BY.*?\*\*', '', text, flags=re.IGNORECASE)
     text = re.sub(r'\*\*CNN FACT CHECK:.*?\*\*', '', text)
     text = re.sub(r'\*\*.*?\*\*', '', text)  # Any other **text**
-    text = re.sub(r'ADVERTISEMENT BREAK', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'COMMERCIAL BREAK.*', '', text, flags=re.IGNORECASE)
+    
+    # Only remove "COMMERCIAL BREAK" when it's on its own line
+    text = re.sub(r'^ADVERTISEMENT BREAK.*?$', '', text, flags=re.MULTILINE | re.IGNORECASE)
+    text = re.sub(r'^\*\*COMMERCIAL BREAK\*\*.*?$', '', text, flags=re.MULTILINE | re.IGNORECASE)
+    text = re.sub(r'^COMMERCIAL BREAK$', '', text, flags=re.MULTILINE | re.IGNORECASE)
     
     # Remove header/footer lines with equals signs
     text = re.sub(r'=+.*?=+', '', text)
@@ -301,13 +304,13 @@ def extract_speaker_turns(cleaned_text, source, date):
     # Multiple patterns to handle different transcript formats
     patterns = [
         # Pattern 1: Speaker Name ([timestamp]): text
-        r'^([A-Za-z\s\.\']+)\s*\(\[?([\d:]+)\]?\):\s*(.*)$',
+        r'^([A-Z][A-Za-z\s\.\']+)\s*\(\[?([\d:]+)\]?\):\s*(.*)$',
         # Pattern 2: Speaker Name (timestamp): text (no brackets)
-        r'^([A-Za-z\s\.\']+)\s*\(([\d:]+)\):\s*(.*)$',
+        r'^([A-Z][A-Za-z\s\.\']+)\s*\(([\d:]+)\):\s*(.*)$',
         # Pattern 3: [timestamp] Speaker Name: text
-        r'^\[?([\d:]+)\]?\s+([A-Za-z\s\.\']+):\s*(.*)$',
+        r'^\[?([\d:]+)\]?\s+([A-Z][A-Za-z\s\.\']+):\s*(.*)$',
         # Pattern 4: Speaker Name: text (no timestamp)
-        r"^([A-Z][A-Za-z\.'\-]+(?: [A-Z][A-Za-z\.'\-']+)*):\s*(.*)$"
+        r"^([A-Z][A-Za-z\.'\-]+(?: [A-Z][A-Za-z\.'\-]+)+):\s*(.*)$"
     ]
     
     for line in lines:
@@ -324,7 +327,7 @@ def extract_speaker_turns(cleaned_text, source, date):
             match = re.match(pattern, line)
             
             if match:
-                # Based on pattern
+                # Extract potential speaker based on pattern
                 if pattern_idx == 0 or pattern_idx == 1:
                     potential_speaker = match.group(1).strip()
                 elif pattern_idx == 2:
@@ -332,14 +335,25 @@ def extract_speaker_turns(cleaned_text, source, date):
                 elif pattern_idx == 3:
                     potential_speaker = match.group(1).strip()
                 
-                # First and Last name
+                # Validate speaker name
                 words = potential_speaker.split()
-                non_speaker_prefixes = ['Video', 'Clip', 'Audio', 'Recording', 'Transcript', 'Voice']
-                
-                if (len(words) < 2 or # Must have at least 2 words
-                    any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes) or # Not a video or audio
-                    potential_speaker.isupper()): # Not all caps
-                    continue
+                non_speaker_prefixes = ['Video', 'Clip', 'Audio', 'Recording', 'Transcript', 'Voice', 'The', 'A', 'An']
+                if pattern_idx == 3:
+                    # Must have exactly 2 or 3 words (First Middle? Last)
+                    if len(words) < 2 or len(words) > 3:
+                        continue
+                    # Each word must start with capital
+                    if not all(w[0].isupper() for w in words):
+                        continue
+                    # Must not be common non-name phrases
+                    if any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes):
+                        continue
+                else:
+                    # For patterns with timestamps
+                    if (len(words) < 2 or
+                        any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes) or
+                        potential_speaker.isupper()):
+                        continue
 
                 # Save previous speaker's text if it exists
                 if current_speaker and current_text:
@@ -355,17 +369,14 @@ def extract_speaker_turns(cleaned_text, source, date):
                 
                 # Extract based on which pattern matched
                 if pattern_idx == 0 or pattern_idx == 1:
-                    # Patterns with speaker, timestamp, text
                     current_speaker = match.group(1).strip()
                     current_timestamp = match.group(2).strip()
                     current_text = [match.group(3)] if match.group(3) else []
                 elif pattern_idx == 2:
-                    # Pattern with timestamp first, then speaker
                     current_timestamp = match.group(1).strip()
                     current_speaker = match.group(2).strip()
                     current_text = [match.group(3)] if match.group(3) else []
                 elif pattern_idx == 3:
-                    # Pattern with just speaker and text (no timestamp) - RESTRICTIVE
                     current_speaker = match.group(1).strip()
                     current_timestamp = 'N/A'
                     current_text = [match.group(2)] if match.group(2) else []
@@ -374,9 +385,10 @@ def extract_speaker_turns(cleaned_text, source, date):
                 break
         
         if not matched and current_speaker:
-            current_text.append(line)
+            if not re.match(r'^[A-Z][A-Za-z\s]+:\s*', line):
+                current_text.append(line)
     
-    # Last speaker turn
+    # Save last speaker turn
     if current_speaker and current_text:
         text = '\n'.join(current_text).strip()
         if text:
@@ -389,7 +401,6 @@ def extract_speaker_turns(cleaned_text, source, date):
             })
     
     return turns
-
 
 def save_as_csv(data, output_path):
     """
