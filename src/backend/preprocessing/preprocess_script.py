@@ -110,11 +110,21 @@ def save_cached_topics(text, topics):
 
 def classify_topics_batch(texts, speakers, threshold=0.3):
     """
-    Improved topic classification with better policy detection
+    Classify multiple texts with OpenAI including moderator detection.
+    Only send substantive turns to OpenAI to reduce costs.
+    
+    Args:
+        texts: List of texts to classify
+        speakers: List of speaker names
+        threshold: Minimum confidence score (for fallback only)
+        
+    Returns:
+        List of topic lists
     """
+    # OpenAI
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not os.getenv("OPENAI_API_KEY"):
-        print("OPENAI_API_KEY not found.")
+        print("OPENAI_API_KEY not found in environment. Using fallback classifier.")
         return classify_topics_batch_fallback(texts, threshold)
     
     all_topics = [None] * len(texts)
@@ -126,39 +136,40 @@ def classify_topics_batch(texts, speakers, threshold=0.3):
     for i, (text, speaker) in enumerate(zip(texts, speakers)):
         word_count = len(text.split())
         
-        # Improved classification
+        # Classification for short turns
         if word_count < 5:
             text_lower = text.lower()
             speaker_lower = speaker.lower()
             
-            # Better moderator detection
-            moderator_phrases = ['welcome', 'next question', 'time is up', 'thank you', 'let me ask', 
-                               'your time', 'please respond', 'we\'ll move to', 'final question',
-                               'good evening', 'thank you for joining', 'let\'s get started']
-            
-            if (any(mod_word in speaker_lower for mod_word in ['moderator', 'host', 'anchor', 'david', 'linsey', 'muir', 'davis']) or
-                any(phrase in text_lower for phrase in moderator_phrases)):
+            # Check for moderator
+            if any(mod_word in speaker_lower for mod_word in ['moderator', 'host', 'anchor', 'journalist']):
                 all_topics[i] = ["moderator"]
-            elif any(response in text_lower for response in ['yes', 'no', 'thank you', 'thanks', 'okay', 'ok']):
+            # Check for common responses
+            elif any(response in text_lower for response in ['yes', 'no', 'thank you', 'thanks', 'okay', 'ok', 'right', 'correct', 'exactly']):
                 all_topics[i] = ["general_response"]
+            # Check for moderator phrases
+            elif any(phrase in text_lower for phrase in ['next question', 'time is up', 'welcome', 'thank you.']):
+                all_topics[i] = ["moderator"]
             else:
                 all_topics[i] = ["general_political_commentary"]
         else:
+            # Substantive turn
             texts_to_process.append(text)
             speakers_to_process.append(speaker)
             indices_to_process.append(i)
     
     print(f"Sending {len(texts_to_process)}/{len(texts)} substantive turns to OpenAI")
     
-    # Process substantive turns
-    for i in range(0, len(texts_to_process), 12):  # Smaller batches for better accuracy
-        batch_texts = texts_to_process[i:i+12]
-        batch_speakers = speakers_to_process[i:i+12]
-        batch_indices = indices_to_process[i:i+12]
+    # Only send substantive turns to OpenAI
+    for i in range(0, len(texts_to_process), 15):
+        batch_texts = texts_to_process[i:i+15]
+        batch_speakers = speakers_to_process[i:i+15]
+        batch_indices = indices_to_process[i:i+15]
         
+        # Prepare batch for OpenAI
         batch_prompt = "\n\n".join([
-            f"Speaker: {speaker}\nText: {text[:400]}"
-            for speaker, text in zip(batch_speakers, batch_texts)
+            f"Turn {j+1}: Speaker: {speaker}\nText: {text[:300]}"
+            for j, (speaker, text) in enumerate(zip(batch_speakers, batch_texts))
         ])
         
         try:
@@ -166,50 +177,47 @@ def classify_topics_batch(texts, speakers, threshold=0.3):
                 model="gpt-3.5-turbo",
                 messages=[{
                     "role": "system", 
-                    "content": """You are a political debate analyst. Analyze each speaker turn and return the most specific topics.
-                        CRITICAL RULES:
-                        1. If the speaker is clearly a MODERATOR (asking questions, managing debate, procedural comments), return ["moderator"]
-                        2. For CANDIDATES, analyze the actual policy content, not just election rhetoric
-                        3. Use SPECIFIC policy topics, not "elections" unless it's purely about voting/electoral process
-                        4. Prioritize: economy, taxes, healthcare, immigration, foreign_policy, abortion, guns, crime, climate, education, social_security, military
-                        5. Only use "elections" when discussing voting, campaigns, or electoral outcomes specifically
-                        6. Use "general_politics" only for very general statements without policy substance
-
-                        Examples:
-                        - "I'll cut taxes for middle class" → ["economy", "taxes"] 
-                        - "We need border security" → ["immigration"]
-                        - "Roe v Wade was wrong" → ["abortion"]
-                        - "My plan creates jobs" → ["economy", "jobs"]
-                        - "The election was stolen" → ["elections"]
-
-                        Return JSON: {"results": [["topic1", "topic2"], ...]}"""
+                    "content": """You are a debate analyst. Analyze each speaker turn and return topics in JSON format.
+                    
+                    RULES:
+                    - If the speaker is a MODERATOR (asking questions, managing debate, introducing topics), return ["moderator"]
+                    - If it's a CANDIDATE, return 1-3 topics from this list: economy, healthcare, immigration, foreign_policy, climate, education, crime, taxes, abortion, guns, civil_rights, elections, social_security, military, general_politics
+                    - ALWAYS return a list, never null or empty
+                    - For candidate responses about other candidates, use "elections" or "general_politics"
+                    
+                    Return JSON format: {"results": [["topic1"], ["moderator"], ["topic1", "topic2"], ...]}
+                    """
                 }, {
                     "role": "user",
-                    "content": f"Analyze these {len(batch_texts)} speaker turns. Focus on POLICY content:\n\n{batch_prompt}"
+                    "content": f"Analyze these {len(batch_texts)} speaker turns:\n\n{batch_prompt}"
                 }],
                 temperature=0.1,
-                max_tokens=800,
+                max_tokens=500,
                 response_format={"type": "json_object"}
             )
             
+            # Parse the response
             import json
             result = json.loads(response.choices[0].message.content)
             batch_topics = result["results"]
             
-            # Validate results
+            # Validate
             if len(batch_topics) != len(batch_texts):
                 print(f"OpenAI returned {len(batch_topics)} results but expected {len(batch_texts)}")
+                # Fill missing with fallback
                 batch_topics = batch_topics + [["general_politics"] for _ in range(len(batch_texts) - len(batch_topics))]
             
             # Map back to original indices
             for j, topics in enumerate(batch_topics):
                 original_idx = batch_indices[j]
+                # Ensure topics is always a list
                 if not topics or not isinstance(topics, list):
                     topics = ["general_politics"]
                 all_topics[original_idx] = topics
                 
         except Exception as e:
             print(f"OpenAI classification failed: {e}")
+            # Fallback to original classifier for this batch
             fallback_topics = classify_topics_batch_fallback(batch_texts, threshold)
             for j, topics in enumerate(fallback_topics):
                 original_idx = batch_indices[j]
@@ -222,258 +230,10 @@ def classify_topics_batch(texts, speakers, threshold=0.3):
     
     return all_topics
 
-def classify_topics_batch(texts, speakers, threshold=0.3):
-    """
-    Topic classification with 2-3 tags per turn, except moderators get 1 tag
-    """
-    client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    if not os.getenv("OPENAI_API_KEY"):
-        print("OPENAI_API_KEY not found. Using fallback classifier.")
-        return classify_topics_batch_fallback(texts, threshold)
-    
-    all_topics = [None] * len(texts)
-    texts_to_process = []
-    speakers_to_process = []
-    indices_to_process = []
-    
-    print("🔍 Filtering short turns...")
-    for i, (text, speaker) in enumerate(zip(texts, speakers)):
-        word_count = len(text.split())
-        
-        # Classification
-        if word_count < 10:
-            text_lower = text.lower()
-            speaker_lower = speaker.lower()
-            
-            # Comprehensive moderator detection
-            moderator_names = ['david', 'muir', 'linsey', 'davis', 'moderator', 'host', 'anchor']
-            moderator_phrases = [
-                'welcome', 'next question', 'time is up', 'thank you', 'let me ask', 
-                'your time', 'please respond', 'we\'ll move to', 'final question',
-                'good evening', 'thank you for joining', 'let\'s get started',
-                'i want to turn to', 'i want to ask', 'your response', 'we\'ll give you',
-                'madam vice president', 'mr. president', 'president trump', 'vice president harris',
-                'rules of tonight\'s debate', 'ninety minutes', 'microphones', 'no pre-written notes',
-                'no audience', 'coin toss', 'closing statement', 'podium', 'welcome to the stage'
-            ]
-            
-            # Check for incomplete sentences
-            is_moderator_turn = (
-                any(name in speaker_lower for name in moderator_names) or
-                any(phrase in text_lower for phrase in moderator_phrases) or
-                # Detect incomplete moderator sentences
-                ('rules' in text_lower and 'debate' in text_lower) or
-                ('minutes' in text_lower and any(word in text_lower for word in ['with', 'debate', 'two'])) or
-                ('microphones' in text_lower) or
-                ('audience' in text_lower and 'no' in text_lower) or
-                ('closing statement' in text_lower) or
-                ('podium' in text_lower)
-            )
-            
-            if is_moderator_turn:
-                all_topics[i] = ["moderator"]
-            elif any(response in text_lower for response in ['yes', 'no', 'thank you', 'thanks', 'okay', 'ok', 'come on', 'that\'s not true']):
-                all_topics[i] = ["general_response", "brief_comment"]
-            else:
-                all_topics[i] = ["general_political_commentary", "brief_statement"]
-        else:
-            texts_to_process.append(text)
-            speakers_to_process.append(speaker)
-            indices_to_process.append(i)
-    
-    print(f"Sending {len(texts_to_process)}/{len(texts)} substantive turns to OpenAI")
-    
-    # Process substantive turns
-    for i in range(0, len(texts_to_process), 10):
-        batch_texts = texts_to_process[i:i+10]
-        batch_speakers = speakers_to_process[i:i+10]
-        batch_indices = indices_to_process[i:i+10]
-        
-        # Prepare batch
-        batch_prompt_entries = []
-        for speaker, text in zip(batch_speakers, batch_texts):
-            truncated_text = text[:600]
-            
-            sentence_endings = ['. ', '? ', '! ', '; ', ', ', ' ']
-            for ending in sentence_endings:
-                last_ending = truncated_text.rfind(ending)
-                if last_ending > 400:
-                    truncated_text = truncated_text[:last_ending + len(ending)].strip()
-                    break
-            
-            # Add ellipsis if we truncated
-            if len(truncated_text) < len(text):
-                truncated_text += "..."
-                
-            batch_prompt_entries.append(f"Speaker: {speaker}\nText: {truncated_text}")
-        
-        batch_prompt = "\n\n".join(batch_prompt_entries)
-        
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4",
-                messages=[{
-                    "role": "system", 
-                    "content": """You are a political debate analyst. Analyze each speaker turn and return topics in JSON format.
-                        CRITICAL RULES:
-                        1. MODERATOR TURNS: If speaker is David Muir, Linsey Davis, or anyone asking questions/managing debate → RETURN EXACTLY ["moderator"] (1 tag only)
-                        2. CANDIDATE TURNS: Return 2-3 specific policy topics from this list:
-                        - Primary topics: economy, taxes, immigration, foreign_policy, abortion, healthcare, guns, crime, climate, energy, education, social_security, military
-                        - Secondary topics: jobs, housing, inflation, trade, civil_rights, election_integrity, national_security
-                        - General fallbacks: general_politics, policy_discussion
-                        3. TAG COUNT REQUIREMENTS:
-                        - Moderators: ALWAYS ["moderator"] (1 tag only)
-                        - Candidates: ALWAYS 2-3 tags (never 1, never more than 3)
-                        - If you can't find 2 specific topics, use "general_politics" as second tag
-
-                        SPECIAL NOTE: Some texts may be cut off mid-sentence. Use the available context to determine the topic.
-
-                        Return ONLY valid JSON in this exact format:
-                        {"results": [["topic1", "topic2"], ["moderator"], ["topic1", "topic2", "topic3"], ...]}"""
-                }, {
-                    "role": "user",
-                    "content": f"Analyze these {len(batch_texts)} turns. Follow tag count rules STRICTLY. Return ONLY JSON:\n\n{batch_prompt}"
-                }],
-                temperature=0.1,
-                max_tokens=1000
-            )
-            
-            import json
-            import re
-            
-            # Extract JSON from response
-            response_text = response.choices[0].message.content
-            
-            # Try to find JSON in the response
-            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
-            if json_match:
-                json_str = json_match.group()
-                result = json.loads(json_str)
-                batch_topics = result["results"]
-            else:
-                # If no JSON found, try to parse the entire response as JSON
-                try:
-                    result = json.loads(response_text)
-                    batch_topics = result["results"]
-                except:
-                    print(f"Could not parse JSON from response: {response_text[:200]}...")
-                    raise ValueError("Invalid JSON response from OpenAI")
-            
-            validated_topics = []
-            for j, topics in enumerate(batch_topics):
-                if not topics or not isinstance(topics, list):
-                    topics = ["general_politics", "policy_discussion"]
-                
-                speaker = batch_speakers[j]
-                text = batch_texts[j]
-                text_lower = text.lower()
-                
-                # Moderator detection
-                is_moderator = (
-                    any(name in speaker.lower() for name in ['david', 'muir', 'linsey', 'davis', 'moderator']) or
-                    any(phrase in text_lower for phrase in [
-                        'next question', 'your response', 'we\'ll give you', 
-                        'madam vice president', 'mr. president', 'rules of tonight',
-                        'ninety minutes', 'microphones', 'no pre-written notes',
-                        'no audience', 'coin toss', 'closing statement', 'podium',
-                        'welcome to the stage', 'let\'s now welcome'
-                    ]) or
-                    # Detect incomplete moderator patterns
-                    ('rules' in text_lower and any(word in text_lower for word in ['debate', 'tonight'])) or
-                    ('minutes' in text_lower and 'with' in text_lower) or
-                    ('microphones' in text_lower and 'turned on' in text_lower) or
-                    ('audience' in text_lower and 'no' in text_lower)
-                )
-                
-                if is_moderator:
-                    validated_topics.append(["moderator"])
-                else:
-                    # Candidates get 2-3 tags
-                    if len(topics) == 1:
-                        topics.append("general_politics")
-                    elif len(topics) > 3:
-                        topics = topics[:3]
-                    if len(topics) < 2:
-                        topics.extend(["general_politics", "policy_discussion"][:2-len(topics)])
-                    validated_topics.append(topics)
-            
-            if len(validated_topics) != len(batch_texts):
-                print(f"OpenAI returned {len(validated_topics)} results but expected {len(batch_texts)}")
-                validated_topics = validated_topics + [["general_politics", "policy_discussion"] for _ in range(len(batch_texts) - len(validated_topics))]
-            
-            for j, topics in enumerate(validated_topics):
-                original_idx = batch_indices[j]
-                all_topics[original_idx] = topics
-                
-        except Exception as e:
-            print(f"OpenAI classification failed: {e}")
-            # Fallback
-            fallback_topics = classify_topics_batch_fallback(batch_texts, threshold)
-            validated_fallback = []
-            for j, topics in enumerate(fallback_topics):
-                speaker = batch_speakers[j]
-                text = batch_texts[j]
-                text_lower = text.lower()
-                
-                is_moderator = (
-                    any(name in speaker.lower() for name in ['david', 'muir', 'linsey', 'davis', 'moderator']) or
-                    any(phrase in text_lower for phrase in [
-                        'next question', 'your response', 'we\'ll give you', 
-                        'rules of tonight', 'ninety minutes', 'microphones'
-                    ])
-                )
-                
-                if is_moderator:
-                    validated_fallback.append(["moderator"])
-                else:
-                    if len(topics) == 1:
-                        topics.append("general_politics")
-                    elif len(topics) > 3:
-                        topics = topics[:3]
-                    if len(topics) < 2:
-                        topics.extend(["general_politics", "policy_discussion"][:2-len(topics)])
-                    validated_fallback.append(topics)
-            
-            for j, topics in enumerate(validated_fallback):
-                original_idx = batch_indices[j]
-                all_topics[original_idx] = topics
-    
-    # Final validation pass
-    for i in range(len(all_topics)):
-        if all_topics[i] is None:
-            all_topics[i] = ["general_politics", "policy_discussion"]
-        else:
-            speaker = speakers[i] if i < len(speakers) else ""
-            text = texts[i] if i < len(texts) else ""
-            text_lower = text.lower()
-            
-            # Final moderator check for incomplete texts
-            is_moderator = (
-                any(name in speaker.lower() for name in ['david', 'muir', 'linsey', 'davis', 'moderator']) or
-                any(phrase in text_lower for phrase in [
-                    'next question', 'your response', 'we\'ll give you', 
-                    'rules of tonight', 'ninety minutes', 'microphones',
-                    'no pre-written notes', 'no audience', 'coin toss'
-                ]) or
-                ('rules' in text_lower and 'debate' in text_lower) or
-                ('minutes' in text_lower and 'with' in text_lower)
-            )
-            
-            if is_moderator:
-                all_topics[i] = ["moderator"]
-            else:
-                if len(all_topics[i]) == 1:
-                    all_topics[i].append("general_politics")
-                elif len(all_topics[i]) > 3:
-                    all_topics[i] = all_topics[i][:3]
-    
-    return all_topics
-
 def classify_topics_batch_fallback(texts, threshold=0.3):
     """
     Fallback classifier using the original BART model
     """
-    # Reduced to most important topics only
     candidate_labels = [
         "economy and jobs",
         "healthcare",
@@ -489,8 +249,7 @@ def classify_topics_batch_fallback(texts, threshold=0.3):
         "election integrity",
         "social security",
         "military and defense",
-        "policy discussion",
-        "moderator"
+        "general politics"
     ]
     
     all_topics = []
@@ -519,15 +278,15 @@ def classify_topics_batch_fallback(texts, threshold=0.3):
                     if score > threshold
                 ]
                 
-                final_topics = topics[:3] if topics else ["policy_discussion"]
+                final_topics = topics[:3] if topics else ["general_political_commentary"]
                 all_topics.append(final_topics)
                 
                 # Save to cache
                 save_cached_topics(text, final_topics)
                 cache_misses += 1                
     except Exception as e:
-        print(f"⚠️  Fallback classification failed: {e}")
-        all_topics = [["policy_discussion"] for _ in texts]
+        print(f"Fallback classification failed: {e}")
+        all_topics = [["general_political_commentary"] for _ in texts]
     
     return all_topics
 
@@ -554,7 +313,6 @@ def extract_speaker_turns(cleaned_text, source, date):
     for line in lines:
         line = line.strip()
         if not line:
-            # If we have a current speaker, add blank line to preserve paragraph breaks
             if current_speaker and current_text:
                 current_text.append('')
             continue
@@ -574,13 +332,13 @@ def extract_speaker_turns(cleaned_text, source, date):
                 elif pattern_idx == 3:
                     potential_speaker = match.group(1).strip()
                 
-                # First and Last name validation
+                # First and Last name
                 words = potential_speaker.split()
                 non_speaker_prefixes = ['Video', 'Clip', 'Audio', 'Recording', 'Transcript', 'Voice']
                 
                 if (len(words) < 2 or # Must have at least 2 words
-                    any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes) or
-                    potential_speaker.isupper()):
+                    any(potential_speaker.startswith(prefix) for prefix in non_speaker_prefixes) or # Not a video or audio
+                    potential_speaker.isupper()): # Not all caps
                     continue
 
                 # Save previous speaker's text if it exists
@@ -597,35 +355,26 @@ def extract_speaker_turns(cleaned_text, source, date):
                 
                 # Extract based on which pattern matched
                 if pattern_idx == 0 or pattern_idx == 1:
+                    # Patterns with speaker, timestamp, text
                     current_speaker = match.group(1).strip()
                     current_timestamp = match.group(2).strip()
-                    # FIX: Always capture the text part, even if empty
-                    text_content = match.group(3) if match.group(3) else ""
-                    current_text = [text_content] if text_content else []
+                    current_text = [match.group(3)] if match.group(3) else []
                 elif pattern_idx == 2:
+                    # Pattern with timestamp first, then speaker
                     current_timestamp = match.group(1).strip()
                     current_speaker = match.group(2).strip()
-                    text_content = match.group(3) if match.group(3) else ""
-                    current_text = [text_content] if text_content else []
+                    current_text = [match.group(3)] if match.group(3) else []
                 elif pattern_idx == 3:
+                    # Pattern with just speaker and text (no timestamp) - RESTRICTIVE
                     current_speaker = match.group(1).strip()
                     current_timestamp = 'N/A'
-                    text_content = match.group(2) if match.group(2) else ""
-                    current_text = [text_content] if text_content else []
+                    current_text = [match.group(2)] if match.group(2) else []
                 
                 matched = True
                 break
         
-        # FIX: Better handling of continuation lines
         if not matched and current_speaker:
-            # This line doesn't match any speaker pattern, so it's a continuation
-            # of the current speaker's text
-            if current_text:
-                # If we have existing text, append this line
-                current_text.append(line)
-            else:
-                # If no text yet, start with this line
-                current_text = [line]
+            current_text.append(line)
     
     # Last speaker turn
     if current_speaker and current_text:
@@ -771,18 +520,16 @@ def preprocess(debate_name, debate_date, input_file_path=None):
     speakers = [turn['speaker'] for turn in speaker_turns]
     all_topics = classify_topics_batch(texts, speakers)
     
-    # Add topics to turns with safety check
+    # Add topics to turns
     none_count = 0
     for turn, topics in zip(speaker_turns, all_topics):
         if topics is None:
             none_count += 1
-            topics = ['unknown']
-        elif not isinstance(topics, list):
-            topics = [str(topics)]
+            topics = ['unknown']  # Default fallback
         turn['topics'] = topics
     
     if none_count > 0:
-        print(f"Warning: {none_count} turns had None topics")
+        print(f"Warning: {none_count} turns had None topics, replaced with 'unknown'")
     
     print(f"Topic classification complete!")
     
