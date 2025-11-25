@@ -15,6 +15,7 @@ function Analyzer({ onBackToHome }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [visibleSections, setVisibleSections] = useState({})
+  const [isProcessingUpload, setIsProcessingUpload] = useState(false);
   const [typingMessage, setTypingMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [file, setFile] = useState(null);
@@ -81,6 +82,29 @@ function Analyzer({ onBackToHome }) {
     // Move to metadata
     setCurrentStage("metadata");
   };
+
+  // Drag and drop
+  useEffect(() => {
+    const handleDragOver = (e) => {
+      e.preventDefault();
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleTranscriptUpload({ target: { files } });
+      }
+    };
+
+    document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('drop', handleDrop);
+
+    return () => {
+      document.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('drop', handleDrop);
+    };
+  }, []);
 
   {/* ==================== Trigger file input click ==================== */}
   const handleUploadBoxClick = () => {
@@ -632,6 +656,16 @@ function Analyzer({ onBackToHome }) {
       {/* ==================== Q&A Mode ==================== */}
       {currentStage === "qa" && (
         <div className="h-screen w-full flex flex-col relative">
+          {/* Back button */}
+          <div className="absolute top-4 left-4 z-30">
+            <button
+              onClick={onBackToHome}
+              className="bg-[#2c2c30] hover:bg-[#3c3c40] text-white px-4 py-2 rounded-lg transition"
+            >
+              ← Back to Home
+            </button>
+          </div>
+
           {/* Messages Container */}
           <div
             ref={messagesContainerRef}
