@@ -3,7 +3,7 @@ from backend.database.connection import DebateDatabase
 from backend.database.insert import DataInserter
 from backend.embeddings_faiss.build_index import build_index
 from backend.retriever.retriever import run_retriever
-from backend.qa_pipeline.QA_pipeline import query_rag
+from backend.qa_pipeline.QA_pipeline import query_rag, build_chroma_db
 from backend.fact_checker_prototype.AI_FactChecker import EnhancedFactChecker
 from backend.core_llm.gpt5_nano import LLMClient
 from flask import Flask, jsonify, request # type: ignore
@@ -222,13 +222,56 @@ def retrieve_response():
             return jsonify({"error": "No query provided"}), 400
         
         # Step 1: Run retriever to get relevant passages
-        print("Step 1/2: Running retriever...")
+        print("Step 1/3: Running retriever...")
         top_k = 10  # Number of relevant passages to retrieve
         retriever_results = run_retriever(user_query, top_k)
         print(f"Retrieved {len(retriever_results) if retriever_results else 0} relevant passages")
         
-        # Step 2: Run QA pipeline
-        print("\nStep 2/2: Running QA pipeline...")
+        # Step 2: Check if ChromaDB needs rebuilding
+        print("\nStep 2/3: Checking ChromaDB status...")
+        try:
+            from pathlib import Path
+            
+            chroma_path = Path("backend/chroma")
+            passages_path = Path("passages.json")
+            
+            # Check if we need to rebuild
+            needs_rebuild = False
+            
+            if not chroma_path.exists():
+                print("ChromaDB doesn't exist - will create fresh database")
+                needs_rebuild = True
+            elif not passages_path.exists():
+                print("Error: passages.json not found!")
+                return jsonify({"error": "passages.json not found"}), 500
+            else:
+                # Check if passages.json is newer than ChromaDB
+                passages_mtime = passages_path.stat().st_mtime
+                chroma_mtime = chroma_path.stat().st_mtime
+                
+                if passages_mtime > chroma_mtime:
+                    print("passages.json is newer than ChromaDB - will rebuild")
+                    needs_rebuild = True
+                else:
+                    print("ChromaDB is up to date - skipping rebuild")
+            
+            if needs_rebuild:
+                print("Building ChromaDB with OpenAI embeddings...")
+                build_chroma_db(force_rebuild=True)
+                print("✅ ChromaDB built successfully with OpenAI embeddings")
+            else:
+                print("✅ Using existing ChromaDB")
+                
+        except Exception as db_error:
+            print(f"Error: ChromaDB setup failed: {db_error}")
+            import traceback
+            traceback.print_exc()
+            return jsonify({
+                "error": f"ChromaDB setup failed: {str(db_error)}"
+            }), 500
+        
+        # Step 3: Run QA pipeline
+        print("\nStep 3/3: Running QA pipeline...")
         qa_response = query_rag(user_query)
         print(f"Generated answer")
         print(f"\nAnswer: {qa_response[:200]}{'...' if len(qa_response) > 200 else ''}\n")

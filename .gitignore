@@ -83,3 +83,4 @@ logs/
 .cache/
 .parcel-cache/
 .next-env.d.ts
+chroma/
