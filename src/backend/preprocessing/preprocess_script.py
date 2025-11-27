@@ -113,8 +113,8 @@ def save_cached_topics(text, topics):
 
 def classify_topics_batch(texts, speakers, threshold=0.3):
     """
-    Classify multiple texts with OpenAI including moderator detection.
-    Only send substantive turns to OpenAI to reduce costs.
+    High-quality classification optimized for 2 cents per transcript.
+    Allows 2-4 tags per turn for better topic coverage.
     
     Args:
         texts: List of texts to classify
@@ -124,7 +124,6 @@ def classify_topics_batch(texts, speakers, threshold=0.3):
     Returns:
         List of topic lists
     """
-    # OpenAI
     client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not os.getenv("OPENAI_API_KEY"):
         print("OPENAI_API_KEY not found in environment. Using fallback classifier.")
@@ -135,100 +134,245 @@ def classify_topics_batch(texts, speakers, threshold=0.3):
     speakers_to_process = []
     indices_to_process = []
     
-    print("Filtering short turns...")
+    topic_keywords = {
+        'economy': ['economy', 'economic', 'jobs', 'employment', 'unemployment', 'inflation', 'prices', 'cost of living', 'GDP', 'recession', 'tariff', 'trade', 'deficit', 'stock market', 'middle class', 'working people', 'wages', 'salary'],
+        'healthcare': ['healthcare', 'health care', 'medical', 'hospital', 'insurance', 'medicare', 'medicaid', 'obamacare', 'affordable care', 'IVF', 'prescription', 'doctor', 'coverage'],
+        'immigration': ['immigration', 'immigrant', 'border', 'asylum', 'deportation', 'ICE', 'undocumented', 'illegal alien', 'migrant', 'southern border', 'border security', 'border patrol', 'visa'],
+        'abortion': ['abortion', 'roe v wade', 'roe v. wade', 'pro-life', 'pro-choice', 'reproductive', 'pregnancy', 'fetus', 'miscarriage', "women's health", 'planned parenthood'],
+        'climate': ['climate', 'global warming', 'emissions', 'carbon', 'renewable energy', 'fossil fuel', 'solar', 'wind energy', 'environmental', 'fracking', 'green energy'],
+        'foreign_policy': ['foreign policy', 'russia', 'china', 'ukraine', 'nato', 'iran', 'north korea', 'israel', 'hamas', 'middle east', 'putin', 'xi', 'gaza', 'hostages', 'cease-fire', 'two-state', 'international', 'diplomacy'],
+        'military': ['military', 'defense', 'armed forces', 'pentagon', 'troops', 'veterans', 'afghanistan', 'lethal', 'national security', 'army', 'navy', 'air force'],
+        'guns': ['gun', 'second amendment', 'firearm', 'NRA', 'shooting', 'gun control', 'gun rights', 'assault weapon', 'weapon'],
+        'taxes': ['tax', 'taxes', 'IRS', 'tax cut', 'tax break', 'deduction', 'tax credit', 'child tax credit', 'billionaire', 'wealthy', 'rich'],
+        'crime': ['crime', 'criminal', 'police', 'law enforcement', 'defund', 'violence', 'murder', 'homicide', 'FBI', 'safety', 'law and order', 'prison', 'jail'],
+        'education': ['education', 'school', 'student', 'teacher', 'university', 'college', 'student loan', 'small business', 'learning', 'classroom'],
+        'elections': ['election', 'vote', 'voter', 'ballot', 'campaign', 'poll', '2020', '2024', 'fraud', 'democracy', 'peaceful transfer', 'january 6', 'fired by', 'voting', 'electoral'],
+        'civil_rights': ['civil rights', 'discrimination', 'equality', 'racism', 'LGBTQ', 'transgender', 'gay marriage', 'freedom', 'constitution', 'rights', 'liberty'],
+        'social_security': ['social security', 'retirement', 'pension', 'seniors', 'elderly', 'scam', 'retiree']
+    }
+    
+    moderator_names = ['muir', 'davis', 'moderator', 'host', 'anchor', 'tapper', 'bash', 'cooper', 'wallace', 'mitchell', 'raddatz']
+    moderator_keywords = ['question', 'ask', 'respond', 'turn to', 'time is up', 'thank you', 'welcome', 'let me', 'want to get', 'move to', 'next question']
+    
     for i, (text, speaker) in enumerate(zip(texts, speakers)):
         word_count = len(text.split())
+        text_lower = text.lower()
+        speaker_lower = speaker.lower()
         
-        # Classification for short turns
+        # Very short turns (< 5 words)
         if word_count < 5:
-            text_lower = text.lower()
-            speaker_lower = speaker.lower()
-            
-            # Check for moderator
-            if any(mod_word in speaker_lower for mod_word in ['moderator', 'host', 'anchor', 'journalist']):
+            if any(mod_name in speaker_lower for mod_name in moderator_names):
                 all_topics[i] = ["moderator"]
-            # Check for common responses
             elif any(response in text_lower for response in ['yes', 'no', 'thank you', 'thanks', 'okay', 'ok', 'right', 'correct', 'exactly']):
                 all_topics[i] = ["general_response"]
-            # Check for moderator phrases
-            elif any(phrase in text_lower for phrase in ['next question', 'time is up', 'welcome', 'thank you.']):
+            elif any(phrase in text_lower for phrase in ['next question', 'time is up', 'welcome']):
                 all_topics[i] = ["moderator"]
             else:
-                all_topics[i] = ["general_political_commentary"]
+                all_topics[i] = ["general_politics"]
+        
+        # Moderators by name
+        elif any(mod_name in speaker_lower for mod_name in moderator_names):
+            if any(keyword in text_lower for keyword in moderator_keywords):
+                all_topics[i] = ["moderator"]
+            else:
+                # Moderator making substantive statement
+                topic_scores = {}
+                for topic, keywords in topic_keywords.items():
+                    matches = sum(1 for keyword in keywords if keyword in text_lower)
+                    if matches > 0:
+                        topic_scores[topic] = matches
+                
+                if topic_scores:
+                    sorted_topics = sorted(topic_scores.items(), key=lambda x: x[1], reverse=True)
+                    all_topics[i] = [topic for topic, score in sorted_topics[:3]]
+                else:
+                    all_topics[i] = ["moderator"]
+        
+        # Short turns (5-15 words)
+        elif word_count <= 15:
+            topic_scores = {}
+            for topic, keywords in topic_keywords.items():
+                matches = sum(1 for keyword in keywords if keyword in text_lower)
+                if matches > 0:
+                    topic_scores[topic] = matches
+            
+            if topic_scores:
+                sorted_topics = sorted(topic_scores.items(), key=lambda x: x[1], reverse=True)
+                all_topics[i] = [topic for topic, score in sorted_topics[:2]]
+            else:
+                all_topics[i] = ["general_politics"]
+        
+        # Long turns (16+ words)
         else:
-            # Substantive turn
             texts_to_process.append(text)
             speakers_to_process.append(speaker)
             indices_to_process.append(i)
-    
-    print(f"Sending {len(texts_to_process)}/{len(texts)} substantive turns to OpenAI")
-    
-    # Only send substantive turns to OpenAI
-    for i in range(0, len(texts_to_process), 15):
-        batch_texts = texts_to_process[i:i+15]
-        batch_speakers = speakers_to_process[i:i+15]
-        batch_indices = indices_to_process[i:i+15]
         
-        # Prepare batch for OpenAI
+    batch_size = 25
+    
+    for i in range(0, len(texts_to_process), batch_size):
+        batch_texts = texts_to_process[i:i+batch_size]
+        batch_speakers = speakers_to_process[i:i+batch_size]
+        batch_indices = indices_to_process[i:i+batch_size]
+        
         batch_prompt = "\n\n".join([
-            f"Turn {j+1}: Speaker: {speaker}\nText: {text[:300]}"
+            f"Turn {j+1}: Speaker: {speaker}\nText: {text[:600]}"
             for j, (speaker, text) in enumerate(zip(batch_speakers, batch_texts))
         ])
         
-        try:
-            response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{
-                    "role": "system", 
-                    "content": """You are a debate analyst. Analyze each speaker turn and return topics in JSON format.
-                    
-                    RULES:
-                    - If the speaker is a MODERATOR (asking questions, managing debate, introducing topics), return ["moderator"]
-                    - If it's a CANDIDATE, return 1-3 topics from this list: economy, healthcare, immigration, foreign_policy, climate, education, crime, taxes, abortion, guns, civil_rights, elections, social_security, military, general_politics
-                    - ALWAYS return a list, never null or empty
-                    - For candidate responses about other candidates, use "elections" or "general_politics"
-                    
-                    Return JSON format: {"results": [["topic1"], ["moderator"], ["topic1", "topic2"], ...]}
-                    """
-                }, {
-                    "role": "user",
-                    "content": f"Analyze these {len(batch_texts)} speaker turns:\n\n{batch_prompt}"
-                }],
-                temperature=0.1,
-                max_tokens=500,
-                response_format={"type": "json_object"}
-            )
-            
-            # Parse the response
-            import json
-            result = json.loads(response.choices[0].message.content)
-            batch_topics = result["results"]
-            
-            # Validate
-            if len(batch_topics) != len(batch_texts):
-                print(f"OpenAI returned {len(batch_topics)} results but expected {len(batch_texts)}")
-                # Fill missing with fallback
-                batch_topics = batch_topics + [["general_politics"] for _ in range(len(batch_texts) - len(batch_topics))]
-            
-            # Map back to original indices
-            for j, topics in enumerate(batch_topics):
-                original_idx = batch_indices[j]
-                # Ensure topics is always a list
-                if not topics or not isinstance(topics, list):
-                    topics = ["general_politics"]
-                all_topics[original_idx] = topics
+        retry_count = 0
+        max_retries = 2
+        
+        while retry_count < max_retries:
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[{
+                        "role": "system", 
+                        "content": """You are a debate analyst. Return 2-4 topics per speaker turn for comprehensive coverage.
+                            CRITICAL: Return EXACTLY the same number of results as turns provided.
+
+                            TOPIC RULES:
+                            - Moderators (asking questions, managing): return ["moderator"]
+                            - Candidates: return 2-4 topics from: economy, healthcare, immigration, foreign_policy, climate, education, crime, taxes, abortion, guns, civil_rights, elections, social_security, military, general_politics
+
+                            TOPIC SELECTION GUIDELINES:
+                            - Use 2 topics for focused statements (e.g., ["economy", "taxes"])
+                            - Use 3 topics for multi-faceted arguments (e.g., ["immigration", "crime", "economy"])
+                            - Use 4 topics for complex policy discussions touching many areas
+                            - Be specific: 
+                            * "economy" = jobs, inflation, trade, GDP, middle class
+                            * "taxes" = tax cuts, deductions, tax policy
+                            * "immigration" = border, deportation, asylum
+                            * "abortion" = reproductive rights, Roe v Wade
+                            * "elections" = voting, 2020 election, democracy, fraud
+                            * "foreign_policy" = Russia, China, Ukraine, Israel, international relations
+                            * "crime" = police, law enforcement, violence
+                            * "guns" = gun control, Second Amendment
+                            * "healthcare" = insurance, Medicare, medical care
+                            * "climate" = environment, emissions, energy
+                            * "education" = schools, students, loans
+                            * "social_security" = retirement, seniors
+                            * "civil_rights" = discrimination, equality, rights
+                            * "military" = defense, armed forces, veterans
+                            - Use "general_politics" only when no specific topic applies
+                            - DO NOT create variations - use exact topic names only
+
+                            Format your response as JSON: {\"results\": [[\"topic1\", \"topic2\"], [\"topic1\", \"topic2\", \"topic3\"], ...]}"""
+                    }, {
+                        "role": "user",
+                        "content": f"Analyze these {len(batch_texts)} turns. Return EXACTLY {len(batch_texts)} results with 2-4 topics each in JSON format:\n\n{batch_prompt}"
+                    }],
+                    temperature=0.0,
+                    max_tokens=1000,
+                    response_format={"type": "json_object"}
+                )
                 
-        except Exception as e:
-            print(f"OpenAI classification failed: {e}")
-            # Fallback to original classifier for this batch
-            fallback_topics = classify_topics_batch_fallback(batch_texts, threshold)
-            for j, topics in enumerate(fallback_topics):
-                original_idx = batch_indices[j]
-                all_topics[original_idx] = topics
+                result = json.loads(response.choices[0].message.content)
+                batch_topics = result.get("results", [])
+                
+                # Validate count
+                if len(batch_topics) != len(batch_texts):
+                    # Retry once if off by 1
+                    if abs(len(batch_topics) - len(batch_texts)) == 1 and retry_count == 0:
+                        retry_count += 1
+                        continue
+                    
+                    # Fix mismatch
+                    if len(batch_topics) > len(batch_texts):
+                        batch_topics = batch_topics[:len(batch_texts)]
+                    else:
+                        # Pad with keyword fallback
+                        for idx in range(len(batch_topics), len(batch_texts)):
+                            text_lower = batch_texts[idx].lower()
+                            topic_scores = {}
+                            for topic, keywords in topic_keywords.items():
+                                matches = sum(1 for kw in keywords if kw in text_lower)
+                                if matches > 0:
+                                    topic_scores[topic] = matches
+                            
+                            if topic_scores:
+                                sorted_topics = sorted(topic_scores.items(), key=lambda x: x[1], reverse=True)
+                                batch_topics.append([t for t, s in sorted_topics[:3]])
+                            else:
+                                batch_topics.append(["general_politics"])
+                
+                # Map results back
+                for j, topics in enumerate(batch_topics):
+                    if j < len(batch_indices):
+                        original_idx = batch_indices[j]
+                        if not topics or not isinstance(topics, list):
+                            topics = ["general_politics"]
+                        
+                        # Clean and validate topics
+                        topics = [t.strip() for t in topics if t and isinstance(t, str)]
+                        topics = [t for t in topics if t]  # Remove empty
+                        
+                        # 2 to 4 topics
+                        if len(topics) < 2 and len(texts_to_process[j].split()) > 30:
+                            # Add general_politics if only 1 topic for long turn
+                            topics.append("general_politics")
+                        elif len(topics) > 4:
+                            topics = topics[:4]
+                        elif not topics:
+                            topics = ["general_politics"]
+                        
+                        all_topics[original_idx] = topics
+                
+                break
+                
+            except json.JSONDecodeError as e:
+                retry_count += 1
+                if retry_count >= max_retries:
+                    # Keyword fallback
+                    for j in range(len(batch_texts)):
+                        if j < len(batch_indices):
+                            text_lower = batch_texts[j].lower()
+                            topic_scores = {}
+                            for topic, keywords in topic_keywords.items():
+                                matches = sum(1 for kw in keywords if kw in text_lower)
+                                if matches > 0:
+                                    topic_scores[topic] = matches
+                            
+                            if topic_scores:
+                                sorted_topics = sorted(topic_scores.items(), key=lambda x: x[1], reverse=True)
+                                all_topics[batch_indices[j]] = [t for t, s in sorted_topics[:3]]
+                            else:
+                                all_topics[batch_indices[j]] = ["general_politics"]
+                    break
+                    
+            except Exception as e:
+                retry_count += 1
+                if retry_count >= max_retries:
+                    print(f"Batch failed after retries: {e}")
+                    # Keyword fallback
+                    for j in range(len(batch_texts)):
+                        if j < len(batch_indices):
+                            text_lower = batch_texts[j].lower()
+                            topic_scores = {}
+                            for topic, keywords in topic_keywords.items():
+                                matches = sum(1 for kw in keywords if kw in text_lower)
+                                if matches > 0:
+                                    topic_scores[topic] = matches
+                            
+                            if topic_scores:
+                                sorted_topics = sorted(topic_scores.items(), key=lambda x: x[1], reverse=True)
+                                all_topics[batch_indices[j]] = [t for t, s in sorted_topics[:3]]
+                            else:
+                                all_topics[batch_indices[j]] = ["general_politics"]
+                    break
+                else:
+                    import time
+                    time.sleep(0.5)
     
     # Final safety check
     for i in range(len(all_topics)):
         if all_topics[i] is None or not isinstance(all_topics[i], list):
+            all_topics[i] = ["general_politics"]
+        # Remove duplicates while preserving order
+        seen = set()
+        all_topics[i] = [t for t in all_topics[i] if not (t in seen or seen.add(t))]
+        if not all_topics[i]:
             all_topics[i] = ["general_politics"]
     
     return all_topics

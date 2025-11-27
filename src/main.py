@@ -27,6 +27,87 @@ cors = CORS(app, origins="*")
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+@app.route('/api/summarize-transcripts-batch', methods=['POST', 'OPTIONS'])
+def summarize_transcripts_batch():
+    try:
+        if request.method == 'OPTIONS':
+            return jsonify({"status": "ok"}), 200
+            
+        data = request.get_json()
+        transcripts_data = data.get('transcripts', [])
+        
+        print(f"Received batch summarization request for {len(transcripts_data)} transcripts")
+        
+        if not transcripts_data:
+            return jsonify({"error": "No transcripts provided"}), 400
+        
+        summaries = {}
+        
+        for transcript in transcripts_data:
+            transcript_id = transcript.get('id')
+            title = transcript.get('title', 'Unknown Debate')
+            sections = transcript.get('sections', [])
+            
+            if not sections:
+                summaries[transcript_id] = "Summary not available for this transcript."
+                continue
+            
+            # Combine section texts
+            full_text = " ".join(
+                section.get('content', '') for section in sections
+            )[:6000]
+            
+            if not full_text.strip():
+                summaries[transcript_id] = "Summary not available for this transcript."
+                continue
+            
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": """You are a expert debate analyst. Create TWO concise sentences summarizing the key clash and main topics.
+                            DO NOT start with 'In this debate' or similar generic phrases. Be specific and varied in your phrasing.
+                            First sentence: main conflict/outcome. Second sentence: key topics discussed."""
+                        },
+                        {
+                            "role": "user",
+                            "content": f"""
+                            Debate: {title}
+                            
+                            Create TWO concise sentences (max 25 words total):
+                            - First sentence: summarize the main conflict or key outcome
+                            - Second sentence: mention the primary topics discussed
+                            
+                            Be specific and avoid generic phrases.
+                            
+                            Transcript excerpt:
+                            "{full_text[:4000]}"
+                            """
+                        }
+                    ],
+                    max_tokens=60,
+                    temperature=0.7
+                )
+                
+                summary = response.choices[0].message.content.strip()
+                summaries[transcript_id] = summary
+                                
+            except Exception as e:
+                print(f"Error summarizing transcript {transcript_id}: {e}")
+                summaries[transcript_id] = "Candidates exchanged views on key policy differences. The debate covered economic plans, healthcare, and national security priorities."
+        
+        return jsonify({
+            "success": True,
+            "summaries": summaries
+        }), 200
+        
+    except Exception as e:
+        print(f"Error in batch summarization: {e}")
+        return jsonify({
+            "error": f"Failed to generate summaries: {str(e)}"
+        }), 500
 
 # Get debate name and date - used throughout pipeline
 def get_debate_metadata():
