@@ -3,6 +3,57 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import debateTranscripts from "../../../debates_metadata.json"
 
+// Batch summaries hook
+const useBatchSummaries = (transcripts) => {
+  const [summaries, setSummaries] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!transcripts || transcripts.length === 0) {
+      setSummaries({});
+      return;
+    }
+
+    const generateBatchSummaries = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('http://localhost:3000/api/summarize-transcripts-batch', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            transcripts: transcripts.map(t => ({
+              id: t.id,
+              sections: t.sections
+            }))
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to generate summaries');
+        }
+
+        const data = await response.json();
+        setSummaries(data.summaries);
+      } catch (error) {
+        console.error("Batch summary error:", error);
+        const defaultSummaries = {};
+        transcripts.forEach(t => {
+          defaultSummaries[t.id] = "Failed to generate summary";
+        });
+        setSummaries(defaultSummaries);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    generateBatchSummaries();
+  }, [transcripts]);
+
+  return { summaries, isLoading };
+};
+
 function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }) {
   /* ==================== Page ==================== */
   const [stars, setStars] = useState([])
@@ -22,6 +73,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
   const [sortBy, setSortBy] = useState('date-desc')
   const [filterTypes, setFilterTypes] = useState([])
   const [showFilters, setShowFilters] = useState(false)
+  const { summaries, isLoading: summariesLoading } = useBatchSummaries(filteredTranscripts);
 
   /* ==================== Data from JSON ==================== */
   useEffect(() => {
@@ -37,18 +89,8 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
       // Transcript objects for each debate_name
       const transcriptObjects = Object.entries(transcriptsBySource).map(([debate_name, items], index) => {
-        const processSpeakerName = (speaker) => {
-          if (!speaker) return '';
-          
-          return speaker
-            .toLowerCase()
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-        };
-        
         // Unique speakers
-        const uniqueSpeakers = [...new Set(items.map(item => processSpeakerName(item.speaker)))].filter(Boolean);
+        const uniqueSpeakers = [...new Set(items.map(item => item.speaker))].filter(Boolean);
         
         // Unique topics
         const allTopics = items.flatMap(item => item.topics || []);
@@ -70,10 +112,10 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
           totalSections: totalSections,
           sections: items.map((item, sectionIndex) => ({
             id: `s${sectionIndex + 1}`,
-            title: `${processSpeakerName(item.speaker)} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
+            title: `${item.speaker} - ${item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1')}`,
             startTime: item.timestamp.replace(/^00:(\d{2}:\d{2})/, '$1'),
             content: item.text,
-            speaker: processSpeakerName(item.speaker),
+            speaker: item.speaker,
             topics: item.topics || []
           })),
           tags: uniqueTopics.slice(0, 10)
@@ -349,11 +391,11 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         {selectedTranscript.title}
                       </h2>
                       <div className="flex flex-wrap gap-4 text-dark-silver text-sm mb-4 text-left">
-                        <span>Date: {selectedTranscript.date}</span>
+                        <span>{selectedTranscript.date}</span>
                         <span>•</span>
-                        <span>{selectedTranscript.speakerCount} Speakers</span>
+                        <span>{selectedTranscript.speakerCount} speakers</span>
                         <span>•</span>
-                        <span>{selectedTranscript.totalSections} Sections</span>
+                        <span>{selectedTranscript.totalSections} instances</span>
                       </div>
                       <div className="flex flex-wrap gap-2 text-left">
                         {selectedTranscript.tags.slice(0, 8).map(tag => (
@@ -387,7 +429,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                         <button
                           key={speaker}
                           onClick={() => setSelectedSpeaker(selectedSpeaker === speaker ? null : speaker)}
-                          className={`px-4 py-2 rounded-lg border text-sm transition-all duration-300 text-left ${
+                          className={`px-4 py-2 rounded-lg border text-xs transition-all duration-300 text-left ${
                             selectedSpeaker === speaker
                               ? 'bg-electric-purple/50 text-white border-electric-purple/50'
                               : 'bg-white/10 text-dark-silver border-white/20 hover:bg-white/20 hover:text-white'
@@ -697,58 +739,49 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
               <div className="w-full">
                 <div className="mx-auto">
                   <div className="pt-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 max-h-[600px] overflow-y-auto pr-2">
-                    {filteredTranscripts.map((transcript, index) => (
+                    {filteredTranscripts.map((transcript) => (
                       <motion.div
                         key={transcript.id}
                         className={`relative backdrop-blur-lg rounded-xl border transition-all duration-500 group min-h-65 flex flex-col ${
-                          hoveredCard === transcript.id 
-                            ? 'border-bright-pink shadow-2xl shadow-electric-purple/20 translate-y-[-8px]'
+                          hoveredCard === transcript.id
+                            ? 'border-bright-pink translate-y-[-8px]'
                             : 'border-white/10 shadow-lg hover:border-white/30'
-                        } bg-gradient-to-br from-[#2B2139] to-[#0B0219]`}
+                        } bg-gradient-to-br from-[#2B2139] to-[#0B0219`}
                         onMouseEnter={() => setHoveredCard(transcript.id)}
                         onMouseLeave={() => setHoveredCard(null)}
                       >
                         {/* Main Content */}
-                        <div className="flex-1 p-6">
-                          {/* Title and Date */}
-                          <div className="text-center mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
-                            <h3 className="text-md font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500 line-clamp-3">
+                        <div className="text-left flex-1 p-6">
+                          {/* Title */}
+                          <div className="mb-3 pt-2 relative z-10 transform transition-all duration-500 group-hover:-translate-y-1">
+                            <h3 className="text-md font-bold text-white mb-2 group-hover:text-bright-pink transition-colors duration-500">
                               {transcript.title}
                             </h3>
-                            <p className="text-dark-silver text-sm">
-                              {transcript.date}
-                            </p>
                           </div>
-
                           {/* Stats */}
-                          <div className="text-center mb-4 relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
-                            <div className="flex justify-center space-x-4 text-xs text-dark-silver">
+                          <div className="mb-4 relative z-10 transform transition-all duration-500 delay-100 group-hover:-translate-y-1">
+                            <div className="flex space-x-4 text-sm text-dark-silver group-hover:text-white transition-colors duration-500">
+                              <span>{transcript.date}</span>
+                              <span>•</span>
                               <span>{transcript.speakerCount} speakers</span>
                               <span>•</span>
-                              <span>{transcript.totalSections} sections</span>
+                              <span>{transcript.totalSections} instances</span>
                             </div>
                           </div>
 
-                          {/* Tags */}
-                          <div className="text-center relative z-10 transform transition-all duration-500 delay-150 group-hover:-translate-y-1">
-                            <div className="flex flex-wrap gap-1 justify-center">
-                              {transcript.tags.slice(0, 3).map(tag => (
-                                <span key={tag} className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
-                                  {tag.replace(/_/g, ' ')}
-                                </span>
-                              ))}
-                              {transcript.tags.length > 3 && (
-                                <span className="px-2 py-1 bg-white/10 rounded text-xs text-dark-silver">
-                                  +{transcript.tags.length - 3}
-                                </span>
-                              )}
-                            </div>
+                          {/* Summary */}
+                          <div className="relative z-10 transform transition-all duration-500 delay-150 group-hover:-translate-y-1">
+                            <p className="text-xs rounded-lg text-dark-silver/60 italic group-hover:text-white transition-colors duration-500">
+                              {summariesLoading 
+                                ? "Generating summary..." 
+                                : (summaries[transcript.id] || "No summary available")
+                              }
+                            </p>
                           </div>
                         </div>
-
+                        {/* Buttons */}
                         <div className="mt-auto h-12 flex-shrink-0 flex border-t border-white/20">
-                          {/* View Button */}
-                          <button 
+                          <button
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -760,9 +793,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                               View
                             </span>
                           </button>
-                          
-                          {/* Analyze Button */}
-                          <button 
+                          <button
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
@@ -776,7 +807,6 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             </span>
                           </button>
                         </div>
-
                         {/* Hover Glow Effect */}
                         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-bright-pink/0 to-[#FFCAE4]/0 group-hover:from-bright-pink/5 group-hover:to-[#FFCAE4]/5 transition-all duration-500 pointer-events-none"></div>
                       </motion.div>

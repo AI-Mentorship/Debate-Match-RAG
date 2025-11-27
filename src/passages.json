@@ -1,104 +1,102 @@
 [
     {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "06:02",
-        "text": "On top of that, we have millions of people pouring into our country from prisons and jails, from mental institutions and insane asylums. And they're coming in and they're taking jobs that are occupied right now by African Americans and Hispanics and also unions. Unions are going to be affected very soon.",
-        "topics": [
-            "immigration",
-            "crime",
-            "civil_rights"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "David Muir",
-        "timestamp": "34:56",
-        "text": "President Trump, as you know, the FBI says, overall, violent crime is actually coming down in this country. But",
-        "topics": [
-            "crime"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "David Muir",
-        "timestamp": "33:25",
-        "text": "President Trump, you called this the largest domestic deportation operation in the history of our country. You say you would use the National Guard.",
-        "topics": [
-            "immigration"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "David Muir",
-        "timestamp": "53:03",
-        "text": "This was a post from President Trump about this upcoming election just weeks away. He said, \"When I win, those people who cheated,\" and then he lists donors, voters, election officials, he says will be prosecuted to the fullest extent of the law, which will include long-term prison sentences. One of your campaign's top lawyers responded saying, \"We won't let Donald Trump intimidate us. We won't let him suppress the vote.\" Is that what you believe he's trying to do here?",
-        "topics": [
-            "elections"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "45:23",
-        "text": "What about those people? What—when are they going to be prosecuted? When are these people from countries all over the world, not just South America—they're coming in from all over the world, David, all over the world. And crime rates are down all over the world because of it.",
-        "topics": [
-            "immigration"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "15:14",
-        "text": "They're criminals. Many of these people coming in are criminals, and that's bad for our economy, too. You know, you mentioned before, we'll talk about immigration later. Well, bad immigration is the worst thing that can happen to our economy. They have and she has destroyed our country with policy that's insane.",
-        "topics": [
-            "immigration"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "34:31",
-        "text": "There's never been anything done like this at all. They've destroyed the fabric of our country. Millions of people let in. And all over the world, crime is down all over the world, except here. Crime here is up and through the roof despite their fraudulent statements that they made. Crime in this country is through the roof.",
-        "topics": [
-            "immigration"
-        ]
-    },
-    {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Kamala Harris",
-        "timestamp": "28:02",
-        "text": "He's going to talk about immigration a lot tonight, even when it's not the subject that is being raised. And I'm going to actually do something really unusual, and I'm going to invite you to attend one of Donald Trump's rallies because it's a really interesting thing to watch. You will see, during the course of his rallies, he talks about fictional characters like Hannibal Lecter.",
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Chris Christie",
+        "timestamp": "30:12",
+        "text": ".",
         "topics": [
             "general_politics"
         ]
     },
     {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
-        "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "33:42",
-        "text": "Yeah. It is much higher because of them. They allowed criminals, many, many millions of criminals. They allowed terrorists. They allowed common street criminals. They allowed people to come in, drug dealers to come into our country, and they are now in the United States and told by their countries, like Venezuela, \"Don't ever come back or we're going to kill you.\" Do you know that crime in Venezuela and crime in countries all over the world is way down?",
+        "debate_name": "2023 RNC Second Republican Presidential Primary Debate in Simi Valley, California",
+        "debate_date": "2023-09-27",
+        "speaker": "Vivek Ramaswamy",
+        "timestamp": "30:30",
+        "text": ".",
         "topics": [
-            "immigration"
+            "general_politics"
         ]
     },
     {
-        "debate_name": "2024 Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_name": "2024 ABC News Presidential Debate in Philadelphia, Pennsylvania",
         "debate_date": "2024-09-10",
-        "speaker": "Donald Trump",
-        "timestamp": "51:24",
-        "text": "The election—people should never be thinking about an election as fraudulent. We need two things. We need walls, we need—and we have to have it. We have to have borders and we have to have good elections. Our elections are bad. And a lot of these illegal immigrants coming in, they're trying to get them to vote.",
+        "speaker": "Kamala Harris",
+        "timestamp": "42:18",
+        "text": ".",
         "topics": [
-            "moderator"
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Second Republican Presidential Primary Debate in Simi Valley, California",
+        "debate_date": "2023-09-27",
+        "speaker": "Tim Scott",
+        "timestamp": "29:13",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Vivek Ramaswamy",
+        "timestamp": "30:12",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Vivek Ramaswamy",
+        "timestamp": "31:02",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Nikki Haley",
+        "timestamp": "14:31",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Nikki Haley",
+        "timestamp": "11:53",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Third Republican Presidential Primary Debate in Miami, Florida",
+        "debate_date": "2023-11-08",
+        "speaker": "Lester Holt",
+        "timestamp": "21:13",
+        "text": ".",
+        "topics": [
+            "general_politics"
+        ]
+    },
+    {
+        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
+        "debate_date": "2023-12-06",
+        "speaker": "Nikki Haley",
+        "timestamp": "30:10",
+        "text": "-",
+        "topics": [
+            "general_politics"
         ]
     }
 ]
