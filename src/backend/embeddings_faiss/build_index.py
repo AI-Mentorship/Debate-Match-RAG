@@ -6,6 +6,7 @@ import faiss
 from openai import OpenAI
 from dotenv import load_dotenv
 import certifi
+import re
 
 # -----------------------------
 # CONFIG
@@ -19,7 +20,7 @@ OUTPUT_METADATA = os.getenv("EMBEDDING_OUTPUT_METADATA")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
-    raise ValueError("❌ Missing OPENAI_API_KEY in .env file")
+    raise ValueError("Missing OPENAI_API_KEY in .env file")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -32,11 +33,38 @@ db = mongo_client[DB_NAME]
 # -----------------------------
 # Helper Functions
 # -----------------------------
-def chunk_text(text, chunk_size=CHUNK_SIZE):
-    """Split text into roughly equal-sized word chunks."""
-    words = text.split()
-    for i in range(0, len(words), chunk_size):
-        yield " ".join(words[i:i + chunk_size])
+def chunk_text(text, chunk_size=CHUNK_SIZE):    
+    # Split into sentences (roughly)
+    sentences = re.split(r'[.!?]+', text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    
+    for sentence in sentences:
+        sentence_length = len(sentence.split())
+        
+        # If adding this sentence would exceed chunk size and we have content, start new chunk
+        if current_length + sentence_length > chunk_size and current_chunk:
+            chunks.append(" ".join(current_chunk))
+            current_chunk = [sentence]
+            current_length = sentence_length
+        else:
+            current_chunk.append(sentence)
+            current_length += sentence_length
+    
+    # Add the last chunk if it has content
+    if current_chunk:
+        chunks.append(" ".join(current_chunk))
+    
+    # If no good sentence boundaries found, fall back to chunking
+    if not chunks:
+        words = text.split()
+        for i in range(0, len(words), chunk_size):
+            chunks.append(" ".join(words[i:i + chunk_size]))
+    
+    return chunks
 
 def fetch_utterances():
     """Fetch utterances with speaker and debate info (join-like)."""
@@ -124,4 +152,4 @@ def build_index():
     with open(OUTPUT_METADATA, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, indent=2)
 
-    print("✅ FAISS index build complete!")
+    print("FAISS index build complete!")

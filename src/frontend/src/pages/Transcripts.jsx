@@ -16,33 +16,68 @@ const useBatchSummaries = (transcripts) => {
 
     const generateBatchSummaries = async () => {
       setIsLoading(true);
+      
       try {
-        const response = await fetch('http://localhost:3000/api/summarize-transcripts-batch', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            transcripts: transcripts.map(t => ({
-              id: t.id,
-              sections: t.sections
-            }))
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to generate summaries');
+        // Check localStorage cache
+        let cachedData = {};
+        try {
+          const cachedSummaries = localStorage.getItem('transcriptSummaries');
+          if (cachedSummaries) {
+            cachedData = JSON.parse(cachedSummaries);
+          }
+        } catch (e) {
+          localStorage.removeItem('transcriptSummaries');
         }
 
-        const data = await response.json();
-        setSummaries(data.summaries);
+        // Check which transcripts need summaries
+        const transcriptsNeedingSummaries = transcripts.filter(
+          t => !cachedData[t.id]
+        );
+
+        let newSummaries = {};
+        
+        if (transcriptsNeedingSummaries.length > 0) {
+          const response = await fetch('http://localhost:3000/api/summarize-transcripts-batch', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+              transcripts: transcriptsNeedingSummaries.map(t => ({
+                id: t.id.toString(),
+                title: t.title,
+                sections: t.sections
+              }))
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to generate summaries');
+          }
+
+          const data = await response.json();
+          newSummaries = data.summaries;
+          
+          // Update localStorage with new summaries
+          const updatedCache = { ...cachedData, ...newSummaries };
+          localStorage.setItem('transcriptSummaries', JSON.stringify(updatedCache));
+        }
+
+        // Combine cached and new summaries
+        const allSummaries = { ...cachedData, ...newSummaries };
+        setSummaries(allSummaries);
+        
       } catch (error) {
         console.error("Batch summary error:", error);
-        const defaultSummaries = {};
-        transcripts.forEach(t => {
-          defaultSummaries[t.id] = "Failed to generate summary";
-        });
-        setSummaries(defaultSummaries);
+        // Try to use cached data
+        try {
+          const cachedSummaries = localStorage.getItem('transcriptSummaries');
+          if (cachedSummaries) {
+            setSummaries(JSON.parse(cachedSummaries));
+          }
+        } catch (e) {
+          // Ignore
+        }
       } finally {
         setIsLoading(false);
       }
@@ -444,12 +479,12 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
 
                 {/* Transcript Content */}
                 <div className="flex-1 overflow-y-auto p-8">
-                  <div className="space-y-6 max-w-6xl mx-auto">
+                  <div className="space-y-6 mx-auto">
                     {filteredSections.map(section => (
                       <div
                         key={section.id}
                         ref={el => transcriptRefs.current[section.id] = el}
-                        className="p-6 rounded-2xl border transition-all duration-300 text-left bg-white/5 border-white/10 hover:border-white/20"
+                        className="pb-4 rounded-2xl transition-all duration-300 text-left"
                       >
                         <div className="flex justify-between items-start mb-3 text-left">
                           <h4 className="font-semibold text-white text-left">{section.speaker}</h4>
@@ -459,7 +494,7 @@ function Transcripts({ onGetStarted, selectedTranscript, setSelectedTranscript }
                             </span>
                           )}
                         </div>
-                        <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-sm">
+                        <p className="text-dark-silver leading-relaxed text-left whitespace-pre-line text-sm hover:text-white transition-all duration-300">
                           {searchQuery ? highlightText(section.content, searchQuery) : section.content}
                         </p>
                         {section.topics && section.topics.length > 0 && (
