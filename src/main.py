@@ -24,7 +24,6 @@ UPLOAD_FOLDER.mkdir(exist_ok=True)
 
 # Flask with CORS for React
 cors = CORS(app, origins="*")
-
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 @app.route('/api/summarize-transcripts-batch', methods=['POST', 'OPTIONS'])
@@ -35,8 +34,6 @@ def summarize_transcripts_batch():
             
         data = request.get_json()
         transcripts_data = data.get('transcripts', [])
-        
-        print(f"Received batch summarization request for {len(transcripts_data)} transcripts")
         
         if not transcripts_data:
             return jsonify({"error": "No transcripts provided"}), 400
@@ -52,7 +49,6 @@ def summarize_transcripts_batch():
                 summaries[transcript_id] = "Summary not available for this transcript."
                 continue
             
-            # Combine section texts
             full_text = " ".join(
                 section.get('content', '') for section in sections
             )[:6000]
@@ -67,23 +63,16 @@ def summarize_transcripts_batch():
                     messages=[
                         {
                             "role": "system",
-                            "content": """You are a expert debate analyst. Create TWO concise sentences summarizing the key clash and main topics.
-                            DO NOT start with 'In this debate' or similar generic phrases. Be specific and varied in your phrasing.
-                            First sentence: main conflict/outcome. Second sentence: key topics discussed."""
+                            "content": """You are a expert debate analyst. Create TWO concise sentences summarizing the key clash and main topics."""
                         },
                         {
                             "role": "user",
                             "content": f"""
                             Debate: {title}
-                            
-                            Create TWO concise sentences (max 25 words total):
-                            - First sentence: summarize the main conflict or key outcome
-                            - Second sentence: mention the primary topics discussed
-                            
-                            Be specific and avoid generic phrases.
-                            
-                            Transcript excerpt:
-                            "{full_text[:4000]}"
+                            Create TWO concise sentences:
+                            - First sentence: main conflict/outcome
+                            - Second sentence: key topics discussed
+                            Transcript excerpt: "{full_text[:4000]}"
                             """
                         }
                     ],
@@ -95,8 +84,7 @@ def summarize_transcripts_batch():
                 summaries[transcript_id] = summary
                                 
             except Exception as e:
-                print(f"Error summarizing transcript {transcript_id}: {e}")
-                summaries[transcript_id] = "Candidates exchanged views on key policy differences. The debate covered economic plans, healthcare, and national security priorities."
+                summaries[transcript_id] = "Candidates exchanged views on key policy differences."
         
         return jsonify({
             "success": True,
@@ -104,7 +92,6 @@ def summarize_transcripts_batch():
         }), 200
         
     except Exception as e:
-        print(f"Error in batch summarization: {e}")
         return jsonify({
             "error": f"Failed to generate summaries: {str(e)}"
         }), 500
@@ -261,8 +248,21 @@ def upload_debate():
             
             # Step 3: Build FAISS index
             print("\nStep 3/3: Building FAISS index...")
-            build_index()
-            print("FAISS index built")
+            try:
+                from backend.embeddings_faiss.incremental_index import update_faiss_incrementally
+                new_count = update_faiss_incrementally()
+                if new_count > 0:
+                    print(f"Incrementally updated FAISS index with {new_count} new chunks")
+                else:
+                    print("FAISS index is already up to date")
+            except ImportError as e:
+                print(f"Incremental update not available: {e}")
+                print("Falling back to full rebuild...")
+                build_index()
+            except Exception as e:
+                print(f"Incremental update failed: {e}")
+                print("Falling back to full rebuild...")
+                build_index()
             
             print(f"\n{'='*80}")
             print(f"DEBATE PROCESSING COMPLETE")

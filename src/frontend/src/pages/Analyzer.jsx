@@ -24,6 +24,9 @@ function Analyzer({ onBackToHome }) {
     SYSTEM_PROMPTS["Retriever + QA"]
   );
 
+  const [currentStep, setCurrentStep] = useState("");
+  const [stepProgress, setStepProgress] = useState("");
+
   // Multi-stage state
   const [currentStage, setCurrentStage] = useState(() => {
     // Check sessionStorage
@@ -134,10 +137,9 @@ function Analyzer({ onBackToHome }) {
       return;
     }
 
-    // Ensure date is in YYYY-MM-DD format
+    // YYYY-MM-DD format
     let formattedDate = debateDate;
     
-    // If date is not in YYYY-MM-DD format, try to convert it
     if (!debateDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
       try {
         const dateObj = new Date(debateDate);
@@ -149,42 +151,64 @@ function Analyzer({ onBackToHome }) {
     }
 
     setIsProcessingUpload(true);
+    setCurrentStep("preprocessing");
 
-    try {
-      const formData = new FormData();
-      formData.append("file", uploadedTranscript);
-      formData.append("debate_name", debateName);
-      formData.append("debate_date", formattedDate);
-
-      console.log("Uploading debate to backend...");
-      console.log("Debate name:", debateName);
-      console.log("Debate date (formatted):", formattedDate);
+    setTimeout(() => {
+      setCurrentStep("database");
       
-      const response = await axios.post(
-        "http://localhost:3000/api/upload-debate",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      setTimeout(() => {
+        setCurrentStep("faiss");        
+        makeApiCall();
+        
+      }, 25000);
+      
+    }, 10000);
 
-      console.log("Upload response:", response.data);
+    const makeApiCall = async () => {
+      try {
+        const formData = new FormData();
+        formData.append("file", uploadedTranscript);
+        formData.append("debate_name", debateName);
+        formData.append("debate_date", formattedDate);
 
-      // Success, move to Q&A
-      setCurrentStage("qa");
-      setMessages([
-        {
-          role: "assistant",
-          content: `${response.data.message}\n\nYou can now ask questions about this debate!`,
-        },
-      ]);
-    } catch (err) {
-      console.error("Upload error:", err);
-      const errorMsg = err.response?.data?.error || "Error uploading debate. Please ensure backend is running.";
-      alert(errorMsg);
-    } finally {
-      setIsProcessingUpload(false);
-    }
+        console.log("Uploading debate to backend...");
+        
+        const response = await axios.post(
+          "http://localhost:3000/api/upload-debate",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            timeout: 120000,
+          }
+        );
+
+        console.log("Upload response:", response.data);
+
+        setTimeout(() => {
+          setCurrentStep("completed");
+        }, 1000);
+        
+        setTimeout(() => {
+          setCurrentStage("qa");
+          setMessages([
+            {
+              role: "assistant",
+              content: `${response.data.message}\n\nYou can now ask questions about this debate!`,
+            },
+          ]);
+        }, 3000);
+
+      } catch (err) {
+        console.error("Upload error:", err);
+        const errorMsg = err.response?.data?.error || "Error uploading debate. Please ensure backend is running.";
+        alert(errorMsg);
+      } finally {
+        setTimeout(() => {
+          setIsProcessingUpload(false);
+          setCurrentStep("");
+        }, 4000);
+      }
+    };
   };
 
   {/* ==================== Send message ==================== */}
@@ -498,7 +522,7 @@ function Analyzer({ onBackToHome }) {
               <h2 className="text-4xl font-bold text-white mb-4">
                 Upload Debate Transcript
               </h2>
-              <p className="text-md md:text-md text-dark-silver mb-8">
+              <p className="text-md md:text-md text-dark-silver mb-12">
                 Start by uploading a debate transcript (.txt file)
               </p>
             </motion.div>
@@ -583,73 +607,211 @@ function Analyzer({ onBackToHome }) {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
           className="min-h-screen w-full flex flex-col items-center justify-center relative z-20"
         >
-          <div className="text-center max-w-2xl w-full">
-            <div className="mb-6 flex items-center justify-center gap-2">
-              <CheckCircle className="text-green-500" size={32} />
-              <h2 className="text-3xl font-bold text-white">
-                Transcript Uploaded!
-              </h2>
-            </div>
-            <p className="text-lg text-light-silver mb-2">
-              File: {uploadedTranscript?.name}
-            </p>
-            <p className="text-md text-light-silver mb-8">
-              Now, please provide the debate details
-            </p>
-
-            <div className="bg-[#2c2c30] rounded-2xl p-8 border border-[#47475b] space-y-6">
-              <div className="text-left">
-                <label className="block text-sm text-light-silver mb-2">
-                  Debate Name
-                </label>
-                <input
-                  type="text"
-                  value={debateName}
-                  onChange={(e) => setDebateName(e.target.value)}
-                  placeholder="e.g., 2024 Presidential Debate"
-                  className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
-                />
-              </div>
-
-              <div className="text-left">
-                <label className="block text-sm text-light-silver mb-2">
-                  Debate Date
-                </label>
-                <input
-                  type="date"
-                  value={debateDate}
-                  onChange={(e) => setDebateDate(e.target.value)}
-                  max={new Date().toISOString().split('T')[0]}
-                  required
-                  className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple [color-scheme:dark]"
-                />
-                <p className="text-xs text-light-silver mt-1">
-                </p>
-              </div>
-
-              <button
-                onClick={handleMetadataSubmit}
-                disabled={isProcessingUpload || !debateName.trim() || !debateDate.trim()}
-                className={`w-full py-3 rounded-lg text-white font-medium transition ${
-                  isProcessingUpload || !debateName.trim() || !debateDate.trim()
-                    ? "bg-gray-600 cursor-not-allowed opacity-60"
-                    : "bg-electric-purple hover:bg-purple-700 active:scale-95"
-                }`}
+          {isProcessingUpload ? (
+            /* ==================== Processing UI ==================== */
+            <div className="text-center max-w-2xl w-full">
+              <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100, delay: 0.2 }}
               >
-                {isProcessingUpload ? "Processing..." : "Submit & Continue"}
-              </button>
+                <h2 className="text-4xl font-bold text-white mb-4 pt-20">
+                  Processing Your Debate
+                </h2>
+                <p className="text-md md:text-md text-dark-silver mb-12">
+                  We're analyzing your transcript and building the search index...
+                </p>
+              </motion.div>
 
-              {isProcessingUpload && (
-                <div className="text-center">
-                  <p className="text-sm text-light-silver">
-                    Processing debate through pipeline... This may take a minute.
-                  </p>
+              <motion.div
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+                className="w-full max-w-2xl mx-auto"
+              >
+                <div className="bg-[#1e1e23] rounded-2xl p-8 border border-[#47475b]">
+                  <h3 className="text-lg font-semibold text-white mb-6 text-center">
+                    Processing Pipeline
+                  </h3>
+                  
+                  {/* Progress Steps */}
+                  <div className="space-y-4">
+                    {/* Step 1 */}
+                    <div className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
+                      currentStep === "preprocessing" ? "bg-electric-purple/20 border-2 border-electric-purple/50" : 
+                      currentStep === "database" || currentStep === "faiss" || currentStep === "completed" ? "bg-green-500/10 border border-green-500/30" : 
+                      "bg-[#2c2c30] border border-[#32324a]"
+                    }`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
+                        currentStep === "preprocessing" ? "bg-electric-purple text-white scale-110" : 
+                        currentStep === "database" || currentStep === "faiss" || currentStep === "completed" ? "bg-green-500 text-white" : 
+                        "bg-gray-600 text-gray-300"
+                      }`}>
+                        {currentStep === "database" || currentStep === "faiss" || currentStep === "completed" ? "✓" : "1"}
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-white font-medium">Processing Transcript</p>
+                        <p className="text-light-silver text-sm">
+                          Cleaning and analyzing transcript content...
+                        </p>
+                      </div>
+                      {currentStep === "preprocessing" && (
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
+                      currentStep === "database" ? "bg-electric-purple/20 border-2 border-electric-purple/50" : 
+                      currentStep === "faiss" || currentStep === "completed" ? "bg-green-500/10 border border-green-500/30" : 
+                      "bg-[#2c2c30] border border-[#32324a]"
+                    }`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
+                        currentStep === "database" ? "bg-electric-purple text-white scale-110" : 
+                        currentStep === "faiss" || currentStep === "completed" ? "bg-green-500 text-white" : 
+                        "bg-gray-600 text-gray-300"
+                      }`}>
+                        {currentStep === "faiss" || currentStep === "completed" ? "✓" : "2"}
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-white font-medium">Building Knowledge Base</p>
+                        <p className="text-light-silver text-sm">
+                          Storing transcript data in database...
+                        </p>
+                      </div>
+                      {currentStep === "database" && (
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-500 ${
+                      currentStep === "faiss" ? "bg-electric-purple/20 border-2 border-electric-purple/50" : 
+                      currentStep === "completed" ? "bg-green-500/20 border-2 border-green-500/50" : 
+                      "bg-[#2c2c30] border border-[#32324a]"
+                    }`}>
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 ${
+                        currentStep === "faiss" ? "bg-electric-purple text-white scale-110" : 
+                        currentStep === "completed" ? "bg-green-500 text-white scale-110" : 
+                        "bg-gray-600 text-gray-300"
+                      }`}>
+                        {currentStep === "completed" ? "✓" : "3"}
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-white font-medium">Building Search Index</p>
+                        <p className="text-light-silver text-sm">
+                          {currentStep === "completed" ? "Search index completed!" : "Creating semantic search capabilities..."}
+                        </p>
+                      </div>
+                      {currentStep === "faiss" && (
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                          <div className="w-2 h-2 bg-electric-purple rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+                        </div>
+                      )}
+                      {currentStep === "completed" && (
+                        <div className="text-green-500 font-medium">
+                          Complete!
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-6 border-t border-[#32324a] text-center">
+                    <p className="text-sm text-light-silver">
+                      {currentStep === "completed" ? 
+                        "All steps completed! Moving to Q&A..." : 
+                        currentStep === "faiss" ?
+                        "Finalizing search index... Almost done!" :
+                        "This may take a minute depending on the transcript size..."
+                      }
+                    </p>
+                  </div>
                 </div>
-              )}
+              </motion.div>
             </div>
-          </div>
+          ) : (
+            /* ==================== Original Form UI ==================== */
+            <div className="text-center max-w-2xl w-full">
+              <motion.div
+                initial={{ y: -30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100, delay: 0.4 }}
+              >
+                <div className="mb-6 flex items-center justify-center gap-2">
+                  <CheckCircle className="text-green-500" size={32} />
+                  <h2 className="text-3xl font-bold text-white">
+                    Transcript Uploaded!
+                  </h2>
+                </div>
+                <p className="text-lg text-light-silver mb-2">
+                  File: {uploadedTranscript?.name}
+                </p>
+                <p className="text-md text-light-silver mb-8">
+                  Now, please provide the debate details
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
+              >
+                <div className="bg-[#2c2c30] rounded-2xl p-8 border border-[#47475b] space-y-6">
+                  <div className="text-left">
+                    <label className="block text-sm text-light-silver mb-2">
+                      Debate Name
+                    </label>
+                    <input
+                      type="text"
+                      value={debateName}
+                      onChange={(e) => setDebateName(e.target.value)}
+                      placeholder="e.g., 2024 Presidential Debate"
+                      className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple"
+                    />
+                  </div>
+
+                  <div className="text-left">
+                    <label className="block text-sm text-light-silver mb-2">
+                      Debate Date
+                    </label>
+                    <input
+                      type="date"
+                      value={debateDate}
+                      onChange={(e) => setDebateDate(e.target.value)}
+                      max={new Date().toISOString().split('T')[0]}
+                      required
+                      className="w-full bg-[#1e1e23] text-white px-4 py-3 rounded-lg border border-[#32324a] focus:outline-none focus:border-electric-purple [color-scheme:dark]"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleMetadataSubmit}
+                    disabled={isProcessingUpload || !debateName.trim() || !debateDate.trim()}
+                    className={`w-full py-3 rounded-lg text-white font-medium transition ${
+                      isProcessingUpload || !debateName.trim() || !debateDate.trim()
+                        ? "bg-gray-600 cursor-not-allowed opacity-60"
+                        : "bg-electric-purple hover:bg-purple-700 active:scale-95"
+                    }`}
+                  >
+                    {isProcessingUpload ? "Processing..." : "Submit & Continue"}
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
         </motion.div>
       )}
 
