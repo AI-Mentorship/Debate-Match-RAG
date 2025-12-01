@@ -153,17 +153,6 @@ function Analyzer({ onBackToHome }) {
     setIsProcessingUpload(true);
     setCurrentStep("preprocessing");
 
-    setTimeout(() => {
-      setCurrentStep("database");
-      
-      setTimeout(() => {
-        setCurrentStep("faiss");        
-        makeApiCall();
-        
-      }, 25000);
-      
-    }, 10000);
-
     const makeApiCall = async () => {
       try {
         const formData = new FormData();
@@ -172,6 +161,12 @@ function Analyzer({ onBackToHome }) {
         formData.append("debate_date", formattedDate);
 
         console.log("Uploading debate to backend...");
+        setTimeout(() => {
+          setCurrentStep("database");
+          setTimeout(() => {
+            setCurrentStep("faiss");
+          }, 25000);
+        }, 10000);
         
         const response = await axios.post(
           "http://localhost:3000/api/upload-debate",
@@ -209,6 +204,8 @@ function Analyzer({ onBackToHome }) {
         }, 4000);
       }
     };
+    
+    makeApiCall();
   };
 
   {/* ==================== Send message ==================== */}
