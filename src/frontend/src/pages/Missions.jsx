@@ -173,12 +173,13 @@ function Missions({ onGetStarted }) {
       >
         <div className="flex flex-col items-center justify-center">
           <span className="text-dark-silver text-sm mb-2 font-medium">
-            {currentSection == 0 ? 'Why We Build DebateMatch.RAG' : ''}
-            {currentSection == 1 ? 'How It Works' : ''}
-            {currentSection == 2 ? 'Our Vision' : ''}
-            {currentSection == 3 ? 'Our Core Values' : ''}
-            {currentSection == 4 ? 'Who Benefits' : ''}
-            {currentSection < 5 ? ' ↓' : 'Scroll up ↑'}
+            {currentSection == 0 ? 'Information Crisis' : ''}
+            {currentSection == 1 ? 'Why We Build DebateMatch.RAG' : ''}
+            {currentSection == 2 ? 'How It Works' : ''}
+            {currentSection == 3 ? 'Our Vision' : ''}
+            {currentSection == 4 ? 'Our Core Values' : ''}
+            {currentSection == 5 ? 'Who Benefits' : ''}
+            {currentSection < 6 ? ' ↓' : 'Scroll up ↑'}
           </span>
           <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
@@ -227,6 +228,172 @@ function Missions({ onGetStarted }) {
             actually said and separating verifiable facts from political messaging.
           </div>
         </motion.div>
+      </section>
+
+      {/* ==================== Information Crisis Section ==================== */}
+      <section
+        id="information-crisis"
+        className={`min-h-screen w-full flex flex-col items-center justify-center relative z-10 transition-all duration-1000 ${
+          visibleSections['information-crisis'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className="text-center max-w-6xl mx-auto px-8">
+          <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Information&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Crisis</span>
+          </h2>
+          {/* Description */}
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-8">
+            Voters often face an overwhelming flood of information, misinformation, and complex
+            rhetoric. Traditional debate formats often leave citizens confused about what candidates
+            actually stand for and which claims hold factual merit.
+          </div>
+        </div>
+          {/* Main Container */}
+          <motion.div
+            className="relative mx-auto w-full max-w-6xl"
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <div className="group relative p-12 overflow-hidden">              
+              {/* Subtle glow effect */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+              <div className="relative z-10">
+                {/* Section Label */}
+                <div className="flex items-center justify-center gap-4 mb-8">
+                  <div className="h-px w-16 bg-gradient-to-r from-transparent to-white/20"></div>
+                  <span className="text-xs font-semibold tracking-[0.2em] uppercase text-purple-300">Dual Challenge Analysis</span>
+                  <div className="h-px w-16 bg-gradient-to-l from-transparent to-white/20"></div>
+                </div>
+
+                {/* Two Crisis Cards */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-12">
+                  {/* Democracy Under Attack */}
+                  <motion.div
+                    initial={{ x: -30, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    viewport={{ once: true }}
+                    className="relative group/crisis"
+                  >
+                    <div className="relative overflow-hidden h-full">
+                      <div className="relative z-10">
+                        {/* Number badge */}
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/30 mb-6">
+                          <span className="text-red-400 font-bold text-lg">01</span>
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                          Democracy Under Attack
+                        </h4>
+                        
+                        {/* Description */}
+                        <p className="text-gray-400 text-base leading-relaxed mb-6 group-hover/crisis:text-gray-300 transition-colors duration-500">
+                          As voters abandon traditional news, debates are being cut, clipped, and distorted 
+                          before the public ever sees the truth.
+                        </p>
+
+                        {/* Metrics */}
+                        <div className="flex items-center justify-center gap-4 pt-4 border-t border-red-500/10">
+                          {['High Risk', 'Urgent', 'Critical'].map((tag, i) => (
+                            <span 
+                              key={i}
+                              className="text-xs font-medium text-red-400/80 uppercase tracking-wider"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* The Access Gap */}
+                  <motion.div
+                    initial={{ x: 30, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    viewport={{ once: true }}
+                    className="relative group/crisis"
+                  >
+                    <div className="relative overflow-hidden h-full">
+                      <div className="relative z-10">
+                        {/* Number badge */}
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 mb-6">
+                          <span className="text-blue-400 font-bold text-lg">02</span>
+                        </div>
+
+                        {/* Title */}
+                        <h4 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                          The Access Gap
+                        </h4>
+                        
+                        {/* Description */}
+                        <p className="text-gray-400 text-base leading-relaxed mb-6 group-hover/crisis:text-gray-300 transition-colors duration-500">
+                          Americans struggle to find reliable debate analysis, leaving them dependent on soundbites rather than full context.
+                        </p>
+
+                        {/* Metrics */}
+                        <div className="flex items-center justify-center gap-4 pt-4 border-t border-blue-500/10">
+                          {['Limited Access', 'Overload', 'Trust Crisis'].map((tag, i) => (
+                            <span 
+                              key={i}
+                              className="text-xs font-medium text-blue-400/80 uppercase tracking-wider"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Divider */}
+                <div className="relative h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-12">
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-electric-purple rounded-full shadow-lg shadow-electric-purple/50"></div>
+                </div>
+
+                {/* Impact Metrics */}
+                <div className="grid grid-cols-3 gap-8">
+                  {[
+                    { value: '2×', label: 'Compounding Crises', sublabel: 'Dual threat amplification' },
+                    { value: '∞', label: 'Information Flood', sublabel: 'Overwhelming volume' },
+                    { value: '0', label: 'Clarity Without Tools', sublabel: 'Current state baseline' }
+                  ].map((stat, i) => (
+                    <motion.div 
+                      key={i}
+                      initial={{ y: 20, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.7 + i * 0.1 }}
+                      viewport={{ once: true }}
+                      className="relative text-center group/stat"
+                    >
+                      {/* Metric value */}
+                      <div className="text-6xl font-bold text-white mb-3">
+                        {stat.value}
+                      </div>
+                      
+                      {/* Label */}
+                      <div className="text-sm font-semibold text-white/90 mb-1 tracking-wide">
+                        {stat.label}
+                      </div>
+                      <div className="text-xs text-gray-500 tracking-wider uppercase">
+                        {stat.sublabel}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
       </section>
 
       {/* ==================== Why We Build DebateMatch.RAG Section ==================== */}
@@ -339,22 +506,14 @@ function Missions({ onGetStarted }) {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-2">The Information Crisis in Politics</h3>
-                  <p className="text-dark-silver text-sm leading-relaxed">
-                    In today's political landscape, voters face an overwhelming flood of information, 
-                    misinformation, and complex rhetoric. Traditional debate formats often leave citizens 
-                    confused about what candidates actually stand for and which claims hold factual merit.
-                  </p>
-                </div>
 
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">Our Solution</h3>
                   <p className="text-dark-silver text-sm leading-relaxed">
-                    DebateMatch.RAG addresses this challenge by leveraging cutting-edge AI technology 
-                    to analyze debate transcripts, verify factual accuracy, and present clear, accessible 
-                    insights. We transform hours of political discourse into actionable information that 
-                    empowers democratic participation.
+                    DebateMatchRAG turns messy political debates into clear, factual answers grounded directly in
+                    verified transcripts. A RAG pipeline retrieves the exact debate moments you need and summarizes
+                    them with trusted fact-checking support. Every answer is transparent, traceable, and tied to
+                    candidates’ actual words, restoring clarity and accountability to political discourse.
                   </p>
                 </div>
 
@@ -372,6 +531,92 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
 
+      {/* ==================== How It Works Section ==================== */}
+      <section
+        id="how-it-works"
+        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
+          visibleSections['how-it-works'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            How&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
+          </h2>
+          {/* Description */}
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
+            Our retrieval-augmented generation pipeline processes your questions through four stages, 
+            ensuring every answer traces back to actual debate transcripts with complete source verification.
+          </div>
+        </div>
+        <div className="flex-1 flex items-start justify-center px-8">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                { 
+                  number: '1', 
+                  title: 'User Query', 
+                  description: 'User queries are parsed and semantically analyzed to identify key political concepts, candidate names, policy areas, and temporal references, enabling precise retrieval from debate transcripts.',
+                  technical: 'Natural language processing extracts entities and intent before database queries are constructed.'
+                },
+                { 
+                  number: '2', 
+                  title: 'Semantic Retrieval', 
+                  description: 'Our vector database performs semantic search across indexed debate transcripts, retrieving passages with contextual relevance to the query rather than simple keyword matching.',
+                  technical: 'Embedding models encode both query and transcript passages into high-dimensional space for similarity matching.'
+                },
+                { 
+                  number: '3', 
+                  title: 'Source Verification', 
+                  description: 'Retrieved passages are cross-referenced with metadata—timestamps, speaker identification, debate context—ensuring complete provenance and enabling independent verification.',
+                  technical: 'Each retrieved segment includes debate name, speaker, timestamp, and surrounding context for validation.'
+                },
+                { 
+                  number: '4', 
+                  title: 'Response Generation', 
+                  description: 'AI models synthesize answers using only the retrieved transcript passages, maintaining strict grounding in source material. All claims are directly attributed to specific debate moments.',
+                  technical: 'Generation is constrained to retrieved context, preventing hallucination while maintaining coherent, informative responses.'
+                }
+              ].map((item, index) => (
+                <div key={index} className="perspective-1000">
+                  <div className="relative backdrop-blur-2xl rounded-3xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden group transform-style-3d hover:rotate-y-5 hover:translate-z-10">
+                    {/* Animated Background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-700"></div>
+                    {/* Content */}
+                    <div className="relative text-left z-10 p-6">
+                      <div className="flex items-start gap-6 mb-4">
+                        <div className="text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent group-hover:scale-115 transition-transform duration-500">
+                          {item.number}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-white mb-2 relative inline-block">
+                            <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
+                              {item.title}
+                            </span>
+                            <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
+                              {item.title}
+                            </span>
+                          </h3>
+                          <p className="text-white/70 text-left leading-relaxed text-sm mb-4 group-hover:text-white transition-colors duration-500">
+                            {item.description}
+                          </p>
+                          <div className="pl-4 text-center border-l-3 border-electric-purple/30 group-hover:border-electric-purple/80 transition-all duration-500">
+                            <p className="text-dark-silver/80 text-xs leading-relaxed italic">
+                              {item.technical}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* ==================== Our Vision Section ==================== */}
       <section
         id="our-vision"
@@ -528,92 +773,6 @@ function Missions({ onGetStarted }) {
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==================== How It Works Section ==================== */}
-      <section
-        id="how-it-works"
-        className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
-          visibleSections['how-it-works'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      >
-        <div className="w-full pt-30">
-          {/* Title */}
-          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            How&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">It Works</span>
-          </h2>
-          {/* Description */}
-          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-12">
-            Our retrieval-augmented generation pipeline processes your questions through four stages, 
-            ensuring every answer traces back to actual debate transcripts with complete source verification.
-          </div>
-        </div>
-        <div className="flex-1 flex items-start justify-center px-8">
-          <div className="max-w-6xl mx-auto w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                { 
-                  number: '1', 
-                  title: 'User Query', 
-                  description: 'User queries are parsed and semantically analyzed to identify key political concepts, candidate names, policy areas, and temporal references, enabling precise retrieval from debate transcripts.',
-                  technical: 'Natural language processing extracts entities and intent before database queries are constructed.'
-                },
-                { 
-                  number: '2', 
-                  title: 'Semantic Retrieval', 
-                  description: 'Our vector database performs semantic search across indexed debate transcripts, retrieving passages with contextual relevance to the query rather than simple keyword matching.',
-                  technical: 'Embedding models encode both query and transcript passages into high-dimensional space for similarity matching.'
-                },
-                { 
-                  number: '3', 
-                  title: 'Source Verification', 
-                  description: 'Retrieved passages are cross-referenced with metadata—timestamps, speaker identification, debate context—ensuring complete provenance and enabling independent verification.',
-                  technical: 'Each retrieved segment includes debate name, speaker, timestamp, and surrounding context for validation.'
-                },
-                { 
-                  number: '4', 
-                  title: 'Response Generation', 
-                  description: 'AI models synthesize answers using only the retrieved transcript passages, maintaining strict grounding in source material. All claims are directly attributed to specific debate moments.',
-                  technical: 'Generation is constrained to retrieved context, preventing hallucination while maintaining coherent, informative responses.'
-                }
-              ].map((item, index) => (
-                <div key={index} className="perspective-1000">
-                  <div className="relative backdrop-blur-2xl rounded-3xl border-2 border-indigo-400/30 hover:border-indigo-400/80 transition-all duration-700 overflow-hidden group transform-style-3d hover:rotate-y-5 hover:translate-z-10">
-                    {/* Animated Background */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-violet-500 to-indigo-600 opacity-0 group-hover:opacity-10 transition-opacity duration-700"></div>
-                    {/* Content */}
-                    <div className="relative text-left z-10 p-6">
-                      <div className="flex items-start gap-6 mb-4">
-                        <div className="text-6xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent group-hover:scale-115 transition-transform duration-500">
-                          {item.number}
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-2xl font-bold text-white mb-2 relative inline-block">
-                            <span className="relative z-10 group-hover:text-transparent transition-all duration-500">
-                              {item.title}
-                            </span>
-                            <span className="absolute inset-0 bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 z-20">
-                              {item.title}
-                            </span>
-                          </h3>
-                          <p className="text-white/70 text-left leading-relaxed text-sm mb-4 group-hover:text-white transition-colors duration-500">
-                            {item.description}
-                          </p>
-                          <div className="pl-4 text-center border-l-3 border-electric-purple/30 group-hover:border-electric-purple/80 transition-all duration-500">
-                            <p className="text-dark-silver/80 text-xs leading-relaxed italic">
-                              {item.technical}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               ))}
             </div>
           </div>
