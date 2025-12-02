@@ -26,6 +26,8 @@ function Analyzer({ onBackToHome }) {
 
   const [currentStep, setCurrentStep] = useState("");
   const [stepProgress, setStepProgress] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const progressTimeoutsRef = useRef([]);
 
   // Multi-stage state
   const [currentStage, setCurrentStage] = useState(() => {
@@ -161,12 +163,20 @@ function Analyzer({ onBackToHome }) {
         formData.append("debate_date", formattedDate);
 
         console.log("Uploading debate to backend...");
-        setTimeout(() => {
+        
+        // Clear any existing timeouts
+        progressTimeoutsRef.current.forEach(clearTimeout);
+        progressTimeoutsRef.current = [];
+        
+        // Store timeout IDs so we can clear them later
+        const timeout1 = setTimeout(() => {
           setCurrentStep("database");
-          setTimeout(() => {
+          const timeout2 = setTimeout(() => {
             setCurrentStep("faiss");
           }, 25000);
+          progressTimeoutsRef.current.push(timeout2);
         }, 10000);
+        progressTimeoutsRef.current.push(timeout1);
         
         const response = await axios.post(
           "http://localhost:3000/api/upload-debate",
@@ -179,33 +189,38 @@ function Analyzer({ onBackToHome }) {
 
         console.log("Upload response:", response.data);
 
-        setTimeout(() => {
-          setCurrentStep("completed");
-        }, 1000);
+        // Clear all progress timeouts since we got the real response
+        progressTimeoutsRef.current.forEach(clearTimeout);
+        progressTimeoutsRef.current = [];
         
         setTimeout(() => {
-          setCurrentStage("qa");
-          setMessages([
-            {
-              role: "assistant",
-              content: `${response.data.message}\n\nYou can now ask questions about this debate!`,
-            },
-          ]);
-        }, 3000);
+          setCurrentStep("completed");
+          setSuccessMessage(response.data.message);
+        }, 1000);
 
       } catch (err) {
         console.error("Upload error:", err);
         const errorMsg = err.response?.data?.error || "Error uploading debate. Please ensure backend is running.";
         alert(errorMsg);
-      } finally {
-        setTimeout(() => {
-          setIsProcessingUpload(false);
-          setCurrentStep("");
-        }, 4000);
+        setIsProcessingUpload(false);
+        setCurrentStep("");
       }
     };
     
     makeApiCall();
+  };
+
+  {/* ==================== Handle transition to QA ==================== */}
+  const handleGoToQA = () => {
+    setIsProcessingUpload(false);
+    setCurrentStep("");
+    setCurrentStage("qa");
+    setMessages([
+      {
+        role: "assistant",
+        content: `${successMessage}\n\nYou can now ask questions about this debate!`,
+      },
+    ]);
   };
 
   {/* ==================== Send message ==================== */}
@@ -726,15 +741,27 @@ function Analyzer({ onBackToHome }) {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-[#32324a] text-center">
+                  <div className="mt-6 pt-6 border-t border-[#32324a] text-center space-y-4">
                     <p className="text-sm text-light-silver">
                       {currentStep === "completed" ? 
-                        "All steps completed! Moving to Q&A..." : 
+                        "All steps completed! Ready to start analyzing." : 
                         currentStep === "faiss" ?
                         "Finalizing search index... Almost done!" :
                         "This may take a minute depending on the transcript size..."
                       }
                     </p>
+                    
+                    {currentStep === "completed" && (
+                      <motion.button
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3 }}
+                        onClick={handleGoToQA}
+                        className="px-8 py-3 bg-electric-purple hover:bg-purple-700 text-white font-medium rounded-lg transition-all active:scale-95 shadow-lg"
+                      >
+                        Go to Q&A →
+                      </motion.button>
+                    )}
                   </div>
                 </div>
               </motion.div>
