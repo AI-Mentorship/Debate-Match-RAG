@@ -176,10 +176,11 @@ function Missions({ onGetStarted }) {
             {currentSection == 0 ? 'Information Crisis' : ''}
             {currentSection == 1 ? 'Why We Build DebateMatch.RAG' : ''}
             {currentSection == 2 ? 'How It Works' : ''}
-            {currentSection == 3 ? 'Our Vision' : ''}
-            {currentSection == 4 ? 'Our Core Values' : ''}
-            {currentSection == 5 ? 'Who Benefits' : ''}
-            {currentSection < 6 ? ' ↓' : 'Scroll up ↑'}
+            {currentSection == 3 ? 'Our Tech Stack' : ''}
+            {currentSection == 4 ? 'Why We Stand Out' : ''}
+            {currentSection == 5 ? 'Our Core Values' : ''}
+            {currentSection == 6 ? 'Who Benefits' : ''}
+            {currentSection < 7 ? ' ↓' : 'Scroll up ↑'}
           </span>
           <div className="w-6 h-10 border-2 border-dark-silver rounded-full flex justify-center relative">
             <motion.div
@@ -616,6 +617,171 @@ function Missions({ onGetStarted }) {
           </div>
         </div>
       </section>
+
+      {/* ==================== Our Tech Stack Section ==================== */}
+      <section 
+        id="tech-stack"
+        className={`min-h-screen w-full flex flex-col items-center justify-center px-8 text-center relative z-10 transition-all duration-1000 ${
+          visibleSections['tech-stack'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="w-full pt-30">
+          {/* Title */}
+          <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
+            Our&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Tech Stack</span>
+          </h2>
+          {/* Description */}
+          <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-20">
+            Built with cutting-edge technologies to deliver fast, accurate, and verifiable political analysis
+          </div>
+        </div>
+
+          {/* Main Content Grid */}
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left side - Rotating Circle Visualization */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="flex justify-center items-center"
+            >
+              <div className="relative w-[450px] h-[450px]">
+                {/* Central hub */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                  <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full w-28 h-28 flex items-center justify-center shadow-2xl border-4 border-purple-400/30">
+                    <span className="text-white font-bold text-xs text-center leading-tight">
+                      Tech<br/>Stack
+                    </span>
+                  </div>
+                </div>
+
+                {/* Orbit ring */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+                  <div className="w-full h-full rounded-full border-2 border-dashed border-purple-500/20"></div>
+                </div>
+
+                {/* Rotating container for tech items */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full animate-spin-slow">
+                  {/* React - Top */}
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-cyan-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-cyan-400 text-[10px] font-bold animate-spin-slow-reverse">React</span>
+                    </div>
+                  </div>
+
+                  {/* Flask - Right */}
+                  <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-red-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-red-400 text-[10px] font-bold animate-spin-slow-reverse">Flask</span>
+                    </div>
+                  </div>
+
+                  {/* MongoDB - Bottom */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-green-500/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-green-500 text-[10px] font-bold animate-spin-slow-reverse">MongoDB</span>
+                    </div>
+                  </div>
+
+                  {/* OpenAI - Left */}
+                  <div className="absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-purple-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-purple-400 text-[10px] font-bold animate-spin-slow-reverse">OpenAI</span>
+                    </div>
+                  </div>
+
+                  {/* ChromaDB - Top Right */}
+                  <div className="absolute top-[15%] right-[15%] transform translate-x-1/2 -translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-orange-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-orange-400 text-[9px] font-bold animate-spin-slow-reverse">ChromaDB</span>
+                    </div>
+                  </div>
+
+                  {/* FAISS - Bottom Right */}
+                  <div className="absolute bottom-[15%] right-[15%] transform translate-x-1/2 translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-blue-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-blue-400 text-[9px] font-bold animate-spin-slow-reverse">FAISS</span>
+                    </div>
+                  </div>
+
+                  {/* Tailwind - Bottom Left */}
+                  <div className="absolute bottom-[15%] left-[15%] transform -translate-x-1/2 translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-sky-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-sky-400 text-[9px] font-bold animate-spin-slow-reverse">Tailwind</span>
+                    </div>
+                  </div>
+
+                  {/* Python - Top Left */}
+                  <div className="absolute top-[15%] left-[15%] transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-yellow-400/50 hover:scale-110 transition-transform duration-300">
+                      <span className="text-yellow-400 text-[9px] font-bold animate-spin-slow-reverse">Python</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Glow effect */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"></div>
+              </div>
+            </motion.div>
+
+            {/* Right side - Tech Stack Details */}
+            <motion.div
+              initial={{ x: 50, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              viewport={{ once: true }}
+              className="text-left space-y-6"
+            >
+              {/* Frontend */}
+              <div className="group">
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full group-hover:scale-150 transition-transform duration-300"></span>
+                  Frontend
+                </h3>
+                <p className="text-dark-silver text-sm leading-relaxed ml-4">
+                  <span className="text-cyan-400 font-semibold">React</span> with <span className="text-sky-400 font-semibold">Tailwind CSS</span> for a responsive, modern interface that makes complex political data accessible and beautiful.
+                </p>
+              </div>
+
+              {/* Backend */}
+              <div className="group">
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full group-hover:scale-150 transition-transform duration-300"></span>
+                  Backend
+                </h3>
+                <p className="text-dark-silver text-sm leading-relaxed ml-4">
+                  <span className="text-red-400 font-semibold">Flask</span> API with <span className="text-yellow-400 font-semibold">Python</span> powers our RAG pipeline, handling complex queries with optimized caching and GPU acceleration.
+                </p>
+              </div>
+
+              {/* Database & Vector Storage */}
+              <div className="group">
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full group-hover:scale-150 transition-transform duration-300"></span>
+                  Data Layer
+                </h3>
+                <p className="text-dark-silver text-sm leading-relaxed ml-4">
+                  <span className="text-green-500 font-semibold">MongoDB</span> for structured data with <span className="text-orange-400 font-semibold">ChromaDB</span> and <span className="text-blue-400 font-semibold">FAISS</span> for lightning-fast semantic search across debate transcripts.
+                </p>
+              </div>
+
+              {/* AI & ML */}
+              <div className="group">
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 bg-purple-400 rounded-full group-hover:scale-150 transition-transform duration-300"></span>
+                  AI Engine
+                </h3>
+                <p className="text-dark-silver text-sm leading-relaxed ml-4">
+                  <span className="text-purple-400 font-semibold">OpenAI API</span> integration for intelligent analysis, topic classification, and fact-checking while maintaining transparency and verifiability.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
       
       {/* ==================== Our Vision Section ==================== */}
       <section
@@ -627,8 +793,8 @@ function Missions({ onGetStarted }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Our&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Vision</span>
+            Why We&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Stand Out</span>
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-16">
