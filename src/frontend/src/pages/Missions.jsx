@@ -626,7 +626,6 @@ function Missions({ onGetStarted }) {
         }`}
       >
         <div className="max-w-7xl mx-auto">
-          <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
             Our&nbsp;
@@ -636,7 +635,6 @@ function Missions({ onGetStarted }) {
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-20">
             Built with cutting-edge technologies to deliver fast, accurate, and verifiable political analysis
           </div>
-        </div>
 
           {/* Main Content Grid */}
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -651,16 +649,25 @@ function Missions({ onGetStarted }) {
               <div className="relative w-[450px] h-[450px]">
                 {/* Central hub */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-                  <div className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full w-28 h-28 flex items-center justify-center shadow-2xl border-4 border-purple-400/30">
-                    <span className="text-white font-bold text-xs text-center leading-tight">
-                      Tech<br/>Stack
+                    <span className="text-2xl md:text-1xl font-bold bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">
+                      Tech Stack
                     </span>
-                  </div>
                 </div>
 
-                {/* Orbit ring */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
-                  <div className="w-full h-full rounded-full border-2 border-dashed border-purple-500/20"></div>
+                {/* Orbiting dots */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                  <div className="relative w-56 h-56 animate-spin-slow">
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="absolute w-2 h-2 bg-white rounded-full opacity"
+                        style={{
+                          top: `${50 + 45 * Math.sin((i * Math.PI) / 4)}%`,
+                          left: `${50 + 45 * Math.cos((i * Math.PI) / 4)}%`,
+                        }}
+                      ></div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Rotating container for tech items */}
@@ -755,7 +762,7 @@ function Missions({ onGetStarted }) {
                 </div>
 
                 {/* Glow effect */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-600/20 rounded-full blur-3xl"></div>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-purple-600/0 rounded-full blur-3xl"></div>
               </div>
             </motion.div>
 
