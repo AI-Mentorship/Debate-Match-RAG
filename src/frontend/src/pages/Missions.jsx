@@ -822,7 +822,7 @@ function Missions({ onGetStarted }) {
         </div>
       </section>
       
-      {/* ==================== Our Vision Section ==================== */}
+      {/* ==================== Why We Stand Out Section ==================== */}
       <section
         id="our-vision"
         className={`min-h-screen w-full flex flex-col relative z-10 transition-all duration-1000 ${
@@ -847,25 +847,18 @@ function Missions({ onGetStarted }) {
             <div className="space-y-12">
               {[
                 {
-                  title: "Primary Source Attribution",
-                  limitation: "General AI synthesizes from training patterns",
-                  limitationDetail: "Based on my training data, candidates likely discussed healthcare policy in general terms",
-                  capability: "DebateMatch.RAG retrieves exact verified quotes",
-                  capabilityDetail: "At 23:45 in the September 2024 Presidential Debate, Kamala Harris stated: [verbatim quote with full context]",
-                },
-                {
-                  title: "Architectural Hallucination Prevention",
-                  limitation: "Statistical models fabricate plausible content",
-                  limitationDetail: "Models confidently generate quotes that were never spoken, with no built-in verification to catch fabrications",
-                  capability: "Retrieval constrained architecture eliminates hallucination",
-                  capabilityDetail: "System architecturally cannot generate content beyond retrieved transcripts, making fabrication structurally impossible",
+                  title: "Zero Hallucination Architecture",
+                  limitation: "Generic AI mixes facts with fabricated claims",
+                  limitationDetail: "Statistical models confidently generate quotes that were never spoken and cannot track contradictions across debates",
+                  capability: "Retrieval-constrained system eliminates fabrication",
+                  capabilityDetail: "Our system architecturally cannot generate content beyond retrieved transcripts, every answer retrieves exact quotes with complete citations, making fabrication structurally impossible",
                 },
                 {
                   title: "Truth You Can Verify Yourself",
-                  limitation: "AI generated content mimics authentic reporting",
-                  limitationDetail: "Sophisticated disinformation spreads unchecked because AI output appears authoritative with no verification mechanism",
-                  capability: "Transparency architecture enables universal verification",
-                  capabilityDetail: "Anyone can verify any claim by checking primary sources, enabling journalists, fact checkers, and voters to confirm authenticity",
+                  limitation: "AI-generated content appears authoritative with no verification",
+                  limitationDetail: "Sophisticated disinformation spreads unchecked because AI output mimics authentic reporting with no way to confirm accuracy",
+                  capability: "Transparent verification empowers universal fact-checking",
+                  capabilityDetail: "Every answer links to fact-checking reports and primary sources—journalists, fact-checkers, and voters can verify any claim themselves with complete confidence",
                 }
               ].map((item, index) => (
                 <motion.div
