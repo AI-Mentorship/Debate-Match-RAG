@@ -667,57 +667,89 @@ function Missions({ onGetStarted }) {
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full animate-spin-slow">
                   {/* React - Top */}
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-cyan-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-cyan-400 text-[10px] font-bold animate-spin-slow-reverse">React</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-cyan-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/react.png" 
+                        alt="React" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* Flask - Right */}
                   <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-red-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-red-400 text-[10px] font-bold animate-spin-slow-reverse">Flask</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-white-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/flask.png" 
+                        alt="Flask" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* MongoDB - Bottom */}
                   <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-green-500/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-green-500 text-[10px] font-bold animate-spin-slow-reverse">MongoDB</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-green-500/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/mongodb.png" 
+                        alt="MongoDB" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* OpenAI - Left */}
                   <div className="absolute top-1/2 left-0 transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-purple-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-purple-400 text-[10px] font-bold animate-spin-slow-reverse">OpenAI</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-green-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/openai.png" 
+                        alt="OpenAI" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* ChromaDB - Top Right */}
                   <div className="absolute top-[15%] right-[15%] transform translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-orange-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-orange-400 text-[9px] font-bold animate-spin-slow-reverse">ChromaDB</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-sky-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/tailwind.png" 
+                        alt="Tailwind" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
-                  {/* FAISS - Bottom Right */}
+                  {/* Ollama - Bottom Right */}
                   <div className="absolute bottom-[15%] right-[15%] transform translate-x-1/2 translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-blue-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-blue-400 text-[9px] font-bold animate-spin-slow-reverse">FAISS</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-yellow-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/python.png" 
+                        alt="Python" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* Tailwind - Bottom Left */}
                   <div className="absolute bottom-[15%] left-[15%] transform -translate-x-1/2 translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-sky-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-sky-400 text-[9px] font-bold animate-spin-slow-reverse">Tailwind</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-orange-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/chroma.png" 
+                        alt="ChromaDB" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
 
                   {/* Python - Top Left */}
                   <div className="absolute top-[15%] left-[15%] transform -translate-x-1/2 -translate-y-1/2">
-                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-16 h-16 flex items-center justify-center shadow-xl border-2 border-yellow-400/50 hover:scale-110 transition-transform duration-300">
-                      <span className="text-yellow-400 text-[9px] font-bold animate-spin-slow-reverse">Python</span>
+                    <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-full w-20 h-20 flex items-center justify-center shadow-xl border-2 border-blue-400/50 hover:scale-110 transition-transform duration-300 overflow-hidden">
+                      <img 
+                        src="/src/assets/img/ollama.png" 
+                        alt="Ollama" 
+                        className="w-full h-full object-cover animate-spin-slow-reverse"
+                      />
                     </div>
                   </div>
                 </div>
@@ -764,7 +796,7 @@ function Missions({ onGetStarted }) {
                   Data Layer
                 </h3>
                 <p className="text-dark-silver text-sm leading-relaxed ml-4">
-                  <span className="text-green-500 font-semibold">MongoDB</span> for structured data with <span className="text-orange-400 font-semibold">ChromaDB</span> and <span className="text-blue-400 font-semibold">FAISS</span> for lightning-fast semantic search across debate transcripts.
+                  <span className="text-green-500 font-semibold">MongoDB</span> for structured data with <span className="text-orange-400 font-semibold">ChromaDB</span> and <span className="text-orange-400 font-semibold">FAISS</span> for lightning-fast semantic search across debate transcripts.
                 </p>
               </div>
 
@@ -775,7 +807,7 @@ function Missions({ onGetStarted }) {
                   AI Engine
                 </h3>
                 <p className="text-dark-silver text-sm leading-relaxed ml-4">
-                  <span className="text-purple-400 font-semibold">OpenAI API</span> integration for intelligent analysis, topic classification, and fact-checking while maintaining transparency and verifiability.
+                  <span className="text-purple-400 font-semibold">OpenAI API</span> and <span className="text-purple-400 font-semibold">Ollama</span>  integration for intelligent analysis, topic classification, and fact-checking while maintaining transparency and verifiability.
                 </p>
               </div>
             </motion.div>
