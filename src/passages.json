@@ -1,102 +1,108 @@
 [
     {
-        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
-        "debate_date": "2023-12-06",
-        "speaker": "Chris Christie",
-        "timestamp": "30:12",
-        "text": ".",
+        "debate_name": "2024 ABC News Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "David Muir",
+        "timestamp": "11:46",
+        "text": "Do you believe Americans can afford higher prices because of tariffs",
         "topics": [
-            "general_politics"
+            "economy"
         ]
     },
     {
-        "debate_name": "2023 RNC Second Republican Presidential Primary Debate in Simi Valley, California",
-        "debate_date": "2023-09-27",
-        "speaker": "Vivek Ramaswamy",
-        "timestamp": "30:30",
-        "text": ".",
+        "debate_name": "2024 ABC News Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "David Muir",
+        "timestamp": "11:26",
+        "text": "You recently said that you might double your plan, imposing tariffs up to 20 percent on goods coming into this country As you know, many economists say that with tariffs at that level, costs are then passed on to the consumer Vice President Harris has argued it will mean higher prices on gas, food, clothing, medication, arguing it costs the typical family nearly $4,000 a year",
         "topics": [
-            "general_politics"
+            "economy"
+        ]
+    },
+    {
+        "debate_name": "2024 CNN News Presidential Debate in Atlanta, Georgia",
+        "debate_date": "2024-06-27",
+        "speaker": "Jake Tapper",
+        "timestamp": "2:57",
+        "text": "For example, a basket of groceries that cost $100 then now costs more than $120, and typical home prices have jumped more than 30% What do you say to voters who feel they are worse off under your presidency than they were under President Trump",
+        "topics": [
+            "moderator"
+        ]
+    },
+    {
+        "debate_name": "2024 CBS News Vice Presidential Debate in New York City, New York",
+        "debate_date": "2024-10-01",
+        "speaker": "J.D. Vance",
+        "timestamp": "1:04:12",
+        "text": "Now, you asked, Margaret, what would immediately change the equation for American citizens If you lower energy prices, as Donald Trump says, \"Drill, baby, drill,\" one of the biggest drivers of housing costs aside from illegal immigration is— think about it If a truck driver is paying 40% more for diesel, then the lumber he's delivering to the job site to build the house is also going to become a lot more expensive",
+        "topics": [
+            "housing",
+            "economy",
+            "energy"
         ]
     },
     {
         "debate_name": "2024 ABC News Presidential Debate in Philadelphia, Pennsylvania",
         "debate_date": "2024-09-10",
         "speaker": "Kamala Harris",
-        "timestamp": "42:18",
-        "text": ".",
+        "timestamp": "04:40",
+        "text": "Economists have said that that Trump sales tax would actually result for middle-class families in about $4,000 more a year because of his policies and his ideas about what should be the backs of middle-class people paying for tax cuts for billionaires",
         "topics": [
-            "general_politics"
-        ]
-    },
-    {
-        "debate_name": "2023 RNC Second Republican Presidential Primary Debate in Simi Valley, California",
-        "debate_date": "2023-09-27",
-        "speaker": "Tim Scott",
-        "timestamp": "29:13",
-        "text": ".",
-        "topics": [
-            "general_politics"
+            "economy",
+            "middle_class"
         ]
     },
     {
         "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
         "debate_date": "2023-12-06",
-        "speaker": "Vivek Ramaswamy",
-        "timestamp": "30:12",
-        "text": ".",
+        "speaker": "Eliana Johnsons",
+        "timestamp": "47:23",
+        "text": "We’re going to come back to President Trump, I promise Governor DeSantis, the latest NewsNation decision desk poll found that inflation tops the worries of American voters 61% say their very concerned and the working class is hardest hit Economists say this was fueled by a glut of federal spending The Biden administration has added $6 trillion to the national debt so far, but President Trump wasn’t exactly a penny pincher His administration added 7 8 trillion Do Republicans, including President Trump, share the blame for inflation And what concrete steps would a president DeSantis take to help Americans make ends meet",
         "topics": [
-            "general_politics"
+            "economy",
+            "inflation"
         ]
     },
     {
-        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
-        "debate_date": "2023-12-06",
-        "speaker": "Vivek Ramaswamy",
-        "timestamp": "31:02",
-        "text": ".",
+        "debate_name": "2024 CNN PRESIDENTIAL DEBATE",
+        "debate_date": "2024-06-27",
+        "speaker": "Jake Tapper",
+        "timestamp": "02:57",
+        "text": "And please welcome the 45th President of the United States, Donald Trump. Gentlemen, thanks so much for being here, let's begin the debate and let's start with the issue that voters consistently say is their top concern, the economy. President Biden, inflation has slowed, but prices remain high. Since you took office, the price of essentials has increased. For example, a basket of groceries that cost $100 then now costs more than $120, and typical home prices have jumped more than 30%. What do you say to voters who feel they are worse off under your presidency than they were under President Trump?",
         "topics": [
-            "general_politics"
+            "moderator"
         ]
     },
     {
-        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
-        "debate_date": "2023-12-06",
-        "speaker": "Nikki Haley",
-        "timestamp": "14:31",
-        "text": ".",
+        "debate_name": "2020 Vice Presidential Debate the University of Utah in Salt Lake City, Utah",
+        "debate_date": "2020-10-07",
+        "speaker": "Mike Pence",
+        "timestamp": "N/A",
+        "text": "When President Trump and I took office, America had gone through the slowest economic recovery since the Great Depression When Joe Biden was vice president they tried to tax, and spend, and regulate, and bail our way back to a growing economy President Trump cut taxes, across the board Despite what Senator Harris says, the average American family of four had $2,000 in savings in taxes And with the rise in wages that occurred, most predominantly for blue-collar, hard working Americans, the average household income for a family of four increased by $4,000 following President Trump's tax cuts But America, you just heard Senator Harris tell you, on day one Joe Biden's gonna raise your taxes It's really remarkable to think, Susan –",
         "topics": [
-            "general_politics"
+            "economy",
+            "taxes"
         ]
     },
     {
-        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
-        "debate_date": "2023-12-06",
-        "speaker": "Nikki Haley",
-        "timestamp": "11:53",
-        "text": ".",
+        "debate_name": "2024 ABC News Presidential Debate in Philadelphia, Pennsylvania",
+        "debate_date": "2024-09-10",
+        "speaker": "Donald Trump",
+        "timestamp": "11:50",
+        "text": "They're not going to have higher prices What's going to have and who's going to have higher prices is China and all of the countries that have been ripping us off for years I charged—I was the only president ever—China was paying us hundreds of billions of dollars and so were other countries And, you know, if she doesn't like them, they should have gone out and they should have immediately cut the tariffs",
         "topics": [
-            "general_politics"
+            "economy",
+            "crime"
         ]
     },
     {
-        "debate_name": "2023 RNC Third Republican Presidential Primary Debate in Miami, Florida",
-        "debate_date": "2023-11-08",
-        "speaker": "Lester Holt",
-        "timestamp": "21:13",
-        "text": ".",
+        "debate_name": "2020 Vice Presidential Debate the University of Utah in Salt Lake City, Utah",
+        "debate_date": "2020-10-07",
+        "speaker": "Mike Pence",
+        "timestamp": "N/A",
+        "text": "– American business buildings It makes no sense It will cost jobs President Trump –",
         "topics": [
-            "general_politics"
-        ]
-    },
-    {
-        "debate_name": "2023 RNC Fourth Republican Presidential Primary Debate in Tuscaloosa, Alabama",
-        "debate_date": "2023-12-06",
-        "speaker": "Nikki Haley",
-        "timestamp": "30:10",
-        "text": "-",
-        "topics": [
-            "general_politics"
+            "economy"
         ]
     }
 ]
