@@ -822,20 +822,6 @@ function Missions({ onGetStarted }) {
                   capabilityDetail: "System architecturally cannot generate content beyond retrieved transcripts, making fabrication structurally impossible",
                 },
                 {
-                  title: "Complete Source Provenance",
-                  limitation: "General AI offers no source provenance",
-                  limitationDetail: "Users cannot verify claims or trace information back to original sources when asked for proof",
-                  capability: "Complete citation chain from query to source",
-                  capabilityDetail: "Every response includes debate name, timestamp, speaker identification, surrounding context, and direct transcript link",
-                },
-                {
-                  title: "Maintain Domain Expertise",
-                  limitation: "Universal AI achieves mediocrity everywhere",
-                  limitationDetail: "Spreading computational resources across infinite domains results in shallow political analysis and missed nuances",
-                  capability: "Specialized architecture delivers domain mastery",
-                  capabilityDetail: "Exclusive focus on political discourse enables optimized retrieval, contextual understanding, and expert-level analysis",
-                },
-                {
                   title: "Truth You Can Verify Yourself",
                   limitation: "AI generated content mimics authentic reporting",
                   limitationDetail: "Sophisticated disinformation spreads unchecked because AI output appears authoritative with no verification mechanism",
@@ -970,10 +956,10 @@ function Missions({ onGetStarted }) {
               {[
                 { number: '1', title: 'Factual Accuracy', description: 'Grounding responses in actual debate transcripts and verified sources' },
                 { number: '2', title: 'Citation Integrity', description: 'Making political discourse more accessible and understandable for all' },
-                { number: '3', title: 'Source Verification', description: 'Helping citizens make informed decisions based on verified information' },
+                { number: '3', title: 'Accountability', description: 'Tracking candidate statements against factual records and past positions' },
                 { number: '4', title: 'Zero Hallucination', description: 'Providing verified context against misleading claims and rhetoric' },
                 { number: '5', title: 'Primary Source Access', description: 'Making political analysis accessible to all voters regardless of background' },
-                { number: '6', title: 'Accountability', description: 'Tracking candidate statements against factual records and past positions' }
+                { number: '6', title: 'Source Verification', description: 'Helping citizens make informed decisions based on verified information' }
               ].map((item, index) => (
                 <motion.div 
                   key={index}
