@@ -107,11 +107,36 @@ function Missions({ onGetStarted }) {
       });
     };
 
+    // Separate handler for saving scroll position
+    const saveScrollPosition = () => {
+      sessionStorage.setItem('missionsScrollPosition', window.scrollY.toString());
+    };
+
     // Initial check on mount
     handleScroll();
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', saveScrollPosition);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', saveScrollPosition);
+    };
+  }, []);
+
+  // Restore scroll position on component mount
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem('missionsScrollPosition');
+    
+    if (savedScrollPosition) {
+      const scrollPos = parseInt(savedScrollPosition, 10);
+      console.log('Restoring scroll position:', scrollPos); // Debug log
+      
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPos);
+      });
+    }
   }, []);
 
   /* ==================== Shooting star animation ==================== */
