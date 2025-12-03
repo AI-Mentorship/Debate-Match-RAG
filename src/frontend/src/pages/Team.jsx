@@ -579,8 +579,8 @@ function Team({ onGetStarted, onModalStateChange }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Technical&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Excellence</span>
+            Backend&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Development</span>
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-18">
@@ -670,8 +670,8 @@ function Team({ onGetStarted, onModalStateChange }) {
         <div className="w-full pt-30">
           {/* Title */}
           <h2 className="text-4xl md:text-4xl font-bold text-white mb-4">
-            Development&nbsp;
-            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Team</span>
+            Fullstack&nbsp;
+            <span className="bg-gradient-to-b from-white to-electric-purple bg-clip-text text-transparent">Development</span>
           </h2>
           {/* Description */}
           <div className="text-md md:text-md text-dark-silver max-w-6xl mx-auto mb-18">
